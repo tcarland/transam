@@ -24,12 +24,15 @@ extern "C" {
 #include "Decode.h"
 using namespace transam;
 
+#include "StringUtils.h"
+using namespace tcanetpp;
+
+
 
 static
 const char Process[] = "transam";
 static
 const char Version[] = "0.1.2";
-
 
 
 
@@ -73,7 +76,6 @@ int main ( int argc, char **argv )
     bool decode   = false;
     bool erase    = false;
     bool notags   = false;
-    int  bitrate  = TRANSAM_DEFAULT_BITRATE;
     int  optindx  = 0;
     int  cd       = 0;
 
@@ -171,6 +173,10 @@ int main ( int argc, char **argv )
         etype.assign(type);
         ::free(type);
     }
+    if ( br != NULL ) {
+        rate = StringUtils::fromString<uint16_t>(br);
+        ::free(br);
+    }
 
     if ( etype.empty() && inf.empty() && ! decode ) {
         std::cout << "Error encoding type not provided or detected" << std::endl;
@@ -180,15 +186,22 @@ int main ( int argc, char **argv )
 
     if ( ! path.empty() )
     {
-        FileList  files, wavs;
+        Decode  decoder;
+
+        decoder.debug(verbose);
+        decoder.dryrun(dryrun);
+        decoder.notags(notags);
+
+        FileList   wavs;
         FileList::iterator fIter;
 
-        if ( ! transam::TransFile::ReadFiles(path, files, notags) ) {
+        if ( ! decoder.decodePath(path, wavs) ) {
+        //if ( ! transam::TransFile::ReadFiles(path, files, notags) ) {
             std::cout << "Error reading files" << std::endl;
             return -1;
         }
 
-        Decode::DecodeFiles(files, wavs);
+        //Decode::DecodeFiles(files, wavs, dryrun);
 
     }
     else

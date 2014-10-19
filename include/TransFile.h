@@ -42,6 +42,8 @@ class TransFile {
     bool          save();
     bool          readTags();
     void          setTags       ( TagLib::PropertyMap map );
+
+
     static bool   ReadFiles     ( const std::string & path,
                                   FileList          & files,
                                   bool                notag );

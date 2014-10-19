@@ -126,8 +126,10 @@ TransFile::ReadFiles ( const std::string & path, FileList & files, bool notag )
         }
 
         file = new TransFile(name, type);
+
         if ( ! notag )
             file->readTags();
+
         files.push_back(file);
     }
 
@@ -135,6 +137,7 @@ TransFile::ReadFiles ( const std::string & path, FileList & files, bool notag )
 
     return true;
 }
+
 
 int
 TransFile::GetEncoding ( const std::string & name )

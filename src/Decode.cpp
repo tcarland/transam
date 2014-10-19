@@ -17,7 +17,8 @@ namespace transam {
 
 
 Decode::Decode() 
-    : _dryrun(false),
+    : _notags(false),
+      _dryrun(false),
       _debug(false)
 {}
 
@@ -35,7 +36,13 @@ Decode::decode ( TransFile & tf, const std::string & outfile )
     std::string cmd;
    
     // send tf?
-    cmd = this->getDecoderExec(tf.getFileName(), outfile, tf.getType());
+    cmd = this->getDecoder(tf.getFileName(), outfile, tf.getType());
+
+    if ( cmd.empty() ) {
+        std::cout << "Decoder has no exec for '" << tf.getFileName() 
+            << "'" << std::endl;
+        return false;
+    }
 
     if ( this->_dryrun )
     {
@@ -88,12 +95,22 @@ Decode::debug() const
 
 //-------------------------------------------------------------------------
 
-bool
-Decode::DecodeFiles ( FileList & files, FileList & wavs )
+void
+Decode::notags ( bool notags )
 {
-    Decode  decoder;
-    
+    _notags = notags;
+}
+
+//-------------------------------------------------------------------------
+
+bool
+Decode::decodePath ( const std::string & path, FileList & wavs )
+{
+    FileList  files;
     FileList::iterator  fIter;
+
+    if ( ! TransFile::ReadFiles(path, files, _notags) )
+        return false;
     
     for ( fIter = files.begin(); fIter != files.end(); ++fIter )
     {
@@ -105,7 +122,7 @@ Decode::DecodeFiles ( FileList & files, FileList & wavs )
             return false;
         }
 
-        if ( decoder.decode(*tf, outfile) )
+        if ( this->decode(*tf, outfile) )
             wavs.push_back(new TransFile(outfile, AUDIO_WAV));
     }
 
@@ -125,16 +142,17 @@ Decode::GetOutputName ( const std::string & infile )
 
     outf.append("wav");
 
-    std::cout << "Decode::OutputName() outfile = " << outf << std::endl;
+    std::cout << "Decode::GetOutputName() infile = " << infile
+              << " outfile = " << outf << std::endl;
 
     return outf;
 }
 
 
 std::string
-Decode::getDecoderExec ( const std::string & infile, 
-                         const std::string & outfile,
-                         encoding_t          type )
+Decode::getDecoder ( const std::string & infile, 
+                     const std::string & outfile,
+                     encoding_t          type )
 {
     std::string  cmd;
 
@@ -163,7 +181,7 @@ Decode::getDecoderExec ( const std::string & infile,
         case AUDIO_UNK:
         case AUDIO_WAV:
         default:
-            std::cout << "Unsupported format" << std::endl;
+            std::cout << "Decode::getDecoder() Unsupported format" << std::endl;
             break;
     }
 
