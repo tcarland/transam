@@ -6,6 +6,7 @@
 #define _TRANSAM_TRANSFILE_H_
 
 #include <list>
+#include <string>
 
 // taglib
 #include "fileref.h"
@@ -13,11 +14,13 @@
 
 #include "transam.h"
 
+
 namespace transam {
 
 
 class TransFile;
-typedef std::list<TransFile*> FileList;
+typedef std::list<TransFile*>   FileList;
+typedef std::list<std::string>  StringList;
 
 
 class TransFile {
@@ -32,6 +35,7 @@ class TransFile {
 
     const
     std::string&  getFileName() const;
+    encoding_t    getType() const;
 
     bool          save();
     bool          readTags();
@@ -40,6 +44,7 @@ class TransFile {
                                   FileList          & files,
                                   bool                notag );
     static int    GetEncoding   ( const std::string & name );
+
   private: 
 
     void          setType();

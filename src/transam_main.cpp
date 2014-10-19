@@ -21,6 +21,7 @@ extern "C" {
 
 #include "transam.h"
 #include "TransFile.h"
+#include "Decode.h"
 using namespace transam;
 
 
@@ -56,19 +57,6 @@ void usage()
 void sigHandler ( int signal )
 {
     return;
-}
-
-
-bool processFiles ( FileList & files, bool encode, int type, bool notag )
-{
-    FileList::iterator fIter;
-
-    for ( fIter = files.begin(); fIter != files.end(); ++fIter )
-    {
-        std::cout << fIter->getFileName() << std::endl;
-    }
-
-    return true;
 }
 
 
@@ -186,7 +174,7 @@ int main ( int argc, char **argv )
 
     if ( ! path.empty() )
     {
-        FileList  files;
+        FileList  files, wavs;
         FileList::iterator fIter;
 
         if ( ! transam::TransFile::ReadFiles(path, files, notags) ) {
@@ -194,7 +182,8 @@ int main ( int argc, char **argv )
             return -1;
         }
 
-        processFiles(files, notags);
+        Decode::DecodeFiles(files, wavs);
+
     }
     else
     {

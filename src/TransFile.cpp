@@ -65,6 +65,12 @@ TransFile::getFileName() const
     return _fileName;
 }
 
+encoding_t
+TransFile::getType() const
+{
+    return _type;
+}
+
 void
 TransFile::setTags ( TagLib::PropertyMap map )
 {

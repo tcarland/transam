@@ -6,6 +6,7 @@ endif
 
 NEED_SOCKET = 1
 NEED_TCANETPP = 1
+NEED_TCACMDBUF = 1
 
 
 ifdef TRANSAM_DEBUG
@@ -17,7 +18,8 @@ LIBS=		$(shell pkg-config --libs taglib)
 
 
 BIN=		transam
-OBJS=		src/TransFile.o src/transam_main.o
+OBJS=		src/TransFile.o src/Encode.o src/Decode.o \
+		src/transam_main.o
 
 ALL_OBJS=	$(OBJS)
 ALL_BINS=	$(BIN)
