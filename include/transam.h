@@ -22,7 +22,6 @@ typedef enum encoding_types {
 } encoding_t;
 
 
-
 static std::string   MP3_ENCODER  = "lame";
 static std::string   MP3E_OPTS    = " -h -b ";
 static std::string   MP3_DECODER  = "mpg123";

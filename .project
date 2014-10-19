@@ -3,6 +3,7 @@
 	<name>transam</name>
 	<comment></comment>
 	<projects>
+		<project>tcanetpp</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

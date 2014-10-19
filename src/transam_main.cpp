@@ -22,6 +22,7 @@ extern "C" {
 #include "transam.h"
 #include "TransFile.h"
 #include "Decode.h"
+#include "Encode.h"
 using namespace transam;
 
 #include "StringUtils.h"
@@ -61,6 +62,20 @@ void usage()
 void sigHandler ( int signal )
 {
     return;
+}
+
+encoding_t setEncodingType ( const std::string & typestr )
+{
+	encoding_t type;
+
+	EncoderMap::iterator fIter;
+
+	if ( (fIter = Encode::Encoders.find(typestr)) == Encode::Encoders.end() )
+		return AUDIO_UNK;
+
+	type = fIter->second;
+
+	return type;
 }
 
 
@@ -136,7 +151,8 @@ int main ( int argc, char **argv )
         }
     }
 
-    std::string inf, outf, etype, path;
+    std::string inf, outf, path;
+    encoding_t  enctype = AUDIO_UNK;
 
     if ( optind == argc && infile == NULL ) {
         std::cout << "No target defined." << std::endl;
@@ -161,6 +177,8 @@ int main ( int argc, char **argv )
     }
     // else set outfile?
 
+    Encode::InitEncoders();
+
     if ( infile != NULL ) {
         inf.assign(infile);
         ::free(infile);
@@ -170,7 +188,7 @@ int main ( int argc, char **argv )
         ::free(outfile);
     }
     if ( type != NULL ) {
-        etype.assign(type);
+    	enctype = setEncodingType(type);
         ::free(type);
     }
     if ( br != NULL ) {
@@ -178,11 +196,10 @@ int main ( int argc, char **argv )
         ::free(br);
     }
 
-    if ( etype.empty() && inf.empty() && ! decode ) {
+    if ( enctype < 2 && inf.empty() && ! decode ) {
         std::cout << "Error encoding type not provided or detected" << std::endl;
         usage();
     }
-
 
     if ( ! path.empty() )
     {
@@ -196,12 +213,18 @@ int main ( int argc, char **argv )
         FileList::iterator fIter;
 
         if ( ! decoder.decodePath(path, wavs) ) {
-        //if ( ! transam::TransFile::ReadFiles(path, files, notags) ) {
             std::cout << "Error reading files" << std::endl;
             return -1;
         }
 
-        //Decode::DecodeFiles(files, wavs, dryrun);
+        if ( ! decode )
+        {
+        	Encode encoder(enctype, rate);
+
+        	encoder.debug(verbose);
+        	encoder.dryrun(dryrun);
+
+        }
 
     }
     else

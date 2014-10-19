@@ -16,9 +16,16 @@ using namespace tcanetpp;
 namespace transam {
 
 
+
+EncoderMap Encode::Encoders = Encode::InitEncoders();
+
+
 Encode::Encode ( encoding_t type, int rate ) 
     : _type(type),
-      _bitrate(rate)
+      _bitrate(rate),
+	  _notags(false),
+	  _dryrun(false),
+	  _debug(false)
 {}
 
 Encode::~Encode() {}
