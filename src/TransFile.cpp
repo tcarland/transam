@@ -19,10 +19,10 @@ using namespace tcanetpp;
 namespace transam {
 
 
-TransFile::TransFile ( const std::string & filename, int type )
-    : _fileName(filename)
+TransFile::TransFile ( const std::string & filename, encoding_t type )
+    : _fileName(filename),
+      _type(type)
 {
-    _type = (encoding_t) type;
 }
 
 TransFile::~TransFile()
@@ -99,7 +99,7 @@ TransFile::ReadFiles ( const std::string & path, FileList & files, bool notag )
     struct dirent * dire;
     struct stat     fsb;
     std::string     name;
-    int             type;
+    encoding_t      type;
     TransFile *     file = NULL;
 
     if ( (dirp = ::opendir(path.c_str())) == NULL )
@@ -112,7 +112,7 @@ TransFile::ReadFiles ( const std::string & path, FileList & files, bool notag )
         if ( name.compare(".") == 0 || name.compare("..") == 0 )
             continue;
 
-        type = TransFile::GetEncoding(name);
+        type = (encoding_t) TransFile::GetEncoding(name);
         name = path + "/" + name;
 
         if ( ::stat(name.c_str(), &fsb) < 0 ) {

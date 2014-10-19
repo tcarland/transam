@@ -27,7 +27,7 @@ class TransFile {
 
   public:
 
-    TransFile ( const std::string & filename, int type );
+    TransFile ( const std::string & filename, encoding_t type );
     ~TransFile();
 
     bool          operator<     ( const TransFile & file ) const;
@@ -35,7 +35,9 @@ class TransFile {
 
     const
     std::string&  getFileName() const;
+
     encoding_t    getType() const;
+    encoding_t    type() const { return this->getType(); }
 
     bool          save();
     bool          readTags();

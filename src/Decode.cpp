@@ -24,11 +24,18 @@ Decode::Decode()
 
 Decode::~Decode() {}
 
+//-------------------------------------------------------------------------
 
 bool
 Decode::decode ( TransFile & tf, const std::string & outfile )
 {
-    std::string cmd  = this->getDecoderExec(tf.getFileName(), outfile, tf.getType());
+    if ( tf.type() == AUDIO_WAV )
+        return true;
+
+    std::string cmd;
+   
+    // send tf?
+    cmd = this->getDecoderExec(tf.getFileName(), outfile, tf.getType());
 
     if ( this->_dryrun )
     {
@@ -36,8 +43,8 @@ Decode::decode ( TransFile & tf, const std::string & outfile )
         return true;
     }
  
-    CmdBuffer    cmdbuf(cmd);
-    StringBuffer lines;
+    CmdBuffer     cmdbuf(cmd);
+    StringBuffer  lines;
     StringBuffer::iterator sIter;
 
     cmdbuf.getAllLines(lines);
@@ -51,19 +58,35 @@ Decode::decode ( TransFile & tf, const std::string & outfile )
     return true;
 }
 
+//-------------------------------------------------------------------------
 
 void
-Decode::setDryrun ( bool dryrun )
+Decode::dryrun ( bool dryrun )
 {
     _dryrun = dryrun;
 }
 
+bool
+Decode::dryrun() const
+{
+    return _dryrun;
+}
+
+//-------------------------------------------------------------------------
+
 void
-Decode::setDebug ( bool debug )
+Decode::debug ( bool debug )
 {
     _debug = debug;
 }
 
+bool
+Decode::debug() const
+{
+    return _debug;
+}
+
+//-------------------------------------------------------------------------
 
 bool
 Decode::DecodeFiles ( FileList & files, FileList & wavs )
@@ -89,6 +112,7 @@ Decode::DecodeFiles ( FileList & files, FileList & wavs )
     return true;
 }
 
+//-------------------------------------------------------------------------
 
 std::string
 Decode::GetOutputName ( const std::string & infile )
@@ -101,7 +125,7 @@ Decode::GetOutputName ( const std::string & infile )
 
     outf.append("wav");
 
-    std::cout << "Decode::OutputName() outfile set as " << outf << std::endl;
+    std::cout << "Decode::OutputName() outfile = " << outf << std::endl;
 
     return outf;
 }
@@ -120,27 +144,27 @@ Decode::getDecoderExec ( const std::string & infile,
             cmd = MP3_DECODER;
             cmd.append(MP3D_OPTS).append(outfile);
             cmd.append(" ").append(infile);
-            ;;
+            break;
         case AUDIO_MP4:
             cmd = MP4_DECODER;
             cmd.append(MP4_IF).append(infile);
             cmd.append(MP4_OF).append(outfile);
-            ;;
+            break;
         case AUDIO_FLAC:
             cmd = FLAC_DECODER;
             cmd.append(FLACD_OPTS).append(outfile);
             cmd.append(" ").append(infile);
-            ;;
+            break;
         case AUDIO_SHN:
             cmd = SHN_DECODER;
             cmd.append(SHN_OPTS).append(infile);
             cmd.append(" ").append(outfile);
-            ;;
+            break;
         case AUDIO_UNK:
         case AUDIO_WAV:
         default:
             std::cout << "Unsupported format" << std::endl;
-            ;;
+            break;
     }
 
     return cmd;

@@ -41,7 +41,8 @@ void version()
 
 void usage()
 {
-    printf("Usage: %s [-dEhnvV] [-t type] [-i infile] [-o outfile] <path>\n", Process);
+    printf("Usage: %s [-dEhnvV] [-t type] [-i infile] [-o outfile] <path>\n", Process);       
+    printf("     -b | --bitrate        :  bitrate for the encoding process (default is 384)\n");
     printf("     -d | --decode         :  decode only to a .wav file (default is to encode)\n");
     printf("     -i | --infile <file>  :  name of the file to transcode\n");
     printf("     -o | --outfile <file> :  name of the target output file\n");
@@ -66,11 +67,13 @@ int main ( int argc, char **argv )
     char *infile  = NULL;
     char *outfile = NULL;
     char *type    = NULL;
+    char *br      = NULL;
     bool verbose  = false;
     bool dryrun   = false;
     bool decode   = false;
     bool erase    = false;
     bool notags   = false;
+    int  bitrate  = TRANSAM_DEFAULT_BITRATE;
     int  optindx  = 0;
     int  cd       = 0;
 
@@ -92,6 +95,9 @@ int main ( int argc, char **argv )
     while ( (optChar = ::getopt_long(argc, argv, "dEhi:o:nt:vV", l_opts, &optindx)) != EOF ) 
     {
         switch ( optChar ) {
+            case 'b':
+              br = strdup(optarg);
+              break;
             case 'd':
               decode = true;
               break;
