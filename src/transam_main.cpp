@@ -28,7 +28,7 @@ using namespace transam;
 static
 const char Process[] = "transam";
 static
-const char Version[] = "0.1.1";
+const char Version[] = "0.1.2";
 
 
 

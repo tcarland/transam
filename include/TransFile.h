@@ -6,11 +6,11 @@
 #define _TRANSAM_TRANSFILE_H_
 
 #include <list>
-#include <string>
 
 // taglib
 #include "fileref.h"
 #include "tpropertymap.h"
+
 
 #include "transam.h"
 

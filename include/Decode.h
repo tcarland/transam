@@ -6,8 +6,8 @@
 #ifndef _TRANSAM_DECODE_H_
 #define _TRANSAM_DECODE_H_
 
+#include "transam.h"
 #include "TransFile.h"
-
 
 
 namespace transam {
@@ -22,20 +22,19 @@ class Decode {
     ~Decode();
 
 
-    bool   decode    ( TransFile & tf, const std::string & outfile );
+    bool        decode         ( TransFile & tf, const std::string & outfile );
 
+    void        setDryrun      ( bool dryrun );
+    void        setDebug       ( bool debug );
 
-    void   setDryrun ( bool dryrun );
-    void   setDebug  ( bool debug );
+    std::string getDecoderExec ( const std::string & infile,
+                                 const std::string & outfile,
+                                 encoding_t          type );
 
   public:
 
     static bool        DecodeFiles    ( FileList & files, FileList & wavs );
-
     static std::string GetOutputName  ( const std::string & infile );
-    static std::string GetDecoderExec ( const std::string & infile,
-                                        const std::string & outfile,
-                                        encoding_t          type );
   
   private:
 

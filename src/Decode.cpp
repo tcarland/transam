@@ -28,8 +28,7 @@ Decode::~Decode() {}
 bool
 Decode::decode ( TransFile & tf, const std::string & outfile )
 {
-    encoding_t  type = tf.getType();
-    std::string cmd  = Decode::GetDecoderExec(tf.getFileName(), outfile, type);
+    std::string cmd  = this->getDecoderExec(tf.getFileName(), outfile, tf.getType());
 
     if ( this->_dryrun )
     {
@@ -109,8 +108,9 @@ Decode::GetOutputName ( const std::string & infile )
 
 
 std::string
-Decode::GetDecoderExec ( const std::string & infile, const std::string & outfile,
-                         encoding_t  type )
+Decode::getDecoderExec ( const std::string & infile, 
+                         const std::string & outfile,
+                         encoding_t          type )
 {
     std::string  cmd;
 
@@ -123,8 +123,8 @@ Decode::GetDecoderExec ( const std::string & infile, const std::string & outfile
             ;;
         case AUDIO_MP4:
             cmd = MP4_DECODER;
-            cmd.append(MP4D_IF).append(infile);
-            cmd.append(MP4D_OF).append(outfile);
+            cmd.append(MP4_IF).append(infile);
+            cmd.append(MP4_OF).append(outfile);
             ;;
         case AUDIO_FLAC:
             cmd = FLAC_DECODER;
