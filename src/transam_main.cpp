@@ -33,7 +33,8 @@ using namespace tcanetpp;
 static
 const char Process[] = "transam";
 static
-const char Version[] = "0.1.2";
+const char Version[] = "0.1.3";
+
 
 
 
@@ -55,7 +56,7 @@ void usage()
     printf("     -n | --dryrun         :  enable the 'dryrun' option, no changes are made\n");
     printf("     -t | --type  <name>   :  The encoding type by extension (if applicable)\n");
     printf("     -T | --notags         :  Disable converting metadata tags to new format\n");
-    printf("     -W | --overwrite      :  Allow the overwriting of files that already exit\n");
+    printf("     -W | --clobber        :  Allow the overwriting of files that already exit\n");
     printf("     -v | --verbose        :  enable verbose output\n");
     printf("     -V | --version        :  display version info and exit\n");
     exit(0);
@@ -69,16 +70,16 @@ void sigHandler ( int signal )
 
 encoding_t setEncodingType ( const std::string & typestr )
 {
-	encoding_t type;
+    encoding_t type;
 
-	EncoderMap::iterator fIter;
+    EncoderMap::iterator fIter;
 
-	if ( (fIter = Encode::Encoders.find(typestr)) == Encode::Encoders.end() )
-		return AUDIO_UNK;
+    if ( (fIter = Encode::Encoders.find(typestr)) == Encode::Encoders.end() )
+        return AUDIO_UNK;
 
-	type = fIter->second;
+    type = fIter->second;
 
-	return type;
+    return type;
 }
 
 
@@ -96,14 +97,13 @@ int main ( int argc, char **argv )
     bool notags   = false;
     bool clobber  = false;
     int  optindx  = 0;
-    int  cd       = 0;
 
     uint16_t rate = TRANSAM_DEFAULT_BITRATE;
 
     static struct option l_opts[] = { {"bitrate", required_argument, 0, 'b'},
                                       {"decode",  no_argument, 0, 'd'},
                                       {"dryrun",  no_argument, 0, 'n'},
-									  {"erase",   no_argument, 0, 'E'},
+                                      {"erase",   no_argument, 0, 'E'},
                                       {"help",    no_argument, 0, 'h'},
                                       {"infile",  required_argument, 0, 'i'},
                                       {"outfile", required_argument, 0, 'o'},
@@ -111,12 +111,12 @@ int main ( int argc, char **argv )
                                       {"notags",  no_argument, 0, 'T'},
                                       {"verbose", no_argument, 0, 'v'},
                                       {"version", no_argument, 0, 'V'},
-                                      {"overwrite", no_argument, 0, 'W'},
+                                      {"clobber", no_argument, 0, 'W'},
                                       {0,0,0,0}
                                     };
 
 
-    while ( (optChar = ::getopt_long(argc, argv, "dEhi:o:nt:vV", l_opts, &optindx)) != EOF ) 
+    while ( (optChar = ::getopt_long(argc, argv, "dEhi:o:nt:vVW", l_opts, &optindx)) != EOF ) 
     {
         switch ( optChar ) {
             case 'b':
@@ -153,8 +153,8 @@ int main ( int argc, char **argv )
               version();
               break;
             case 'W':
-            	clobber = true;
-            	break;
+                clobber = true;
+                break;
             default:
               // path
               break;
@@ -162,6 +162,7 @@ int main ( int argc, char **argv )
     }
 
     std::string inf, outf, path;
+
     encoding_t  enctype = AUDIO_UNK;
 
     if ( optind == argc && infile == NULL ) {
@@ -171,20 +172,6 @@ int main ( int argc, char **argv )
         path = argv[optind];
         if ( path.empty() )
             usage();
-/*
-        cd   = ::chdir(path.c_str());
-        if ( cd < 0 ) 
-        {
-            if ( errno == EACCES ) {
-                std::cout << "No permission for " << path << std::endl;
-                return -1;
-            } else {
-                std::cout << "Error with target: " << path << ": "
-                    << std::string(strerror(errno)) << std::endl;
-                return -1;
-            }
-        }
-*/
     }
     // else set outfile?
 
@@ -199,7 +186,7 @@ int main ( int argc, char **argv )
         ::free(outfile);
     }
     if ( type != NULL ) {
-    	enctype = setEncodingType(type);
+        enctype = setEncodingType(type);
         ::free(type);
     }
     if ( br != NULL ) {
@@ -214,35 +201,40 @@ int main ( int argc, char **argv )
 
     if ( ! path.empty() )
     {
-        Decode  decoder;
+        Decode    decoder;
+        FileList  wavs;
+        FileList::iterator fIter;
 
         decoder.debug(verbose);
         decoder.dryrun(dryrun);
         decoder.notags(notags);
         decoder.clobber(clobber);
 
-        FileList   wavs;
-        FileList::iterator fIter;
-
         if ( ! decoder.decodePath(path, wavs) ) {
-            std::cout << "Error reading files" << std::endl;
+            std::cout << "Error decoding files" << std::endl;
             return -1;
         }
-
+        
+        // if not decode only
         if ( ! decode )
         {
-        	Encode encoder(enctype, rate);
+            Encode  encoder(enctype, rate);
 
-        	encoder.debug(verbose);
-        	encoder.dryrun(dryrun);
+            encoder.debug(verbose);
+            encoder.dryrun(dryrun);
+            encoder.clobber(clobber);
+            encoder.erase(erase);
 
+            if ( ! encoder.encodeFiles(wavs) ) {
+                std::cout << "Error encoding files" << std::endl;
+                return -1;
+            }
         }
-
     }
     else
     {
-    }
 
+    }
 
     std::cout << "Finished." << std::endl;
 

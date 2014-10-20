@@ -28,6 +28,7 @@ class Encode {
 
     bool         encode    ( TransFile         & tf, 
                              const std::string & outfile );
+    bool         encodeFiles ( FileList & files );
 
 
     void         bitrate   ( int bitrate );
@@ -50,14 +51,14 @@ class Encode {
                                   const std::string & outfile );
  
 
-    static bool  EncodeFiles    ( FileList & files, encoding_t type, int rate );
-
-    static std::string GetOutputName ( TransFile & tf );
+    static std::string GetOutputName ( TransFile & tf, encoding_t type );
+    static std::string GetExtension  ( encoding_t  type );
 
 
   public:
 
     static EncoderMap  Encoders;
+
     static EncoderMap  InitEncoders()
     {
     	EncoderMap   emap;

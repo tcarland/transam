@@ -20,7 +20,7 @@ namespace transam {
 Decode::Decode() 
     : _notags(false),
       _dryrun(false),
-	  _clobber(false),
+      _clobber(false),
       _debug(false)
 {}
 
@@ -32,9 +32,6 @@ Decode::~Decode() {}
 bool
 Decode::decode ( TransFile & tf, const std::string & outfile )
 {
-    if ( tf.type() == AUDIO_WAV )
-        return true;
-
     std::string cmd;
    
     // send tf?
@@ -106,7 +103,7 @@ Decode::notags ( bool notags )
 bool
 Decode::notags() const
 {
-	return _notags;
+    return _notags;
 }
 
 //-------------------------------------------------------------------------
@@ -114,13 +111,13 @@ Decode::notags() const
 void
 Decode::clobber ( bool clobber )
 {
-	_clobber = clobber;
+    _clobber = clobber;
 }
 
 bool
 Decode::clobber() const
 {
-	return _clobber;
+    return _clobber;
 }
 
 //-------------------------------------------------------------------------
@@ -132,7 +129,7 @@ Decode::decodePath ( const std::string & path, FileList & wavs )
     FileList::iterator  fIter;
 
     if ( ! TransFile::ReadFiles(path, files, _notags) ) {
-    	std::cout << "Reading files from path '" << path
+        std::cout << "Reading files from path '" << path
             << "' failed." << std::endl;
         return false;
     }
@@ -142,19 +139,32 @@ Decode::decodePath ( const std::string & path, FileList & wavs )
         TransFile * tf      = (TransFile*) *fIter;
         std::string outfile = Decode::GetOutputName(tf->getFileName());
 
-        if ( outfile.empty() ) {
-            std::cout << "Error generating output filename" << std::endl;
-            return false;
-        }
-
-        if ( FileUtils::IsReadable(outfile) ) {
-        	std::cout << "Decode::decodePath() output file exists!";
-        	continue;
-        }
-
-        if ( this->decode(*tf, outfile) )
+        if ( tf->type() < AUDIO_MP3 ) 
+        {
+            std::cout << "DecodePath() input file is already a wav/pcm file." << std::endl;
             wavs.push_back(new TransFile(outfile, AUDIO_WAV));
+        }
+        else 
+        {
+            if ( outfile.empty() ) {
+                std::cout << "Error generating output filename" << std::endl;
+                return false;
+            }
+            if ( FileUtils::IsReadable(outfile) && ! this->clobber() ) {
+                std::cout << "Decode::decodePath() output file exists! " 
+                    << " Set --clobber option to overwrite" << std::endl;
+            } else if ( this->decode(*tf, outfile) ) {
+                wavs.push_back(new TransFile(outfile, AUDIO_WAV));
+            }
+        }
+
+        delete tf;
     }
+
+    if ( this->_debug )
+        std::cout << "Decoding finished.\n" << std::endl;
+
+    files.clear();
 
     return true;
 }
@@ -172,8 +182,8 @@ Decode::GetOutputName ( const std::string & infile )
 
     outf.append(".wav");
 
-    std::cout << "Decode::GetOutputName() infile = " << infile
-              << " outfile = " << outf << std::endl;
+    //std::cout << "Decode::GetOutputName() in=" << infile
+              //<< " out=" << outf << std::endl;
 
     return outf;
 }

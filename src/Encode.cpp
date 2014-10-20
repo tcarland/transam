@@ -23,11 +23,11 @@ EncoderMap Encode::Encoders = Encode::InitEncoders();
 Encode::Encode ( encoding_t type, int rate ) 
     : _type(type),
       _bitrate(rate),
-	  _notags(false),
-	  _dryrun(false),
-	  _erase(false),
-	  _clobber(false),
-	  _debug(false)
+      _notags(false),
+      _dryrun(false),
+      _erase(false),
+      _clobber(false),
+      _debug(false)
 {}
 
 Encode::~Encode() {}
@@ -47,8 +47,11 @@ Encode:: encode ( TransFile & tf, const std::string & outfile )
 
     cmd = this->getEncoderExec(tf.getFileName(), outfile);
 
-    if ( this->dryrun() )
-    {
+    if ( cmd.empty() ) {
+        std::cout << "Encode() Error determining Encoder." << std::endl;
+        return false;
+    }
+    if ( this->dryrun() ) {
         std::cout << "exec: '" << cmd << "'" << std::endl;
         return true;
     }
@@ -67,6 +70,32 @@ Encode:: encode ( TransFile & tf, const std::string & outfile )
 
     return true;
 }
+
+
+bool
+Encode::encodeFiles ( FileList & files )
+{
+    FileList::iterator fIter;
+
+    for ( fIter = files.begin(); fIter != files.end(); ++fIter )
+    {
+        TransFile  * tf      = (TransFile*) *fIter;
+        std::string  outfile = Encode::GetOutputName(*tf, _type);
+
+        if ( outfile.empty() ) {
+            std::cout << "Error generating output filename" << std::endl;
+            return false;
+        }
+
+        if ( this->encode(*tf, outfile) )
+            std::cout << "Encoded to " << outfile << std::endl;
+        else
+            return false;
+    }
+
+    return true;
+}
+
 
 
 int
@@ -97,25 +126,25 @@ Encode::dryrun() const
 void
 Encode::clobber ( bool clobber )
 {
-	_clobber = clobber;
+    _clobber = clobber;
 }
 
 bool
 Encode::clobber() const
 {
-	return _clobber;
+    return _clobber;
 }
 
 void
 Encode::erase ( bool erase )
 {
-	_erase = erase;
+    _erase = erase;
 }
 
 bool
 Encode::erase() const
 {
-	return _erase;
+    return _erase;
 }
 
 void
@@ -130,48 +159,44 @@ Encode::debug() const
     return _debug;
 }
 
-bool
-Encode::EncodeFiles ( FileList & files, encoding_t type, int rate )
-{
-    Encode  encoder(type, rate);
-
-    FileList::iterator fIter;
-
-    for ( fIter = files.begin(); fIter != files.end(); ++fIter )
-    {
-        TransFile  * tf      = (TransFile*) *fIter;
-        std::string  outfile = Encode::GetOutputName(*tf);
-
-        if ( outfile.empty() ) {
-            std::cout << "Error generating output filename" << std::endl;
-            return false;
-        }
-
-        if ( encoder.encode(*tf, outfile) )
-            std::cout << "Encoded to " << outfile << std::endl;
-        else
-            return false;
-    }
-
-    return true;
-}
-
-
 std::string
-Encode::GetOutputName ( TransFile & tf )
+Encode::GetOutputName ( TransFile & tf, encoding_t type )
 {
     std::string outf, ext;
     int         indx;
 
     indx = StringUtils::lastIndexOf(tf.getFileName(), ".");
     outf = tf.getFileName().substr(0, indx);
+    ext  = Encode::GetExtension(type);
+    outf.append(ext);
 
-    // set extension
-    // outf.append(ext);
-
-    std::cout << "Encode::GetOutputName() outfile = " << outf << std::endl;
+    //std::cout << "Encode::GetOutputName() out=" << outf << std::endl;
 
     return outf;
+}
+
+std::string
+Encode::GetExtension ( encoding_t type )
+{
+    std::string  ext = ".unk";
+    switch ( type ) {
+        case AUDIO_MP3:
+            ext = ".mp3";
+            break;
+        case AUDIO_MP4:
+            ext = ".mp4";
+            break;
+        case AUDIO_FLAC:
+            ext = ".flac";
+            break;
+        case AUDIO_OGG:
+            ext = ".ogg";
+            break;
+        default:
+            break;
+    }
+
+    return ext;
 }
 
 

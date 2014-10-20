@@ -3,12 +3,14 @@
 
 #include <inttypes.h>
 #include <string>
+#include <map>
 
 
 namespace transam {
 
 
 #define TRANSAM_DEFAULT_BITRATE 384
+
 
 
 typedef enum encoding_types {

@@ -103,7 +103,7 @@ TransFile::ReadFiles ( const std::string & path, FileList & files, bool notag )
     TransFile *     file = NULL;
 
     if ( (dirp = ::opendir(path.c_str())) == NULL ) {
-    	std::cout << "TransFile::ReadFiles failed to read directory."
+        std::cout << "TransFile::ReadFiles failed to read directory."
             << std::endl;
         return false;
     }
