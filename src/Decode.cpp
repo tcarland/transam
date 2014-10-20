@@ -151,8 +151,8 @@ Decode::decodePath ( const std::string & path, FileList & wavs )
                 return false;
             }
             if ( FileUtils::IsReadable(outfile) && ! this->clobber() ) {
-                std::cout << "Decode::decodePath() output file exists! " 
-                    << " Set --clobber option to overwrite" << std::endl;
+                std::cout << "Decode::decodePath() output file exists: " << outfile 
+                    << std::endl << "    Set --clobber option to overwrite" << std::endl;
             } else if ( this->decode(*tf, outfile) ) {
                 wavs.push_back(new TransFile(outfile, AUDIO_WAV));
             }
