@@ -6,6 +6,8 @@
 #ifndef _TRANSAM_ENCODE_CPP_
 #define _TRANSAM_ENCODE_CPP_
 
+#include <unistd.h>
+
 #include "Encode.h"
 
 #include "CmdBuffer.h"
@@ -87,9 +89,11 @@ Encode::encodeFiles ( FileList & files )
             return false;
         }
 
-        if ( this->encode(*tf, outfile) )
+        if ( this->encode(*tf, outfile) ) {
             std::cout << "Encoded to " << outfile << std::endl;
-        else
+            if ( this->erase() && ! this->dryrun() )
+                ::unlink(tf->getFileName().c_str());
+        } else
             return false;
     }
 
