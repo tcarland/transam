@@ -45,14 +45,17 @@ void version()
 
 void usage()
 {
-    printf("Usage: %s [-dEhnvV] [-t type] [-i infile] [-o outfile] <path>\n", Process);       
+    printf("Usage: %s [-dEhnvVW] [-t type] [-i infile] [-o outfile] <path>\n", Process);
     printf("     -b | --bitrate        :  bitrate for the encoding process (default is 384)\n");
     printf("     -d | --decode         :  decode only to a .wav file (default is to encode)\n");
+    printf("     -E | --erase          :  erase wav files after decoding\n");
+    printf("     -h | --help           :  display help information and exit");
     printf("     -i | --infile <file>  :  name of the file to transcode\n");
     printf("     -o | --outfile <file> :  name of the target output file\n");
     printf("     -n | --dryrun         :  enable the 'dryrun' option, no changes are made\n");
     printf("     -t | --type  <name>   :  The encoding type by extension (if applicable)\n");
     printf("     -T | --notags         :  Disable converting metadata tags to new format\n");
+    printf("     -W | --overwrite      :  Allow the overwriting of files that already exit\n");
     printf("     -v | --verbose        :  enable verbose output\n");
     printf("     -V | --version        :  display version info and exit\n");
     exit(0);
@@ -91,6 +94,7 @@ int main ( int argc, char **argv )
     bool decode   = false;
     bool erase    = false;
     bool notags   = false;
+    bool clobber  = false;
     int  optindx  = 0;
     int  cd       = 0;
 
@@ -99,12 +103,15 @@ int main ( int argc, char **argv )
     static struct option l_opts[] = { {"bitrate", required_argument, 0, 'b'},
                                       {"decode",  no_argument, 0, 'd'},
                                       {"dryrun",  no_argument, 0, 'n'},
+									  {"erase",   no_argument, 0, 'E'},
+                                      {"help",    no_argument, 0, 'h'},
                                       {"infile",  required_argument, 0, 'i'},
                                       {"outfile", required_argument, 0, 'o'},
                                       {"type",    required_argument, 0, 't'},
                                       {"notags",  no_argument, 0, 'T'},
                                       {"verbose", no_argument, 0, 'v'},
                                       {"version", no_argument, 0, 'V'},
+                                      {"overwrite", no_argument, 0, 'W'},
                                       {0,0,0,0}
                                     };
 
@@ -145,6 +152,9 @@ int main ( int argc, char **argv )
             case 'V':
               version();
               break;
+            case 'W':
+            	clobber = true;
+            	break;
             default:
               // path
               break;
@@ -161,8 +171,8 @@ int main ( int argc, char **argv )
         path = argv[optind];
         if ( path.empty() )
             usage();
+/*
         cd   = ::chdir(path.c_str());
-
         if ( cd < 0 ) 
         {
             if ( errno == EACCES ) {
@@ -174,6 +184,7 @@ int main ( int argc, char **argv )
                 return -1;
             }
         }
+*/
     }
     // else set outfile?
 
@@ -208,6 +219,7 @@ int main ( int argc, char **argv )
         decoder.debug(verbose);
         decoder.dryrun(dryrun);
         decoder.notags(notags);
+        decoder.clobber(clobber);
 
         FileList   wavs;
         FileList::iterator fIter;

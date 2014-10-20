@@ -26,13 +26,17 @@ class Decode {
     bool        decodePath ( const std::string & path, FileList & wavs );
 
 
-    void        notags     ( bool notags );
-    void        dryrun     ( bool dryrun );
-    void        debug      ( bool debug );
+    void        notags  ( bool notags );
+    bool        notags() const;
 
+    void        dryrun  ( bool dryrun );
     bool        dryrun() const;
-    bool        debug() const;
 
+    void		clobber ( bool clobber );
+    bool        clobber() const;
+
+    void        debug   ( bool debug );
+    bool        debug() const;
 
     std::string getDecoder ( const std::string & infile,
                              const std::string & outfile,
@@ -47,6 +51,7 @@ class Decode {
 
     bool        _notags;
     bool        _dryrun;
+    bool        _clobber;
     bool        _debug;
     
 };

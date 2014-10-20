@@ -9,6 +9,7 @@
 #include "Decode.h"
 
 #include "StringUtils.h"
+#include "FileUtils.h"
 #include "CmdBuffer.h"
 using namespace tcanetpp;
 
@@ -19,6 +20,7 @@ namespace transam {
 Decode::Decode() 
     : _notags(false),
       _dryrun(false),
+	  _clobber(false),
       _debug(false)
 {}
 
@@ -101,6 +103,26 @@ Decode::notags ( bool notags )
     _notags = notags;
 }
 
+bool
+Decode::notags() const
+{
+	return _notags;
+}
+
+//-------------------------------------------------------------------------
+
+void
+Decode::clobber ( bool clobber )
+{
+	_clobber = clobber;
+}
+
+bool
+Decode::clobber() const
+{
+	return _clobber;
+}
+
 //-------------------------------------------------------------------------
 
 bool
@@ -109,8 +131,11 @@ Decode::decodePath ( const std::string & path, FileList & wavs )
     FileList  files;
     FileList::iterator  fIter;
 
-    if ( ! TransFile::ReadFiles(path, files, _notags) )
+    if ( ! TransFile::ReadFiles(path, files, _notags) ) {
+    	std::cout << "Reading files from path '" << path
+            << "' failed." << std::endl;
         return false;
+    }
     
     for ( fIter = files.begin(); fIter != files.end(); ++fIter )
     {
@@ -120,6 +145,11 @@ Decode::decodePath ( const std::string & path, FileList & wavs )
         if ( outfile.empty() ) {
             std::cout << "Error generating output filename" << std::endl;
             return false;
+        }
+
+        if ( FileUtils::IsReadable(outfile) ) {
+        	std::cout << "Decode::decodePath() output file exists!";
+        	continue;
         }
 
         if ( this->decode(*tf, outfile) )
@@ -140,7 +170,7 @@ Decode::GetOutputName ( const std::string & infile )
     indx = StringUtils::lastIndexOf(infile, ".");
     outf = infile.substr(0, indx);
 
-    outf.append("wav");
+    outf.append(".wav");
 
     std::cout << "Decode::GetOutputName() infile = " << infile
               << " outfile = " << outf << std::endl;

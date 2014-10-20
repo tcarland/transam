@@ -33,8 +33,14 @@ class Encode {
     void         bitrate   ( int bitrate );
     int          bitrate() const;
 
+    void         clobber   ( bool clobber );
+    bool         clobber() const;
+
     void         dryrun    ( bool dryrun );
     bool         dryrun() const;
+
+    void         erase     ( bool erase );
+    bool         erase() const;
 
     void         debug     ( bool debug );
     bool         debug() const;
@@ -47,6 +53,7 @@ class Encode {
     static bool  EncodeFiles    ( FileList & files, encoding_t type, int rate );
 
     static std::string GetOutputName ( TransFile & tf );
+
 
   public:
 
@@ -68,6 +75,8 @@ class Encode {
     int         _bitrate;
     bool        _notags;
     bool        _dryrun;
+    bool        _erase;
+    bool        _clobber;
     bool        _debug;
 };
 

@@ -25,6 +25,8 @@ Encode::Encode ( encoding_t type, int rate )
       _bitrate(rate),
 	  _notags(false),
 	  _dryrun(false),
+	  _erase(false),
+	  _clobber(false),
 	  _debug(false)
 {}
 
@@ -92,6 +94,29 @@ Encode::dryrun() const
     return _dryrun;
 }
 
+void
+Encode::clobber ( bool clobber )
+{
+	_clobber = clobber;
+}
+
+bool
+Encode::clobber() const
+{
+	return _clobber;
+}
+
+void
+Encode::erase ( bool erase )
+{
+	_erase = erase;
+}
+
+bool
+Encode::erase() const
+{
+	return _erase;
+}
 
 void
 Encode::debug ( bool debug )
