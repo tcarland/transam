@@ -1,6 +1,8 @@
 /**
-  * @file src/Decode.cpp 
-  * @author tcarland@gmail.com
+  *   @file   Decode.cpp 
+  *   @author tcarland@gmail.com
+  *
+  *   Copyright (c) 2011 Timothy Charlton Arland <tcarland@gmail.com>
   * 
  **/
 #ifndef _TRANSAM_DECODE_CPP_
@@ -25,7 +27,8 @@ Decode::Decode()
 {}
 
 
-Decode::~Decode() {}
+Decode::~Decode()
+{}
 
 //-------------------------------------------------------------------------
 

@@ -1,6 +1,8 @@
 /**
-  * @file include/Decode.h 
-  * @author tcarland@gmail.com
+  *   @file   Decode.h 
+  *   @author tcarland@gmail.com
+  *
+  *   Copyright (c) 2011 Timothy Charlton Arland <tcarland@gmail.com>
   * 
  **/
 #ifndef _TRANSAM_DECODE_H_
@@ -11,7 +13,6 @@
 
 
 namespace transam {
-
 
 
 class Decode {
@@ -25,17 +26,14 @@ class Decode {
     bool        decode     ( TransFile & tf, const std::string & outfile );
     bool        decodePath ( const std::string & path, FileList & wavs );
 
+    void        notags     ( bool notags );
+    void        dryrun     ( bool dryrun );
+    void        clobber    ( bool clobber );
+    void        debug      ( bool debug );
 
-    void        notags  ( bool notags );
     bool        notags() const;
-
-    void        dryrun  ( bool dryrun );
     bool        dryrun() const;
-
-    void		clobber ( bool clobber );
     bool        clobber() const;
-
-    void        debug   ( bool debug );
     bool        debug() const;
 
     std::string getDecoder ( const std::string & infile,

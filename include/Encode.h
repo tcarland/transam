@@ -1,6 +1,8 @@
 /**
-  * @file include/Encode.h 
-  * @author tcarland@gmail.com
+  *   @file   Encode.h 
+  *   @author tcarland@gmail.com
+  *
+  *   Copyright (c) 2011 Timothy Charlton Arland <tcarland@gmail.com>
   * 
  **/
 #ifndef _TRANSAM_ENCODE_H_
@@ -26,8 +28,8 @@ class Encode {
     ~Encode();
 
 
-    bool         encode    ( TransFile         & tf, 
-                             const std::string & outfile );
+    bool         encode      ( TransFile         & tf, 
+                               const std::string & outfile );
     bool         encodeFiles ( FileList & files );
 
 
@@ -49,7 +51,8 @@ class Encode {
 
     std::string  getEncoderExec ( const std::string & infile,
                                   const std::string & outfile );
- 
+
+  public:
 
     static std::string GetOutputName ( TransFile & tf, encoding_t type );
     static std::string GetExtension  ( encoding_t  type );

@@ -1,5 +1,8 @@
 /** 
-  *   @file TransFile.h
+  *   @file   TransFile.h
+  *   @author tcarland@gmail.com
+  *
+  *   Copyright (c) 2011 Timothy Charlton Arland <tcarland@gmail.com>
   *
  **/
 #ifndef _TRANSAM_TRANSFILE_H_

@@ -1,6 +1,8 @@
 /**
-  * @file src/Encode.cpp 
-  * @author 
+  *   @file   Encode.cpp 
+  *   @author tcarland@gmail.com
+  *
+  *   Copyright (c) 2011 Timothy Charlton Arland <tcarland@gmail.com>
   * 
  **/
 #ifndef _TRANSAM_ENCODE_CPP_
@@ -101,7 +103,6 @@ Encode::encodeFiles ( FileList & files )
 }
 
 
-
 int
 Encode::bitrate() const
 {
@@ -127,6 +128,7 @@ Encode::dryrun() const
     return _dryrun;
 }
 
+
 void
 Encode::clobber ( bool clobber )
 {
@@ -138,6 +140,7 @@ Encode::clobber() const
 {
     return _clobber;
 }
+
 
 void
 Encode::erase ( bool erase )
@@ -151,6 +154,7 @@ Encode::erase() const
     return _erase;
 }
 
+
 void
 Encode::debug ( bool debug )
 {
@@ -162,6 +166,7 @@ Encode::debug() const
 {
     return _debug;
 }
+
 
 std::string
 Encode::GetOutputName ( TransFile & tf, encoding_t type )
@@ -179,10 +184,12 @@ Encode::GetOutputName ( TransFile & tf, encoding_t type )
     return outf;
 }
 
+
 std::string
 Encode::GetExtension ( encoding_t type )
 {
     std::string  ext = ".unk";
+
     switch ( type ) {
         case AUDIO_MP3:
             ext = ".mp3";

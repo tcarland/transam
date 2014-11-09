@@ -1,7 +1,8 @@
 /**
-  *   @file TransFile.cpp
+  *   @file   TransFile.cpp
   *   @author tcarland@gmail.com
-  *   Copyright (c) 2011 Timothy Charlton Arland
+  *
+  *   Copyright (c) 2011 Timothy Charlton Arland <tcarland@gmail.com>
   *
  **/
 #define _TRANSAM_TRANSFILE_CPP_
