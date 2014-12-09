@@ -50,7 +50,7 @@ void usage()
     printf("     -b | --bitrate        :  bitrate for the encoding process (default is 384)\n");
     printf("     -d | --decode         :  decode only to a .wav file (default is to encode)\n");
     printf("     -E | --erase          :  erase wav files after decoding\n");
-    printf("     -h | --help           :  display help information and exit");
+    printf("     -h | --help           :  display help information and exit\n");
     printf("     -i | --infile <file>  :  name of the file to transcode\n");
     printf("     -o | --outfile <file> :  name of the target output file\n");
     printf("     -n | --dryrun         :  enable the 'dryrun' option, no changes are made\n");
@@ -195,15 +195,15 @@ int main ( int argc, char **argv )
     }
 
     if ( enctype < 2 && inf.empty() && ! decode ) {
-        std::cout << "Error encoding type not provided or detected" << std::endl;
+        std::cout << "Error! Encoding type not provided or detected." << std::endl;
         usage();
     }
 
     if ( ! path.empty() )
     {
-        Decode    decoder;
-        FileList  wavs, outfiles;
-        FileList::iterator fIter;
+        Decode         decoder;
+        TransFileList  wavs, outfiles;
+        TransFileList::iterator fIter;
 
         decoder.debug(verbose);
         decoder.dryrun(dryrun);

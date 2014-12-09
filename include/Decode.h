@@ -25,7 +25,7 @@ class Decode {
 
     bool        decode     ( const TransFile   & infile,
     						 TransFile         & outfile );
-    bool        decodePath ( FileList          & wavs,
+    bool        decodePath ( TransFileList     & wavs,
     						 const std::string & path );
 
     void        notags     ( bool notags );

@@ -103,7 +103,7 @@ TransFile::readTags()
 
 
 bool
-TransFile::ReadFiles ( const std::string & path, FileList & files, bool notag )
+TransFile::ReadFiles ( const std::string & path, TransFileList & files, bool notag )
 {
     DIR*            dirp;
     struct dirent * dire;

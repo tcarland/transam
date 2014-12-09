@@ -73,10 +73,10 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
 //-------------------------------------------------------------------------
 
 bool
-Decode::decodePath ( FileList & wavs, const std::string & path )
+Decode::decodePath ( TransFileList & wavs, const std::string & path )
 {
-    FileList  files;
-    FileList::iterator  fIter;
+    TransFileList  files;
+    TransFileList::iterator  fIter;
 
     if ( ! TransFile::ReadFiles(path, files, _notags) ) {
         std::cout << "Reading files from path '" << path

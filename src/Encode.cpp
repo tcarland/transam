@@ -84,9 +84,9 @@ Encode:: encode ( TransFile & infile, TransFile & outfile )
 //-------------------------------------------------------------------------
 
 bool
-Encode::encodeFiles ( FileList & infiles, FileList & outfiles  )
+Encode::encodeFiles ( TransFileList & infiles, TransFileList & outfiles  )
 {
-    FileList::iterator fIter;
+    TransFileList::iterator fIter;
 
     for ( fIter = infiles.begin(); fIter != infiles.end(); ++fIter )
     {
