@@ -33,15 +33,15 @@ Decode::~Decode()
 //-------------------------------------------------------------------------
 
 bool
-Decode::decode ( TransFile & tf, const std::string & outfile )
+Decode::decode ( const TransFile & infile, TransFile & outfile )
 {
     std::string cmd;
    
     // send tf?
-    cmd = this->getDecoder(tf.getFileName(), outfile, tf.getType());
+    cmd = this->getDecoder(infile, outfile.getFileName());
 
     if ( cmd.empty() ) {
-        std::cout << "Decoder has no exec for '" << tf.getFileName() 
+        std::cout << "Decoder has no exec for '" << infile.getFileName()
             << "'" << std::endl;
         return false;
     }
@@ -63,6 +63,63 @@ Decode::decode ( TransFile & tf, const std::string & outfile )
 
     for ( sIter = lines.begin(); sIter != lines.end(); ++sIter )
         std::cout << " '" << *sIter << std::endl;
+
+    if ( ! this->notags() )
+        outfile.setTags(infile.getTags());
+
+    return true;
+}
+
+//-------------------------------------------------------------------------
+
+bool
+Decode::decodePath ( FileList & wavs, const std::string & path )
+{
+    FileList  files;
+    FileList::iterator  fIter;
+
+    if ( ! TransFile::ReadFiles(path, files, _notags) ) {
+        std::cout << "Reading files from path '" << path
+            << "' failed." << std::endl;
+        return false;
+    }
+    
+    for ( fIter = files.begin(); fIter != files.end(); ++fIter )
+    {
+        TransFile & tf      = (TransFile&) *fIter;
+        std::string outfile = Decode::GetOutputName(tf.getFileName());
+
+        if ( tf.type() < AUDIO_MP3 )
+        {
+            std::cout << "DecodePath() input file is already a wav/pcm file." << std::endl;
+            wavs.push_back(TransFile(outfile, AUDIO_WAV));
+        }
+        else 
+        {
+        	if ( ! this->notags() ) {
+        		if ( ! tf.readTags() )
+        			std::cout << "Error reading metadata tags" << std::endl;
+			}
+
+            if ( outfile.empty() ) {
+                std::cout << "Error generating output filename" << std::endl;
+                return false;
+            }
+            if ( FileUtils::IsReadable(outfile) && ! this->clobber() ) {
+                std::cout << "Decode::decodePath() output file exists: " << outfile 
+                    << std::endl << "    Set --clobber option to overwrite" << std::endl;
+            } else {
+            	TransFile outtf(outfile, AUDIO_WAV);
+            	if ( this->decode(tf, outtf) )
+                    wavs.push_back(outtf);
+            }
+        }
+    }
+
+    if ( this->_debug )
+        std::cout << "Decoding finished.\n" << std::endl;
+
+    files.clear();
 
     return true;
 }
@@ -125,51 +182,42 @@ Decode::clobber() const
 
 //-------------------------------------------------------------------------
 
-bool
-Decode::decodePath ( const std::string & path, FileList & wavs )
+std::string
+Decode::getDecoder ( const TransFile   & infile,
+                     const std::string & outfile )
 {
-    FileList  files;
-    FileList::iterator  fIter;
+    std::string  cmd;
 
-    if ( ! TransFile::ReadFiles(path, files, _notags) ) {
-        std::cout << "Reading files from path '" << path
-            << "' failed." << std::endl;
-        return false;
-    }
-    
-    for ( fIter = files.begin(); fIter != files.end(); ++fIter )
+    switch ( infile.getType() )
     {
-        TransFile * tf      = (TransFile*) *fIter;
-        std::string outfile = Decode::GetOutputName(tf->getFileName());
-
-        if ( tf->type() < AUDIO_MP3 ) 
-        {
-            std::cout << "DecodePath() input file is already a wav/pcm file." << std::endl;
-            wavs.push_back(new TransFile(outfile, AUDIO_WAV));
-        }
-        else 
-        {
-            if ( outfile.empty() ) {
-                std::cout << "Error generating output filename" << std::endl;
-                return false;
-            }
-            if ( FileUtils::IsReadable(outfile) && ! this->clobber() ) {
-                std::cout << "Decode::decodePath() output file exists: " << outfile 
-                    << std::endl << "    Set --clobber option to overwrite" << std::endl;
-            } else if ( this->decode(*tf, outfile) ) {
-                wavs.push_back(new TransFile(outfile, AUDIO_WAV));
-            }
-        }
-
-        delete tf;
+        case AUDIO_MP3:
+            cmd = MP3_DECODER;
+            cmd.append(MP3D_OPTS).append(outfile);
+            cmd.append(" ").append(infile.getFileName());
+            break;
+        case AUDIO_MP4:
+            cmd = MP4_DECODER;
+            cmd.append(MP4_IF).append(infile.getFileName());
+            cmd.append(MP4_OF).append(outfile);
+            break;
+        case AUDIO_FLAC:
+            cmd = FLAC_DECODER;
+            cmd.append(FLACD_OPTS).append(outfile);
+            cmd.append(" ").append(infile.getFileName());
+            break;
+        case AUDIO_SHN:
+            cmd = SHN_DECODER;
+            cmd.append(SHN_OPTS).append(infile.getFileName());
+            cmd.append(" ").append(outfile);
+            break;
+        case AUDIO_UNK:
+        case AUDIO_WAV:
+        default:
+            std::cout << "Decode::getDecoder() Unsupported format." << std::endl;
+            break;
     }
 
-    if ( this->_debug )
-        std::cout << "Decoding finished.\n" << std::endl;
-
-    files.clear();
-
-    return true;
+    return cmd;
 }
 
 //-------------------------------------------------------------------------
@@ -185,52 +233,10 @@ Decode::GetOutputName ( const std::string & infile )
 
     outf.append(".wav");
 
-    //std::cout << "Decode::GetOutputName() in=" << infile
-              //<< " out=" << outf << std::endl;
-
     return outf;
 }
 
-
-std::string
-Decode::getDecoder ( const std::string & infile, 
-                     const std::string & outfile,
-                     encoding_t          type )
-{
-    std::string  cmd;
-
-    switch ( type ) 
-    {
-        case AUDIO_MP3:
-            cmd = MP3_DECODER;
-            cmd.append(MP3D_OPTS).append(outfile);
-            cmd.append(" ").append(infile);
-            break;
-        case AUDIO_MP4:
-            cmd = MP4_DECODER;
-            cmd.append(MP4_IF).append(infile);
-            cmd.append(MP4_OF).append(outfile);
-            break;
-        case AUDIO_FLAC:
-            cmd = FLAC_DECODER;
-            cmd.append(FLACD_OPTS).append(outfile);
-            cmd.append(" ").append(infile);
-            break;
-        case AUDIO_SHN:
-            cmd = SHN_DECODER;
-            cmd.append(SHN_OPTS).append(infile);
-            cmd.append(" ").append(outfile);
-            break;
-        case AUDIO_UNK:
-        case AUDIO_WAV:
-        default:
-            std::cout << "Decode::getDecoder() Unsupported format" << std::endl;
-            break;
-    }
-
-    return cmd;
-}
-
+//-------------------------------------------------------------------------
 
 }  // namespace
 

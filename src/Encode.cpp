@@ -36,20 +36,21 @@ Encode::Encode ( encoding_t type, int rate )
 
 Encode::~Encode() {}
 
+//-------------------------------------------------------------------------
 
 bool
-Encode:: encode ( TransFile & tf, const std::string & outfile )
+Encode:: encode ( TransFile & infile, TransFile & outfile )
 {
     std::string cmd;
 
-    if ( tf.type() != AUDIO_WAV )
+    if ( infile.type() != AUDIO_WAV )
     {
         // decode first
         ;
         return false;
     }
 
-    cmd = this->getEncoderExec(tf.getFileName(), outfile);
+    cmd = this->getEncoderExec(infile.getFileName(), outfile.getFileName());
 
     if ( cmd.empty() ) {
         std::cout << "Encode() Error determining Encoder." << std::endl;
@@ -72,29 +73,37 @@ Encode:: encode ( TransFile & tf, const std::string & outfile )
     for ( sIter = lines.begin(); sIter != lines.end(); ++sIter )
         std::cout << " '" << *sIter << std::endl;
 
+    if ( ! this->notags() ) {
+    	outfile.setTags(infile.getTags());
+    	outfile.save();
+    }
+
     return true;
 }
 
+//-------------------------------------------------------------------------
 
 bool
-Encode::encodeFiles ( FileList & files )
+Encode::encodeFiles ( FileList & infiles, FileList & outfiles  )
 {
     FileList::iterator fIter;
 
-    for ( fIter = files.begin(); fIter != files.end(); ++fIter )
+    for ( fIter = infiles.begin(); fIter != infiles.end(); ++fIter )
     {
-        TransFile  * tf      = (TransFile*) *fIter;
-        std::string  outfile = Encode::GetOutputName(*tf, _type);
+        TransFile  & infile  = (TransFile&) *fIter;
+        std::string  outfile = Encode::GetOutputName(infile, _type);
 
         if ( outfile.empty() ) {
             std::cout << "Error generating output filename" << std::endl;
             return false;
         }
 
-        if ( this->encode(*tf, outfile) ) {
+        TransFile  outtf(outfile, this->_type);
+
+        if ( this->encode(infile, outtf) ) {
             std::cout << "Encoded to " << outfile << std::endl;
             if ( this->erase() && ! this->dryrun() )
-                ::unlink(tf->getFileName().c_str());
+                ::unlink(infile.getFileName().c_str());
         } else
             return false;
     }
@@ -102,6 +111,7 @@ Encode::encodeFiles ( FileList & files )
     return true;
 }
 
+//-------------------------------------------------------------------------
 
 int
 Encode::bitrate() const
@@ -115,6 +125,21 @@ Encode::bitrate ( int rate )
     _bitrate = rate;
 }
 
+//-------------------------------------------------------------------------
+
+void
+Encode::notags ( bool notags )
+{
+    _notags = notags;
+}
+
+bool
+Encode::notags() const
+{
+    return _notags;
+}
+
+//-------------------------------------------------------------------------
 
 void
 Encode::dryrun ( bool dryrun )
@@ -128,6 +153,7 @@ Encode::dryrun() const
     return _dryrun;
 }
 
+//-------------------------------------------------------------------------
 
 void
 Encode::clobber ( bool clobber )
@@ -141,6 +167,7 @@ Encode::clobber() const
     return _clobber;
 }
 
+//-------------------------------------------------------------------------
 
 void
 Encode::erase ( bool erase )
@@ -154,6 +181,7 @@ Encode::erase() const
     return _erase;
 }
 
+//-------------------------------------------------------------------------
 
 void
 Encode::debug ( bool debug )
@@ -167,9 +195,10 @@ Encode::debug() const
     return _debug;
 }
 
+//-------------------------------------------------------------------------
 
 std::string
-Encode::GetOutputName ( TransFile & tf, encoding_t type )
+Encode::GetOutputName ( const TransFile & tf, encoding_t type )
 {
     std::string outf, ext;
     int         indx;
@@ -184,6 +213,7 @@ Encode::GetOutputName ( TransFile & tf, encoding_t type )
     return outf;
 }
 
+//-------------------------------------------------------------------------
 
 std::string
 Encode::GetExtension ( encoding_t type )
@@ -210,6 +240,7 @@ Encode::GetExtension ( encoding_t type )
     return ext;
 }
 
+//-------------------------------------------------------------------------
 
 std::string
 Encode::getEncoderExec ( const std::string & infile,
@@ -246,6 +277,7 @@ Encode::getEncoderExec ( const std::string & infile,
     return cmd;
 }
 
+//-------------------------------------------------------------------------
 
 }  // namespace
 

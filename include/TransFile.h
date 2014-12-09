@@ -22,14 +22,16 @@ namespace transam {
 
 
 class TransFile;
-typedef std::list<TransFile*>   FileList;
+typedef std::list<TransFile>    FileList;
 typedef std::list<std::string>  StringList;
+typedef TagLib::PropertyMap     TagMap;
 
 
 class TransFile {
 
   public:
 
+	TransFile();
     TransFile ( const std::string & filename, encoding_t type );
     ~TransFile();
 
@@ -44,7 +46,8 @@ class TransFile {
 
     bool          save();
     bool          readTags();
-    void          setTags       ( TagLib::PropertyMap map );
+    const TagMap& getTags() const;
+    void          setTags       ( const TagMap      & tags );
 
 
     static bool   ReadFiles     ( const std::string & path,
@@ -60,7 +63,7 @@ class TransFile {
 
     std::string          _fileName;
 
-    TagLib::PropertyMap  _pmap;
+    TagMap               _pmap;
     encoding_t           _type;
 
 };

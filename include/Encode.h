@@ -28,13 +28,17 @@ class Encode {
     ~Encode();
 
 
-    bool         encode      ( TransFile         & tf, 
-                               const std::string & outfile );
-    bool         encodeFiles ( FileList & files );
+    bool         encode      ( TransFile   & infile,
+                               TransFile   & outfile );
+    bool         encodeFiles ( FileList    & infiles,
+    						   FileList    & outfiles );
 
 
     void         bitrate   ( int bitrate );
     int          bitrate() const;
+
+    void         notags    ( bool notags );
+    bool         notags() const;
 
     void         clobber   ( bool clobber );
     bool         clobber() const;
@@ -54,8 +58,9 @@ class Encode {
 
   public:
 
-    static std::string GetOutputName ( TransFile & tf, encoding_t type );
-    static std::string GetExtension  ( encoding_t  type );
+    static std::string GetOutputName ( const TransFile & tf,
+                                       encoding_t        type );
+    static std::string GetExtension  ( encoding_t        type );
 
 
   public:

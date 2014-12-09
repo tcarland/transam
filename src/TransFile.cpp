@@ -20,6 +20,10 @@ using namespace tcanetpp;
 namespace transam {
 
 
+TransFile::TransFile()
+    : _type(AUDIO_UNK)
+{}
+
 TransFile::TransFile ( const std::string & filename, encoding_t type )
     : _fileName(filename),
       _type(type)
@@ -73,11 +77,16 @@ TransFile::getType() const
 }
 
 void
-TransFile::setTags ( TagLib::PropertyMap map )
+TransFile::setTags ( const TagMap & map )
 {
     _pmap = map;
 }
 
+const TagMap&
+TransFile::getTags() const
+{
+	return _pmap;
+}
 
 bool
 TransFile::readTags()
@@ -101,7 +110,7 @@ TransFile::ReadFiles ( const std::string & path, FileList & files, bool notag )
     struct stat     fsb;
     std::string     name;
     encoding_t      type;
-    TransFile *     file = NULL;
+    TransFile       file;
 
     if ( (dirp = ::opendir(path.c_str())) == NULL ) {
         std::cout << "TransFile::ReadFiles failed to read directory."
@@ -131,10 +140,10 @@ TransFile::ReadFiles ( const std::string & path, FileList & files, bool notag )
             continue;
         }
 
-        file = new TransFile(name, type);
+        file = TransFile(name, type);
 
         if ( ! notag )
-            file->readTags();
+            file.readTags();
 
         files.push_back(file);
     }

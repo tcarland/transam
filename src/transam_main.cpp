@@ -33,7 +33,7 @@ using namespace tcanetpp;
 static
 const char Process[] = "transam";
 static
-const char Version[] = "0.1.3";
+const char Version[] = "0.1.4";
 
 
 
@@ -202,7 +202,7 @@ int main ( int argc, char **argv )
     if ( ! path.empty() )
     {
         Decode    decoder;
-        FileList  wavs;
+        FileList  wavs, outfiles;
         FileList::iterator fIter;
 
         decoder.debug(verbose);
@@ -210,7 +210,7 @@ int main ( int argc, char **argv )
         decoder.notags(notags);
         decoder.clobber(clobber);
 
-        if ( ! decoder.decodePath(path, wavs) ) {
+        if ( ! decoder.decodePath(wavs, path) ) {
             std::cout << "Error decoding files" << std::endl;
             return -1;
         }
@@ -225,7 +225,7 @@ int main ( int argc, char **argv )
             encoder.clobber(clobber);
             encoder.erase(erase);
 
-            if ( ! encoder.encodeFiles(wavs) ) {
+            if ( ! encoder.encodeFiles(wavs, outfiles) ) {
                 std::cout << "Error encoding files" << std::endl;
                 return -1;
             }

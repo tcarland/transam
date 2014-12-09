@@ -23,26 +23,30 @@ class Decode {
     ~Decode();
 
 
-    bool        decode     ( TransFile & tf, const std::string & outfile );
-    bool        decodePath ( const std::string & path, FileList & wavs );
+    bool        decode     ( const TransFile   & infile,
+    						 TransFile         & outfile );
+    bool        decodePath ( FileList          & wavs,
+    						 const std::string & path );
 
     void        notags     ( bool notags );
+    bool        notags()  const;
+
     void        dryrun     ( bool dryrun );
+    bool        dryrun()  const;
+
     void        clobber    ( bool clobber );
-    void        debug      ( bool debug );
-
-    bool        notags() const;
-    bool        dryrun() const;
     bool        clobber() const;
-    bool        debug() const;
 
-    std::string getDecoder ( const std::string & infile,
-                             const std::string & outfile,
-                             encoding_t          type );
+    void        debug      ( bool debug );
+    bool        debug()   const;
+
+    std::string getDecoder  ( const TransFile   & infile,
+                              const std::string & outfile );
 
   public:
 
-    static std::string GetOutputName  ( const std::string & infile );
+    static
+	std::string GetOutputName ( const std::string & infile );
   
 
   private:

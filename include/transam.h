@@ -12,7 +12,6 @@ namespace transam {
 #define TRANSAM_DEFAULT_BITRATE 384
 
 
-
 typedef enum encoding_types {
     AUDIO_UNK     = 0,
     AUDIO_WAV     = 1,
