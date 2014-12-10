@@ -23,6 +23,7 @@ typedef enum encoding_types {
     AUDIO_OGG     = 6
 } encoding_t;
 
+typedef encoding_t enc_t;
 
 // Command and options for each encoding type
 static std::string   MP3_ENCODER  = "lame";

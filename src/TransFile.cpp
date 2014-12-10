@@ -154,7 +154,7 @@ TransFile::ReadFiles ( const std::string & path, TransFileList & files, bool not
 }
 
 
-int
+enc_t
 TransFile::GetEncoding ( const std::string & name )
 {
     std::string ext;
@@ -163,7 +163,7 @@ TransFile::GetEncoding ( const std::string & name )
     indx = StringUtils::lastIndexOf(name, ".");
 
     if ( indx <= 0 )
-        return 0;
+        return AUDIO_UNK;
 
     ext = name.substr(indx+1);
 

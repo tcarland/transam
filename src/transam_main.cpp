@@ -209,32 +209,28 @@ int main ( int argc, char **argv )
         usage();
     }
 
+    Decode  decoder;
+    decoder.debug(verbose);
+    decoder.dryrun(dryrun);
+    decoder.notags(notags);
+    decoder.clobber(clobber);
+
+    Encode  encoder(enctype, rate);
+    encoder.debug(verbose);
+    encoder.dryrun(dryrun);
+    encoder.clobber(clobber);
+    encoder.erase(!noerase);
+
     if ( ! path.empty() )
     {
-        Decode         decoder;
         TransFileList  wavs, outfiles;
         TransFileList::iterator fIter;
-
-        decoder.debug(verbose);
-        decoder.dryrun(dryrun);
-        decoder.notags(notags);
-        decoder.clobber(clobber);
 
         if ( ! decoder.decodePath(wavs, path) ) {
             std::cout << "Error decoding files" << std::endl;
             return -1;
         }
-        
-        // if not decode only
-        if ( ! decode )
-        {
-            Encode  encoder(enctype, rate);
-
-            encoder.debug(verbose);
-            encoder.dryrun(dryrun);
-            encoder.clobber(clobber);
-            encoder.erase(!noerase);
-
+        if ( ! decode ) {
             if ( ! encoder.encodeFiles(wavs, outfiles, outp) ) {
                 std::cout << "Error encoding files" << std::endl;
                 return -1;
@@ -243,7 +239,25 @@ int main ( int argc, char **argv )
     }
     else
     {
+        if ( inf.empty() ) {
+            std::cout << "Error! Input file not provided." << std::endl;
+            usage();
+        }
 
+        TransFile intf(inf, TransFile::GetEncoding(inf));
+        TransFile wav(Decode::GetOutputName(inf), AUDIO_WAV);
+        TransFile outf(Encode::GetOutputName(wav, enctype), enctype);
+
+        if ( ! decoder.decode(intf, wav) ) {
+            std::cout << "Error decoding. " << std::endl;
+            return -1;
+        }
+        if ( ! decode ) {
+            if ( ! encoder.encode(wav, outf) ) {
+                std::cout << "Error encoding files." << std::endl;
+                return -1;
+            }
+        }
     }
 
     std::cout << "Finished." << std::endl;
