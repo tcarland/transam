@@ -11,7 +11,7 @@ static const char Process[] = "showtags";
 
 void usage()
 {
-    printf("Usage: %s <path>\n");
+    printf("Usage: %s <path>\n", Process);
     exit(0);
 }
 
