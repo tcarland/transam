@@ -14,6 +14,7 @@
 
 #include "CmdBuffer.h"
 #include "StringUtils.h"
+#include "FileUtils.h"
 using namespace tcanetpp;
 
 

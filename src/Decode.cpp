@@ -88,7 +88,7 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path )
     for ( fIter = files.begin(); fIter != files.end(); ++fIter )
     {
         TransFile & intf    = (TransFile&) *fIter;
-        std::string outfile = Decode::GetOutputName(tf.getFileName());
+        std::string outfile = Decode::GetOutputName(intf.getFileName());
 
         if ( intf.type() < AUDIO_MP3 )
         {
