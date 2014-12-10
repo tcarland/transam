@@ -37,7 +37,6 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
 {
     std::string cmd;
    
-    // send tf?
     cmd = this->getDecoder(infile, outfile.getFileName());
 
     if ( cmd.empty() ) {
@@ -46,8 +45,7 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
         return false;
     }
 
-    if ( this->_dryrun )
-    {
+    if ( this->_dryrun ) {
         std::cout << "exec: `" << cmd << "'" << std::endl;
         return true;
     }
@@ -89,10 +87,10 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path )
     
     for ( fIter = files.begin(); fIter != files.end(); ++fIter )
     {
-        TransFile & tf      = (TransFile&) *fIter;
+        TransFile & intf    = (TransFile&) *fIter;
         std::string outfile = Decode::GetOutputName(tf.getFileName());
 
-        if ( tf.type() < AUDIO_MP3 )
+        if ( intf.type() < AUDIO_MP3 )
         {
             std::cout << "DecodePath() input file is already a wav/pcm file." << std::endl;
             wavs.push_back(TransFile(outfile, AUDIO_WAV));
@@ -100,22 +98,27 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path )
         else 
         {
             if ( ! this->notags() ) {
-                if ( ! tf.readTags() )
-                    std::cout << "Error reading metadata tags" << std::endl;
+                if ( ! intf.readTags() )
+                    std::cout << "Error reading metadata tags." << std::endl;
             }
+
             if ( outfile.empty() ) {
-                std::cout << "Error generating output filename" << std::endl;
+                std::cout << "Error generating output filename." << std::endl;
                 return false;
             }
+
             if ( FileUtils::IsReadable(outfile) && ! this->clobber() ) {
                 std::cout << "Decode::decodePath() output file exists: " << outfile 
-                    << std::endl << "    Set --clobber option to overwrite" << std::endl;
-            } else {
-            	TransFile outtf(outfile, AUDIO_WAV);
-            	if ( this->decode(tf, outtf) )
-                    wavs.push_back(outtf);
-            	else  // say more
-                 return false;
+                    << std::endl << "    Set --clobber option to overwrite." << std::endl;
+                continue;
+            }
+            
+            TransFile outtf(outfile, AUDIO_WAV);
+
+            if ( this->decode(intf, outtf) ) {
+                wavs.push_back(outtf);
+            } else { 
+                return false;
             }
         }
     }

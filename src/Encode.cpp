@@ -99,14 +99,21 @@ Encode::encodeFiles ( TransFileList & infiles, TransFileList & outfiles,
             return false;
         }
 
+        if ( FileUtils::IsReadable(outfile) && ! this->clobber() ) {
+            std::cout << "Encode::encodeFiles() output file exists: " << outfile
+                << std::endl << "    Set --clobber option to overwrite." << std::endl;
+            continue;
+        }
+
         TransFile  outtf(outfile, this->_type);
 
         if ( this->encode(infile, outtf) ) {
             std::cout << "Encoded to " << outfile << std::endl;
             if ( this->erase() && ! this->dryrun() )
                 ::unlink(infile.getFileName().c_str());
-        } else
+        } else {
             return false;
+        }
     }
 
     return true;

@@ -85,7 +85,34 @@ TransFile::setTags ( const TagMap & map )
 const TagMap&
 TransFile::getTags() const
 {
-	return _pmap;
+    return _pmap;
+}
+
+void
+TransFile::printTags()
+{
+    TagMap::Iterator tIter;
+
+    std::cout << _fileName << ":" << std::endl;
+
+    tIter = _pmap.find("ARTIST");
+    if ( tIter != _pmap.end() )
+        std::cout << tIter->second;
+    tIter = _pmap.find("ALBUM");
+    if ( tIter != _pmap.end() )
+        std::cout << " - " << tIter->second;
+    tIter = _pmap.find("TRACKNUMBER");
+    if ( tIter != _pmap.end() )
+        std::cout << " - " << tIter->second;
+    tIter = _pmap.find("TITLE");
+    if ( tIter != _pmap.end() )
+        std::cout << " - " << tIter->second;
+
+    std::cout << std::endl;
+
+    //for ( tIter = _pmap.begin(); tIter != _pmap.end(); ++tIter )
+        //std::cout << tIter->first << " : " << tIter->second << std::endl;
+    return;
 }
 
 bool
@@ -118,7 +145,7 @@ TransFile::ReadFiles ( const std::string & path, TransFileList & files, bool not
         return false;
     }
 
-    std::cout << "ReadFiles path " << path << std::endl;
+    //std::cout << "ReadFiles path: " << path << std::endl;
 
     while ( (dire = ::readdir(dirp)) != NULL )
     {

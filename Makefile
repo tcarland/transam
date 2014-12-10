@@ -34,6 +34,10 @@ transam: $(OBJS)
 	$(make-cxxbin-rule)
 	@echo
 
+showtags: src/showtags.o src/TransFile.o
+	$(make-cxxbin-rule)
+	@echo
+
 .PHONY: test
 test:
 
