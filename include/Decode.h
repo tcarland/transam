@@ -29,16 +29,16 @@ class Decode {
     						 const std::string & path );
 
     void        notags     ( bool notags );
-    bool        notags()  const;
+    bool        notags() const;
 
     void        dryrun     ( bool dryrun );
-    bool        dryrun()  const;
+    bool        dryrun() const;
 
     void        clobber    ( bool clobber );
     bool        clobber() const;
 
     void        debug      ( bool debug );
-    bool        debug()   const;
+    bool        debug() const;
 
     std::string getDecoder  ( const TransFile   & infile,
                               const std::string & outfile );

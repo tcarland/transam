@@ -175,7 +175,7 @@ int main ( int argc, char **argv )
     }
     // else set outfile?
 
-    Encode::InitEncoders();
+    //Encode::InitEncoders();
 
     if ( infile != NULL ) {
         inf.assign(infile);

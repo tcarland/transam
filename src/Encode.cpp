@@ -61,14 +61,15 @@ Encode:: encode ( TransFile & infile, TransFile & outfile )
         return true;
     }
 
-    CmdBuffer     cmdbuf(cmd);
+    CmdBuffer     cmdbuf;
+
+    if ( ! cmdbuf.Open(cmd) )
+    	return false;
+
     StringBuffer  lines;
     StringBuffer::iterator sIter;
     
     cmdbuf.getAllLines(lines);
-
-    if ( lines.empty() ) 
-        return false;
 
     for ( sIter = lines.begin(); sIter != lines.end(); ++sIter )
         std::cout << " '" << *sIter << std::endl;

@@ -52,14 +52,17 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
         return true;
     }
  
-    CmdBuffer     cmdbuf(cmd);
+    CmdBuffer  cmdbuf;
+
+    if ( ! cmdbuf.Open(cmd) ) {
+    	std::cout << "Error in cmd exec: " << cmd << std::endl;
+    	return false;
+    }
+
     StringBuffer  lines;
     StringBuffer::iterator sIter;
 
     cmdbuf.getAllLines(lines);
-
-    if ( lines.empty() )
-        return false;
 
     for ( sIter = lines.begin(); sIter != lines.end(); ++sIter )
         std::cout << " '" << *sIter << std::endl;
@@ -112,6 +115,8 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path )
             	TransFile outtf(outfile, AUDIO_WAV);
             	if ( this->decode(tf, outtf) )
                     wavs.push_back(outtf);
+            	else  // say more
+            		return false;
             }
         }
     }
