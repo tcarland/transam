@@ -36,24 +36,31 @@ class TransFile {
     TransFile ( const std::string & filename, encoding_t type );
     ~TransFile();
 
-    bool          operator<     ( const TransFile & file ) const;
-    bool          operator==    ( const TransFile & file ) const;
+    bool          operator<    ( const TransFile & file ) const;
+    bool          operator==   ( const TransFile & file ) const;
 
     const
     std::string&  getFileName() const;
-    encoding_t    getType() const;
-    encoding_t    type() const { return this->getType(); }
 
-    bool          save();
-    bool          readTags();
-    void          printTags();
+    encoding_t    getEncodingType() const { return this->type(); }
+    encoding_t    getType() const { return this->type(); }
+    encoding_t    type() const;
+
+
+    void          setTags      ( const TagMap & tags );
+    
     const TagMap& getTags() const;
-    void          setTags       ( const TagMap      & tags );
 
-    static bool   ReadFiles     ( const std::string & path,
-                                  TransFileList     & files,
-                                  bool                notag = false );
-    static enc_t  GetEncoding   ( const std::string & name );
+    bool          readTags();
+    bool          saveTags();
+    void          printTags();
+
+
+    static bool   ReadPath     ( const std::string & path,
+                                 TransFileList     & files,
+                                 bool        notag = false );
+
+    static enc_t  GetEncoding  ( const std::string & name );
 
   private: 
 
@@ -61,10 +68,10 @@ class TransFile {
 
   private:
 
-    std::string          _fileName;
+    std::string   _fileName;
 
-    TagMap               _pmap;
-    encoding_t           _type;
+    TagMap        _pmap;
+    encoding_t    _type;
 
 };
 
