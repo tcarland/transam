@@ -3,6 +3,7 @@
   *   @author tcarland@gmail.com
   *   Copyright (c) 2011 Timothy Charlton Arland
   *
+  *   TODO: show taginfo, alternate output path
  **/
 #define _TRANSAM_TRANSAM_CPP_
 
@@ -33,7 +34,7 @@ using namespace tcanetpp;
 static
 const char Process[] = "transam";
 static
-const char Version[] = "0.1.4";
+const char Version[] = "0.1.5";
 
 
 
@@ -47,18 +48,19 @@ void version()
 void usage()
 {
     printf("Usage: %s [-dEhnvVW] [-t type] [-i infile] [-o outfile] <path>\n", Process);
-    printf("     -b | --bitrate        :  bitrate for the encoding process (default is 384)\n");
-    printf("     -d | --decode         :  decode only to a .wav file (default is to encode)\n");
-    printf("     -E | --erase          :  erase wav files after decoding\n");
-    printf("     -h | --help           :  display help information and exit\n");
-    printf("     -i | --infile <file>  :  name of the file to transcode\n");
-    printf("     -o | --outfile <file> :  name of the target output file\n");
-    printf("     -n | --dryrun         :  enable the 'dryrun' option, no changes are made\n");
-    printf("     -t | --type  <name>   :  The encoding type by extension (if applicable)\n");
-    printf("     -T | --notags         :  Disable converting metadata tags to new format\n");
-    printf("     -W | --clobber        :  Allow the overwriting of files that already exit\n");
-    printf("     -v | --verbose        :  enable verbose output\n");
-    printf("     -V | --version        :  display version info and exit\n");
+    printf("     -b | --bitrate        :  bitrate for the encoding process (default is 384).\n");
+    printf("     -d | --decode         :  decode only to a .wav file (default is to encode).\n");
+    printf("     -E | --noerase        :  do NOT erase wav files after encoding.\n");
+    printf("     -h | --help           :  display help information and exit.\n");
+    printf("     -i | --infile <file>  :  name of the file to transcode.\n");
+    printf("     -o | --outfile <file> :  name of the target output file.\n");
+    printf("     -p | --outpath <path> :  alternate output path to place generated files.\n");
+    printf("     -n | --dryrun         :  enable the 'dryrun' option, no changes are made.\n");
+    printf("     -t | --type  <name>   :  The encoding type by extension (if applicable).\n");
+    printf("     -T | --notags         :  Disable converting metadata tags to new format.\n");
+    printf("     -W | --clobber        :  Allow the overwriting of files that already exit.\n");
+    printf("     -v | --verbose        :  enable verbose output.\n");
+    printf("     -V | --version        :  display version info and exit.\n");
     exit(0);
 }
 
@@ -88,12 +90,13 @@ int main ( int argc, char **argv )
     char optChar;
     char *infile  = NULL;
     char *outfile = NULL;
+    char *outpath = NULL;
     char *type    = NULL;
     char *br      = NULL;
     bool verbose  = false;
     bool dryrun   = false;
     bool decode   = false;
-    bool erase    = false;
+    bool noerase  = false;
     bool notags   = false;
     bool clobber  = false;
     int  optindx  = 0;
@@ -103,7 +106,7 @@ int main ( int argc, char **argv )
     static struct option l_opts[] = { {"bitrate", required_argument, 0, 'b'},
                                       {"decode",  no_argument, 0, 'd'},
                                       {"dryrun",  no_argument, 0, 'n'},
-                                      {"erase",   no_argument, 0, 'E'},
+                                      {"noerase", no_argument, 0, 'E'},
                                       {"help",    no_argument, 0, 'h'},
                                       {"infile",  required_argument, 0, 'i'},
                                       {"outfile", required_argument, 0, 'o'},
@@ -126,7 +129,7 @@ int main ( int argc, char **argv )
               decode = true;
               break;
             case 'E':
-              erase = true;
+              noerase = true;
               break;
             case 'h':
               usage();
@@ -134,11 +137,14 @@ int main ( int argc, char **argv )
             case 'i':
               infile = strdup(optarg);
               break;
+            case 'n':
+              dryrun = true;
+              break;
             case 'o':
               outfile = strdup(optarg);
               break;
-            case 'n':
-              dryrun = true;
+            case 'p':
+              outpath = strdup(optarg);
               break;
             case 't':
               type  = strdup(optarg);
@@ -153,15 +159,15 @@ int main ( int argc, char **argv )
               version();
               break;
             case 'W':
-                clobber = true;
-                break;
+              clobber = true;
+              break;
             default:
               // path
               break;
         }
     }
 
-    std::string inf, outf, path;
+    std::string inf, outf, outp, path;
 
     encoding_t  enctype = AUDIO_UNK;
 
@@ -184,6 +190,10 @@ int main ( int argc, char **argv )
     if ( outfile != NULL ) {
         outf.assign(outfile);
         ::free(outfile);
+    }
+    if ( outpath != NULL ) {
+    	outp.assign(outpath);
+    	::free(outpath);
     }
     if ( type != NULL ) {
         enctype = setEncodingType(type);
@@ -223,9 +233,9 @@ int main ( int argc, char **argv )
             encoder.debug(verbose);
             encoder.dryrun(dryrun);
             encoder.clobber(clobber);
-            encoder.erase(erase);
+            encoder.erase(!noerase);
 
-            if ( ! encoder.encodeFiles(wavs, outfiles) ) {
+            if ( ! encoder.encodeFiles(wavs, outfiles, outp) ) {
                 std::cout << "Error encoding files" << std::endl;
                 return -1;
             }

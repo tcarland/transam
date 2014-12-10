@@ -28,11 +28,12 @@ class Encode {
     ~Encode();
 
 
-    bool         encode      ( TransFile     & infile,
-                               TransFile     & outfile );
-    bool         encodeFiles ( TransFileList & infiles,
-    						   TransFileList & outfiles );
+    bool         encode      ( TransFile         & infile,
+                               TransFile         & outfile );
 
+    bool         encodeFiles ( TransFileList     & infiles,
+                               TransFileList     & outfiles,
+                               const std::string & outpath = "");
 
     void         bitrate   ( int bitrate );
     int          bitrate() const;
@@ -58,9 +59,10 @@ class Encode {
 
   public:
 
-    static std::string GetOutputName ( const TransFile & tf,
-                                       encoding_t  type );
-    static std::string GetExtension  ( encoding_t  type );
+    static std::string GetOutputName ( const TransFile   & tf,
+                                       encoding_t          type,
+                                       const std::string & outpath = "");
+    static std::string GetExtension  ( encoding_t          type );
 
 
   public:

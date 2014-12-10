@@ -9,9 +9,10 @@
 namespace transam {
 
 
+// default encoding bitrate
 #define TRANSAM_DEFAULT_BITRATE 384
 
-
+// supported encoding types
 typedef enum encoding_types {
     AUDIO_UNK     = 0,
     AUDIO_WAV     = 1,
@@ -23,6 +24,7 @@ typedef enum encoding_types {
 } encoding_t;
 
 
+// Command and options for each encoding type
 static std::string   MP3_ENCODER  = "lame";
 static std::string   MP3E_OPTS    = " -h -b ";
 static std::string   MP3_DECODER  = "mpg123";

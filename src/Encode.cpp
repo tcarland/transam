@@ -29,7 +29,7 @@ Encode::Encode ( encoding_t type, int rate )
       _bitrate(rate),
       _notags(false),
       _dryrun(false),
-      _erase(false),
+      _erase(true),
       _clobber(false),
       _debug(false)
 {}
@@ -41,12 +41,11 @@ Encode::~Encode() {}
 bool
 Encode:: encode ( TransFile & infile, TransFile & outfile )
 {
-    std::string cmd;
+    std::string  cmd;
 
     if ( infile.type() != AUDIO_WAV )
     {
         // decode first
-        ;
         return false;
     }
 
@@ -61,7 +60,7 @@ Encode:: encode ( TransFile & infile, TransFile & outfile )
         return true;
     }
 
-    CmdBuffer     cmdbuf;
+    CmdBuffer  cmdbuf;
 
     if ( ! cmdbuf.Open(cmd) )
     	return false;
@@ -85,7 +84,8 @@ Encode:: encode ( TransFile & infile, TransFile & outfile )
 //-------------------------------------------------------------------------
 
 bool
-Encode::encodeFiles ( TransFileList & infiles, TransFileList & outfiles  )
+Encode::encodeFiles ( TransFileList & infiles, TransFileList & outfiles,
+                      const std::string & outpath )
 {
     TransFileList::iterator fIter;
 
@@ -199,7 +199,8 @@ Encode::debug() const
 //-------------------------------------------------------------------------
 
 std::string
-Encode::GetOutputName ( const TransFile & tf, encoding_t type )
+Encode::GetOutputName ( const TransFile   & tf, encoding_t type, 
+                        const std::string & outpath )
 {
     std::string outf, ext;
     int         indx;
@@ -209,7 +210,14 @@ Encode::GetOutputName ( const TransFile & tf, encoding_t type )
     ext  = Encode::GetExtension(type);
     outf.append(ext);
 
-    //std::cout << "Encode::GetOutputName() out=" << outf << std::endl;
+    if ( ! outpath.empty() )
+    {
+        indx = StringUtils::lastIndexOf(outf, "/");
+        outf = outf.substr(indx+1);
+        outf = outpath + "/" + outf;
+    }
+
+    std::cout << "\n\nEncode::GetOutputName() out=" << outf << std::endl;
 
     return outf;
 }

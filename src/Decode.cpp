@@ -99,11 +99,10 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path )
         }
         else 
         {
-        	if ( ! this->notags() ) {
-        		if ( ! tf.readTags() )
-        			std::cout << "Error reading metadata tags" << std::endl;
-			}
-
+            if ( ! this->notags() ) {
+                if ( ! tf.readTags() )
+                    std::cout << "Error reading metadata tags" << std::endl;
+            }
             if ( outfile.empty() ) {
                 std::cout << "Error generating output filename" << std::endl;
                 return false;
@@ -116,7 +115,7 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path )
             	if ( this->decode(tf, outtf) )
                     wavs.push_back(outtf);
             	else  // say more
-            		return false;
+                 return false;
             }
         }
     }
