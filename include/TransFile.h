@@ -47,7 +47,9 @@ class TransFile {
     encoding_t    type() const;
 
 
-    void          setTags      ( const TagMap & tags );
+    void          setTags      ( const TagMap      & tags );
+    bool          setTag       ( const std::string & key,
+    							 const std::string & val );
     
     const TagMap& getTags() const;
 

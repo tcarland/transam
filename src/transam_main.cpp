@@ -106,14 +106,15 @@ void listTags ( const std::string & path, encoding_t type )
     {
         TransFile & tf = (TransFile&) *fIter;
         if ( ! tf.haveTags() ) {
-        	std::cout << "NOTAGS: " << tf.getFileName() << std::endl;
-        	continue;
+            std::cout << "NOTAGS: " << tf.getFileName() << std::endl;
+            continue;
         }
         if ( type > AUDIO_UNK && type == tf.type() )
             tf.printTags();
         else if ( type == AUDIO_UNK )
-        	tf.printTags();
+            tf.printTags();
     }
+
     return;
 }
 

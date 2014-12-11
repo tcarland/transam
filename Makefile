@@ -18,10 +18,12 @@ INCLUDES=       -Iinclude $(shell pkg-config --cflags taglib)
 LIBS=		$(shell pkg-config --libs taglib)
 
 
-BIN=		transam transcheck
+BIN=		transam transcheck transtag
 OBJS=		src/TransFile.o src/Encode.o src/Decode.o \
 		src/transam_main.o
 TRCOBJ=		src/trans_check.o
+TAGOBJ=		src/trans_tag.o
+
 ALL_OBJS=	$(OBJS) $(TRCOBJ)
 ALL_BINS=	$(BIN)
 
@@ -35,6 +37,10 @@ transam: $(OBJS)
 	@echo
 
 transcheck: $(TRCOBJ) src/TransFile.o
+	$(make-cxxbin-rule)
+	@echo
+
+transtag: $(TAGOBJ) src/Encode.o src/TransFile.o
 	$(make-cxxbin-rule)
 	@echo
 
