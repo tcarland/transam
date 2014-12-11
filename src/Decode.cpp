@@ -79,7 +79,7 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path )
     TransFileList  files;
     TransFileList::iterator  fIter;
 
-    if ( ! TransFile::ReadFiles(path, files, _notags) ) {
+    if ( ! TransFile::ReadPath(path, files, _notags) ) {
         std::cout << "Reading files from path '" << path
             << "' failed." << std::endl;
         return false;

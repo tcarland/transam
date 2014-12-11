@@ -53,11 +53,11 @@ Encode:: encode ( TransFile & infile, TransFile & outfile )
     cmd = this->getEncoderExec(infile.getFileName(), outfile.getFileName());
 
     if ( cmd.empty() ) {
-        std::cout << "Encode() Error determining Encoder." << std::endl;
+        std::cout << "ERROR! Encode() determining encoder." << std::endl;
         return false;
     }
     if ( this->dryrun() ) {
-        std::cout << "exec: '" << cmd << "'" << std::endl;
+        std::cout << " exec: '" << cmd << "'" << std::endl;
         return true;
     }
 
@@ -76,7 +76,7 @@ Encode:: encode ( TransFile & infile, TransFile & outfile )
 
     if ( ! this->notags() ) {
     	outfile.setTags(infile.getTags());
-    	outfile.save();
+    	outfile.saveTags();
     }
 
     return true;
@@ -92,8 +92,8 @@ Encode::encodeFiles ( TransFileList & infiles, TransFileList & outfiles,
 
     for ( fIter = infiles.begin(); fIter != infiles.end(); ++fIter )
     {
-        TransFile  & infile  = (TransFile&) *fIter;
-        std::string  outfile = Encode::GetOutputName(infile, _type);
+        TransFile  & intf    = (TransFile&) *fIter;
+        std::string  outfile = Encode::GetOutputName(intf, _type);
 
         if ( outfile.empty() ) {
             std::cout << "Error generating output filename" << std::endl;
@@ -102,20 +102,41 @@ Encode::encodeFiles ( TransFileList & infiles, TransFileList & outfiles,
 
         if ( FileUtils::IsReadable(outfile) && ! this->clobber() ) {
             std::cout << "Encode::encodeFiles() output file exists: " << outfile
-                << std::endl << "    Set --clobber option to overwrite." << std::endl;
+                << std::endl << "  Set --clobber option to overwrite."
+				<< " skipping..." << std::endl;
             continue;
         }
 
         TransFile  outtf(outfile, this->_type);
 
-        if ( this->encode(infile, outtf) ) {
-            std::cout << "Encoded to " << outfile << std::endl;
-            if ( this->erase() && ! this->dryrun() )
-                ::unlink(infile.getFileName().c_str());
-        } else {
+        if ( this->encode(intf, outtf) )
+        {
+        	if ( ! FileUtils::IsReadable(outfile) && ! _dryrun )
+        	{
+        		std::cout << "ERROR! Outfile not readable, problem with encoder exec?"
+        		    << std::endl;
+        		return false;
+        	}
+
+            std::cout << " . ";
+        	if ( _debug )
+        		std::cout << intf.getFileName() << " >> " << outfile << std::endl;
+
+        	if ( this->erase() && ! this->dryrun() )
+            {
+                ::unlink(intf.getFileName().c_str());
+                if ( _debug )
+                	std::cout << "  DELETE: " << intf.getFileName() << std::endl;
+            }
+        }
+        else
+        {
+        	std::cout << "ERROR! in decode()" << std::endl;
             return false;
         }
     }
+
+    std::cout << std::endl;
 
     return true;
 }

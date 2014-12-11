@@ -50,7 +50,7 @@ TransFile::operator== ( const TransFile & file ) const
 
 
 bool
-TransFile::save()
+TransFile::saveTags()
 {
     TagLib::FileRef f(_fileName.c_str());
 
@@ -71,7 +71,7 @@ TransFile::getFileName() const
 }
 
 encoding_t
-TransFile::getType() const
+TransFile::type() const
 {
     return _type;
 }
@@ -130,7 +130,7 @@ TransFile::readTags()
 
 
 bool
-TransFile::ReadFiles ( const std::string & path, TransFileList & files, bool notag )
+TransFile::ReadPath ( const std::string & path, TransFileList & files, bool notag )
 {
     DIR*            dirp;
     struct dirent * dire;

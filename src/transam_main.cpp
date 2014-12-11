@@ -52,13 +52,14 @@ void usage()
     printf("     -d | --decode         :  decode only to a .wav file (default is to encode).\n");
     printf("     -E | --noerase        :  do NOT erase wav files after encoding.\n");
     printf("     -h | --help           :  display help information and exit.\n");
+    printf("     -L | --list           :  list only the id3/4 tags for each file");
+    printf("     -n | --dryrun         :  enable the 'dryrun' option, no changes are made.\n");
     printf("     -i | --infile <file>  :  name of the file to transcode.\n");
     printf("     -o | --outfile <file> :  name of the target output file.\n");
     printf("     -p | --outpath <path> :  alternate output path to place generated files.\n");
-    printf("     -n | --dryrun         :  enable the 'dryrun' option, no changes are made.\n");
     printf("     -t | --type  <name>   :  The encoding type by extension (if applicable).\n");
     printf("     -T | --notags         :  Disable converting metadata tags to new format.\n");
-    printf("     -W | --clobber        :  Allow the overwriting of files that already exit.\n");
+    printf("     -W | --clobber        :  Allow the overwriting of files that already exist.\n");
     printf("     -v | --verbose        :  enable verbose output.\n");
     printf("     -V | --version        :  display version info and exit.\n");
     exit(0);
@@ -84,6 +85,27 @@ encoding_t setEncodingType ( const std::string & typestr )
     return type;
 }
 
+void listTags ( const std::string & path, encoding_t type )
+{
+    TransFileList  files;
+    TransFileList::iterator  fIter;
+
+    if ( ! TransFile::ReadPath(path, files) )
+    {
+        std::cout << "ERROR reading files from path '" << path
+            << "'" << std::endl;
+        return;
+    }
+
+    for ( fIter = files.begin(); fIter != files.end(); ++fIter )
+    {
+        TransFile & tf = (TransFile&) *fIter;
+        if ( type > AUDIO_UNK && type == tf.type() )
+            tf.printTags();
+    }
+    return;
+}
+
 
 int main ( int argc, char **argv )
 {
@@ -99,6 +121,7 @@ int main ( int argc, char **argv )
     bool noerase  = false;
     bool notags   = false;
     bool clobber  = false;
+    bool showtags = false;
     int  optindx  = 0;
 
     uint16_t rate = TRANSAM_DEFAULT_BITRATE;
@@ -108,6 +131,7 @@ int main ( int argc, char **argv )
                                       {"dryrun",  no_argument, 0, 'n'},
                                       {"noerase", no_argument, 0, 'E'},
                                       {"help",    no_argument, 0, 'h'},
+                                      {"list",    no_argument, 0, 'L'},
                                       {"infile",  required_argument, 0, 'i'},
                                       {"outfile", required_argument, 0, 'o'},
                                       {"type",    required_argument, 0, 't'},
@@ -119,7 +143,7 @@ int main ( int argc, char **argv )
                                     };
 
 
-    while ( (optChar = ::getopt_long(argc, argv, "dEhi:o:nt:vVW", l_opts, &optindx)) != EOF ) 
+    while ( (optChar = ::getopt_long(argc, argv, "dEhi:Lo:nt:vVW", l_opts, &optindx)) != EOF )
     {
         switch ( optChar ) {
             case 'b':
@@ -136,6 +160,9 @@ int main ( int argc, char **argv )
               break;
             case 'i':
               infile = strdup(optarg);
+              break;
+            case 'L':
+              showtags = true;
               break;
             case 'n':
               dryrun = true;
@@ -181,8 +208,6 @@ int main ( int argc, char **argv )
     }
     // else set outfile?
 
-    //Encode::InitEncoders();
-
     if ( infile != NULL ) {
         inf.assign(infile);
         ::free(infile);
@@ -192,8 +217,8 @@ int main ( int argc, char **argv )
         ::free(outfile);
     }
     if ( outpath != NULL ) {
-    	outp.assign(outpath);
-    	::free(outpath);
+        outp.assign(outpath);
+        ::free(outpath);
     }
     if ( type != NULL ) {
         enctype = setEncodingType(type);
@@ -202,6 +227,17 @@ int main ( int argc, char **argv )
     if ( br != NULL ) {
         rate = StringUtils::fromString<uint16_t>(br);
         ::free(br);
+    }
+
+    // list only
+    if ( showtags )
+    {
+        if ( path.empty() ) {
+            std::cout << "Path required with the --list option" << std::endl;
+            return -1;
+        }
+
+        listTags(path, enctype);
     }
 
     if ( enctype < 2 && inf.empty() && ! decode ) {
