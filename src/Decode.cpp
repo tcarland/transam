@@ -53,8 +53,8 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
     CmdBuffer  cmdbuf;
 
     if ( ! cmdbuf.Open(cmd) ) {
-    	std::cout << "Error in cmd exec: " << cmd << std::endl;
-    	return false;
+        std::cout << "Error in cmd exec: " << cmd << std::endl;
+        return false;
     }
 
     StringBuffer  lines;
@@ -74,7 +74,8 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
 //-------------------------------------------------------------------------
 
 bool
-Decode::decodePath ( TransFileList & wavs, const std::string & path )
+Decode::decodePath ( TransFileList & wavs, const std::string & path,
+                     const std::string & outpath )
 {
     TransFileList  files;
     TransFileList::iterator  fIter;
@@ -88,24 +89,27 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path )
     for ( fIter = files.begin(); fIter != files.end(); ++fIter )
     {
         TransFile & intf    = (TransFile&) *fIter;
-        std::string outfile = Decode::GetOutputName(intf.getFileName());
+        std::string outfile = Decode::GetOutputName(intf.getFileName(), outpath);
 
         if ( intf.type() < AUDIO_MP3 )
         {
-            std::cout << "DecodePath() input file is already a wav/pcm file." << std::endl;
+            std::cout << "Decode::decodePath() input file " << intf.getFileName()
+                      << " is already a wav/pcm file." << std::endl;
             wavs.push_back(TransFile(outfile, AUDIO_WAV));
         }
         else 
         {
             if ( ! this->notags() ) {
                 if ( ! intf.readTags() )
-                    std::cout << "Error reading metadata tags." << std::endl;
+                    std::cout << "decodePath() ERROR reading metadata tags." << std::endl;
             }
 
             if ( outfile.empty() ) {
-                std::cout << "Error generating output filename." << std::endl;
+                std::cout << "decodePath() ERROR generating output filename." << std::endl;
                 return false;
             }
+            if ( _debug )
+            	std::cout << "\noutfile: " << outfile << std::endl;
 
             if ( FileUtils::IsReadable(outfile) && ! this->clobber() ) {
                 std::cout << "Decode::decodePath() output file exists: " << outfile 
@@ -230,7 +234,7 @@ Decode::getDecoder ( const TransFile   & infile,
 //-------------------------------------------------------------------------
 
 std::string
-Decode::GetOutputName ( const std::string & infile )
+Decode::GetOutputName ( const std::string & infile, const std::string & outpath )
 {
     std::string  outf;
     int  indx;
@@ -239,6 +243,14 @@ Decode::GetOutputName ( const std::string & infile )
     outf = infile.substr(0, indx);
 
     outf.append(".wav");
+
+    if ( ! outpath.empty() )
+    {
+        indx = StringUtils::lastIndexOf(outf, "/");
+        if ( indx >= 0 )
+            outf = outf.substr(indx+1);
+        outf = outpath + "/" + outf;
+    }
 
     return outf;
 }

@@ -93,12 +93,14 @@ Encode::encodeFiles ( TransFileList & infiles, TransFileList & outfiles,
     for ( fIter = infiles.begin(); fIter != infiles.end(); ++fIter )
     {
         TransFile  & intf    = (TransFile&) *fIter;
-        std::string  outfile = Encode::GetOutputName(intf, _type);
+        std::string  outfile = Encode::GetOutputName(intf, _type, outpath);
 
         if ( outfile.empty() ) {
             std::cout << "Error generating output filename" << std::endl;
             return false;
         }
+        if ( _debug )
+            std::cout << "\noutfile: " << outfile << std::endl;
 
         if ( FileUtils::IsReadable(outfile) && ! this->clobber() ) {
             std::cout << "Encode::encodeFiles() output file exists: " << outfile
@@ -242,11 +244,10 @@ Encode::GetOutputName ( const TransFile   & tf, encoding_t type,
     if ( ! outpath.empty() )
     {
         indx = StringUtils::lastIndexOf(outf, "/");
-        outf = outf.substr(indx+1);
+        if ( indx >= 0 )
+            outf = outf.substr(indx+1);
         outf = outpath + "/" + outf;
     }
-
-    std::cout << "\n\nEncode::GetOutputName() out=" << outf << std::endl;
 
     return outf;
 }

@@ -173,6 +173,11 @@ TransFile::ReadPath ( const std::string & path, TransFileList & files, bool nota
             continue;
         }
 
+        if ( type == AUDIO_UNK ) {
+        	std::cout << " Skipping " << name << " unknown extension." << std::endl;
+        	continue;
+        }
+
         file = TransFile(name, type);
 
         if ( ! notag )

@@ -34,7 +34,7 @@ using namespace tcanetpp;
 static
 const char Process[] = "transam";
 static
-const char Version[] = "0.2.1";
+const char Version[] = "0.2.3";
 
 
 
@@ -57,7 +57,8 @@ void usage()
     printf("     -i | --infile <file>  :  name of the file to transcode.\n");
     printf("     -o | --outfile <file> :  name of the target output file.\n");
     printf("     -p | --outpath <path> :  alternate output path to place generated files.\n");
-    printf("     -t | --type  <name>   :  The encoding type by extension (if applicable).\n");
+    printf("     -t | --type <name>    :  The encoding type by extension (if applicable).\n");
+    printf("                           :  supported types are: flac, mp3, mp4, ogg, shn, wav");
     printf("     -T | --notags         :  Disable converting metadata tags to new format.\n");
     printf("     -W | --clobber        :  Allow the overwriting of files that already exist.\n");
     printf("     -v | --verbose        :  enable verbose output.\n");
@@ -70,6 +71,7 @@ void sigHandler ( int signal )
 {
     return;
 }
+
 
 encoding_t setEncodingType ( const std::string & typestr )
 {
@@ -84,6 +86,7 @@ encoding_t setEncodingType ( const std::string & typestr )
 
     return type;
 }
+
 
 void listTags ( const std::string & path, encoding_t type )
 {
@@ -115,6 +118,7 @@ void listTags ( const std::string & path, encoding_t type )
 }
 
 
+
 int main ( int argc, char **argv )
 {
     char optChar;
@@ -142,6 +146,7 @@ int main ( int argc, char **argv )
                                       {"list",    no_argument, 0, 'L'},
                                       {"infile",  required_argument, 0, 'i'},
                                       {"outfile", required_argument, 0, 'o'},
+									  {"outpath", required_argument, 0, 'p'},
                                       {"type",    required_argument, 0, 't'},
                                       {"notags",  no_argument, 0, 'T'},
                                       {"verbose", no_argument, 0, 'v'},
@@ -151,7 +156,7 @@ int main ( int argc, char **argv )
                                     };
 
 
-    while ( (optChar = ::getopt_long(argc, argv, "dEhi:Lo:nt:vVW", l_opts, &optindx)) != EOF )
+    while ( (optChar = ::getopt_long(argc, argv, "dEhi:Lo:p:nt:vVW", l_opts, &optindx)) != EOF )
     {
         switch ( optChar ) {
             case 'b':
@@ -272,7 +277,7 @@ int main ( int argc, char **argv )
         TransFileList  wavs, outfiles;
         TransFileList::iterator fIter;
 
-        if ( ! decoder.decodePath(wavs, path) ) {
+        if ( ! decoder.decodePath(wavs, path, outp) ) {
             std::cout << "Error decoding files" << std::endl;
             return -1;
         }
