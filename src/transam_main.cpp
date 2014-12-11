@@ -52,7 +52,7 @@ void usage()
     printf("     -d | --decode         :  decode only to a .wav file (default is to encode).\n");
     printf("     -E | --noerase        :  do NOT erase wav files after encoding.\n");
     printf("     -h | --help           :  display help information and exit.\n");
-    printf("     -L | --list           :  list only the id3/4 tags for each file");
+    printf("     -L | --list           :  list only the id3/4 tags for each file.\n");
     printf("     -n | --dryrun         :  enable the 'dryrun' option, no changes are made.\n");
     printf("     -i | --infile <file>  :  name of the file to transcode.\n");
     printf("     -o | --outfile <file> :  name of the target output file.\n");
@@ -97,11 +97,19 @@ void listTags ( const std::string & path, encoding_t type )
         return;
     }
 
+    files.sort();
+
     for ( fIter = files.begin(); fIter != files.end(); ++fIter )
     {
         TransFile & tf = (TransFile&) *fIter;
+        if ( ! tf.haveTags() ) {
+        	std::cout << "NOTAGS: " << tf.getFileName() << std::endl;
+        	continue;
+        }
         if ( type > AUDIO_UNK && type == tf.type() )
             tf.printTags();
+        else if ( type == AUDIO_UNK )
+        	tf.printTags();
     }
     return;
 }
@@ -238,6 +246,8 @@ int main ( int argc, char **argv )
         }
 
         listTags(path, enctype);
+
+        return 0;
     }
 
     if ( enctype < 2 && inf.empty() && ! decode ) {

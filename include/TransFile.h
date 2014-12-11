@@ -51,6 +51,7 @@ class TransFile {
     
     const TagMap& getTags() const;
 
+    bool          haveTags();
     bool          readTags();
     bool          saveTags();
     void          printTags();

@@ -93,7 +93,7 @@ TransFile::printTags()
 {
     TagMap::Iterator tIter;
 
-    std::cout << _fileName << ":" << std::endl;
+    std::cout << "  ";
 
     tIter = _pmap.find("ARTIST");
     if ( tIter != _pmap.end() )
@@ -103,15 +103,13 @@ TransFile::printTags()
         std::cout << " - " << tIter->second;
     tIter = _pmap.find("TRACKNUMBER");
     if ( tIter != _pmap.end() )
-        std::cout << " - " << tIter->second;
+        std::cout << " - t" << tIter->second;
     tIter = _pmap.find("TITLE");
     if ( tIter != _pmap.end() )
         std::cout << " - " << tIter->second;
 
     std::cout << std::endl;
 
-    //for ( tIter = _pmap.begin(); tIter != _pmap.end(); ++tIter )
-        //std::cout << tIter->first << " : " << tIter->second << std::endl;
     return;
 }
 
@@ -126,6 +124,14 @@ TransFile::readTags()
     _pmap = f.tag()->properties();
 
     return true;
+}
+
+bool
+TransFile::haveTags()
+{
+	if ( _pmap.isEmpty() )
+		return false;
+	return true;
 }
 
 
