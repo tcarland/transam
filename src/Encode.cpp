@@ -113,7 +113,6 @@ Encode::encodeFiles ( TransFileList & infiles, TransFileList & outfiles,
         if ( _debug )
             std::cout << "\noutfile: " << outfile << std::endl;
 
-
         TransFile  outtf(outfile, this->_type);
 
         if ( this->encode(intf, outtf) )

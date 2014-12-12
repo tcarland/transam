@@ -268,7 +268,8 @@ int main ( int argc, char **argv )
     		std::cout << "Error: Output path is invalid (not a directory)." << std::endl;
     		return -1;
     	}
-    	if ( (::mkdir(outp.c_str(), 755)) != 0 ) {
+
+    	if ( (::mkdir(outp.c_str(), 0755)) != 0 ) {
     		std::cout << "Error: Failed to create output directory! ";
     		if ( errno == EACCES || errno == EPERM )
     			std::cout << "No permissions";
@@ -316,6 +317,8 @@ int main ( int argc, char **argv )
 
         intf = TransFile(inf, TransFile::GetEncoding(inf));
         wav  = TransFile(Decode::GetOutputName(inf), AUDIO_WAV);
+
+        intf.readTags();
 
         if ( outf.empty() ) {
         	if ( enctype == AUDIO_UNK ) {
