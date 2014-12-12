@@ -34,7 +34,7 @@ using namespace tcanetpp;
 static
 const char Process[] = "transam";
 static
-const char Version[] = "0.2.3";
+const char Version[] = "0.2.5";
 
 
 
@@ -58,7 +58,7 @@ void usage()
     printf("     -o | --outfile <file> :  name of the target output file.\n");
     printf("     -p | --outpath <path> :  alternate output path to place generated files.\n");
     printf("     -t | --type <name>    :  The encoding type by extension (if applicable).\n");
-    printf("                           :  supported types are: flac, mp3, mp4, ogg, shn, wav");
+    printf("                           :  supported types are: flac, mp3, mp4, ogg, shn, wav\n");
     printf("     -T | --notags         :  Disable converting metadata tags to new format.\n");
     printf("     -W | --clobber        :  Allow the overwriting of files that already exist.\n");
     printf("     -v | --verbose        :  enable verbose output.\n");
@@ -101,6 +101,8 @@ void listTags ( const std::string & path, encoding_t type )
     }
 
     files.sort();
+
+    std::cout << "Listing metadata for files in " << path << std::endl;
 
     for ( fIter = files.begin(); fIter != files.end(); ++fIter )
     {
@@ -296,16 +298,37 @@ int main ( int argc, char **argv )
             usage();
         }
 
-        TransFile intf(inf, TransFile::GetEncoding(inf));
-        TransFile wav(Decode::GetOutputName(inf), AUDIO_WAV);
-        TransFile outf(Encode::GetOutputName(wav, enctype), enctype);
+        TransFile  intf, outtf, wav;
 
-        if ( ! decoder.decode(intf, wav) ) {
+        intf = TransFile(inf, TransFile::GetEncoding(inf));
+        wav  = TransFile(Decode::GetOutputName(inf), AUDIO_WAV);
+
+        if ( outf.empty() ) {
+        	if ( enctype == AUDIO_UNK ) {
+        		std::cout << "ERROR! Encoding type is required. Output file is not defined."
+				          << std::endl;
+        	    return -1;
+            }
+        	outf = Encode::GetOutputName(wav, enctype);
+        }
+
+        if ( enctype == AUDIO_UNK ) {
+        	int indx = StringUtils::lastIndexOf(outf, ".");
+        	std::string ext = outf.substr(indx+1);
+        	enctype = setEncodingType(ext);
+        }
+
+        outtf = TransFile(outf, enctype);
+
+        if ( intf.type() == AUDIO_WAV ) {
+        	std::cout << "Input file is already raw pcm/wav." << std::endl;
+        } else if ( ! decoder.decode(intf, wav) ) {
             std::cout << "Error decoding. " << std::endl;
             return -1;
         }
+
         if ( ! decode ) {
-            if ( ! encoder.encode(wav, outf) ) {
+            if ( ! encoder.encode(wav, outtf) ) {
                 std::cout << "Error encoding files." << std::endl;
                 return -1;
             }

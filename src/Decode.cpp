@@ -37,6 +37,15 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
 {
     std::string cmd;
    
+    if ( FileUtils::IsReadable(outfile.getFileName()) && ! this->clobber() )
+    {
+        std::cout << "Decode::decode() output file exists: "
+                  << outfile.getFileName() << std::endl
+                  << "    Set --clobber option to overwrite."
+                  << std::endl;
+        return false;
+    }
+
     cmd = this->getDecoder(infile, outfile.getFileName());
 
     if ( cmd.empty() ) {
@@ -99,24 +108,22 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path,
         }
         else 
         {
-            if ( ! this->notags() ) {
+            if ( ! this->notags() )
+            {
                 if ( ! intf.readTags() )
-                    std::cout << "decodePath() ERROR reading metadata tags." << std::endl;
+                    std::cout << "decodePath() ERROR reading metadata tags: "
+                              << intf.getFileName() << std::endl;
             }
 
             if ( outfile.empty() ) {
-                std::cout << "decodePath() ERROR generating output filename." << std::endl;
+                std::cout << "decodePath() ERROR generating output filename."
+                		  << std::endl;
                 return false;
             }
+
             if ( _debug )
             	std::cout << "\noutfile: " << outfile << std::endl;
 
-            if ( FileUtils::IsReadable(outfile) && ! this->clobber() ) {
-                std::cout << "Decode::decodePath() output file exists: " << outfile 
-                    << std::endl << "    Set --clobber option to overwrite." << std::endl;
-                continue;
-            }
-            
             TransFile outtf(outfile, AUDIO_WAV);
 
             if ( this->decode(intf, outtf) ) {

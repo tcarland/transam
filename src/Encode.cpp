@@ -44,6 +44,13 @@ Encode:: encode ( TransFile & infile, TransFile & outfile )
 {
     std::string  cmd;
 
+    if ( FileUtils::IsReadable(outfile.getFileName()) && ! this->clobber() ) {
+        std::cout << "Encode::encodeFiles() output file exists: "
+        		  << outfile.getFileName() << std::endl
+				  << "  Set --clobber option to overwrite."
+				  << std::endl;
+        return false;
+    }
     if ( infile.type() != AUDIO_WAV )
     {
         // decode first
@@ -102,12 +109,6 @@ Encode::encodeFiles ( TransFileList & infiles, TransFileList & outfiles,
         if ( _debug )
             std::cout << "\noutfile: " << outfile << std::endl;
 
-        if ( FileUtils::IsReadable(outfile) && ! this->clobber() ) {
-            std::cout << "Encode::encodeFiles() output file exists: " << outfile
-                << std::endl << "  Set --clobber option to overwrite."
-				<< " skipping..." << std::endl;
-            continue;
-        }
 
         TransFile  outtf(outfile, this->_type);
 

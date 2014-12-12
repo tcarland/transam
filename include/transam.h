@@ -39,8 +39,9 @@ static std::string   MP4_OF       = " -of ";
 
 static std::string   FLAC_ENCODER = "flac";
 static std::string   FLAC_DECODER = "flac";
-static std::string   FLACE_OPTS   = " -8 -V -o ";
+static std::string   FLACE_OPTS   = " -8 -V -f -o ";
 static std::string   FLACD_OPTS   = " -d --output-name=";
+static std::string   FLACE_2496   = " --bps=24 --sample-rate=96000";
 
 static std::string   OGG_ENCODER  = "oggenc";
 static std::string   OGG_DECODER  = "oggdec";
