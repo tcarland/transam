@@ -9,7 +9,8 @@
 namespace transam {
 
 
-// default encoding bitrate
+#define TRANSAM_VERSION        "v0.2.8"
+#define TRANSAM_LICENSE        "Copyright (c)2010-2013 Timothy C. Arland <tcarland@gmail.com>"
 #define TRANSAM_DEFAULT_BITRATE 384
 
 // supported encoding types

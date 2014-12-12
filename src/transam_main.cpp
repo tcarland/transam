@@ -33,17 +33,16 @@ using namespace tcanetpp;
 
 static
 const char Process[] = "transam";
-static
-const char Version[] = "0.2.6";
-
 
 
 
 void version()
 {
-    printf("%s version: v%s\n", Process, Version);
+    std::cout << Process << " : " << TRANSAM_VERSION << std::endl;
+    std::cout << TRANSAM_LICENSE << std::endl;
     exit(0);
 }
+
 
 void usage()
 {
