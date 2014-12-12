@@ -21,7 +21,7 @@ using namespace transam;
 using namespace tcanetpp;
 
 static const char Process[] = "transtag";
-static const char Version[] = "0.1.2";
+static const char Version[] = "0.1.3";
 
 
 
@@ -92,7 +92,7 @@ bool setTag ( TransFile & tf, const std::string & tag )
 
     indx = StringUtils::indexOf(tag, ":");
     if ( indx < 0 ) {
-        std::cout << " Tag format invalid. Should  key:val" << std::endl;
+        std::cout << " Tag format invalid. Should be 'key:val'" << std::endl;
         return false;
     }
 

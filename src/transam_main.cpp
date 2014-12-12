@@ -34,7 +34,7 @@ using namespace tcanetpp;
 static
 const char Process[] = "transam";
 static
-const char Version[] = "0.2.5";
+const char Version[] = "0.2.6";
 
 
 

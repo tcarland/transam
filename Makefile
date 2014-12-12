@@ -27,7 +27,7 @@ TAGOBJ=		src/trans_tag.o
 ALL_OBJS=	$(OBJS) $(TRCOBJ)
 ALL_BINS=	$(BIN)
 
-all: transam
+all: transam transtag transcheck
 
 include $(TOPDIR)/tcamake/project_defs
 

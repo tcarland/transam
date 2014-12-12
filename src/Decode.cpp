@@ -54,15 +54,15 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
         return false;
     }
 
-    if ( this->_dryrun ) {
-        std::cout << "exec: `" << cmd << "'" << std::endl;
+    std::cout << "exec: `" << cmd << "'" << std::endl;
+
+    if ( this->_dryrun )
         return true;
-    }
  
     CmdBuffer  cmdbuf;
 
     if ( ! cmdbuf.Open(cmd) ) {
-        std::cout << "Error in cmd exec: " << cmd << std::endl;
+        std::cout << "decode() Error in cmd open." << std::endl;
         return false;
     }
 
