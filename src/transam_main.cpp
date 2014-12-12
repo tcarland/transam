@@ -27,8 +27,8 @@ extern "C" {
 using namespace transam;
 
 #include "StringUtils.h"
+#include "FileUtils.h"
 using namespace tcanetpp;
-
 
 
 static
@@ -260,6 +260,21 @@ int main ( int argc, char **argv )
     if ( enctype < 2 && inf.empty() && ! decode ) {
         std::cout << "Error! Encoding type not provided or detected." << std::endl;
         usage();
+    }
+
+    if ( ! outp.empty() && ! FileUtils::IsDirectory(outp) )
+    {
+    	if ( FileUtils::IsReadable(outp) ) {
+    		std::cout << "Error: Output path is invalid (not a directory)." << std::endl;
+    		return -1;
+    	}
+    	if ( (::mkdir(outp.c_str(), 755)) != 0 ) {
+    		std::cout << "Error: Failed to create output directory! ";
+    		if ( errno == EACCES || errno == EPERM )
+    			std::cout << "No permissions";
+    		std::cout << std::endl;
+    		return -1;
+    	}
     }
 
     Decode  decoder;
