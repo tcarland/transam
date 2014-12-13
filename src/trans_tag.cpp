@@ -21,7 +21,7 @@ using namespace transam;
 using namespace tcanetpp;
 
 static const char Process[] = "transtag";
-static const char Version[] = "0.2.1";
+static const char Version[] = "0.3.1";
 
 
 

@@ -38,30 +38,32 @@ const char Process[] = "transam";
 
 void version()
 {
-    std::cout << Process << " : " << TRANSAM_VERSION << std::endl;
-    std::cout << TRANSAM_LICENSE << std::endl;
+    std::cout << Process << " : " << TRANSAM_VERSION << std::endl
+              << TRANSAM_LICENSE  << std::endl;
     exit(0);
 }
 
 
 void usage()
 {
-    printf("Usage: %s [-dEhnvVW] [-t type] [-i infile] [-o outfile] <path>\n", Process);
-    printf("     -b | --bitrate        :  bitrate for the encoding process (default is 384).\n");
-    printf("     -d | --decode         :  decode only to a .wav file (default is to encode).\n");
-    printf("     -E | --noerase        :  do NOT erase wav files after encoding.\n");
-    printf("     -h | --help           :  display help information and exit.\n");
-    printf("     -L | --list           :  list only the id3/4 tags for each file.\n");
-    printf("     -n | --dryrun         :  enable the 'dryrun' option, no changes are made.\n");
-    printf("     -i | --infile <file>  :  name of the file to transcode.\n");
-    printf("     -o | --outfile <file> :  name of the target output file.\n");
-    printf("     -p | --outpath <path> :  alternate output path to place generated files.\n");
-    printf("     -t | --type <name>    :  The encoding type by extension (if applicable).\n");
-    printf("                           :  supported types are: flac, mp3, mp4, ogg, shn, wav\n");
-    printf("     -T | --notags         :  Disable converting metadata tags to new format.\n");
-    printf("     -W | --clobber        :  Allow the overwriting of files that already exist.\n");
-    printf("     -v | --verbose        :  enable verbose output.\n");
-    printf("     -V | --version        :  display version info and exit.\n");
+    std::cout << "Usage: " << Process << " [-dEhnvVW] [-t type] [-i infile] [-o outfile] <path>\n"
+              << "     -A | --apply-only     :  used with --set-tags to only tag the infiles, no decoding.\n"
+              << "     -b | --bitrate        :  bitrate for the encoding process (default is 384).\n"
+              << "     -d | --decode         :  decode only to a .wav file (default is to encode).\n"
+              << "     -E | --noerase        :  do NOT erase source WAV files after decode/encode.\n"
+              << "     -h | --help           :  display help information and exit.\n"
+              << "     -L | --list           :  list only the id3/4 tags for each file.\n"
+              << "     -n | --dryrun         :  enable the 'dryrun' option, no changes are made.\n"
+              << "     -i | --infile <file>  :  name of the file to transcode.\n"
+              << "     -o | --outfile <file> :  name of the target output file.\n"
+              << "     -p | --outpath <path> :  alternate output path to place generated files.\n"
+              << "     -t | --type <name>    :  The encoding type by extension (if applicable).\n"
+              << "                           :  supported types are: flac, mp3, mp4, ogg, shn, wav\n"
+              << "     -T | --tags=\"KEY:val\" "
+              << "     -W | --clobber        :  Allow the overwriting of files that already exist.\n"
+              << "     -X | --notags         :  Disable converting metadata tags to new encoding.\n"
+              << "     -v | --verbose        :  enable verbose output.\n"
+              << "     -V | --version        :  display version info and exit.\n" << std::endl;
     exit(0);
 }
 
@@ -74,8 +76,7 @@ void sigHandler ( int signal )
 
 encoding_t setEncodingType ( const std::string & typestr )
 {
-    encoding_t type;
-
+    encoding_t  type;
     EncoderMap::iterator fIter;
 
     if ( (fIter = Encode::Encoders.find(typestr)) == Encode::Encoders.end() )
