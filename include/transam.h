@@ -1,3 +1,13 @@
+/**
+  *  @file    transam.h
+  *  @author  Timothy C. Arland <tcarland@gmail.com>
+  *
+  *  Copyright (c) 2009,2010 Timothy C. Arland <tcarland@gmail.com>
+  *
+  *  TRANS-AM  Transcoding for Audio Media
+  *     Allows for single step transcoding from one format to another
+  *   such as shn->flac or flac->mp4 while keeping metadata intact.
+ **/
 #ifndef _TRANSAM_TRANSAM_H_
 #define _TRANSAM_TRANSAM_H_
 
@@ -13,6 +23,7 @@ namespace transam {
 #define TRANSAM_LICENSE        "Copyright (c)2010-2013 Timothy C. Arland <tcarland@gmail.com>"
 #define TRANSAM_DEFAULT_BITRATE 384
 
+
 // supported encoding types
 typedef enum encoding_types {
     AUDIO_UNK     = 0,
@@ -25,6 +36,7 @@ typedef enum encoding_types {
 } encoding_t;
 
 typedef encoding_t enc_t;
+
 
 // Command and options for each encoding type
 static std::string   MP3_ENCODER  = "lame";
@@ -40,8 +52,9 @@ static std::string   MP4_OF       = " -of ";
 
 static std::string   FLAC_ENCODER = "flac";
 static std::string   FLAC_DECODER = "flac";
-static std::string   FLACE_OPTS   = " -8 -V -f -o ";
 static std::string   FLACD_OPTS   = " -d --output-name=";
+static std::string   FLACE_OPTS   = " -8 -V -f -o ";
+static std::string   FLACE_1648   = " --bps=16 --sample-rate=48000";
 static std::string   FLACE_2496   = " --bps=24 --sample-rate=96000";
 
 static std::string   OGG_ENCODER  = "oggenc";

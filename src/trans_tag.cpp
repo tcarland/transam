@@ -21,7 +21,7 @@ using namespace transam;
 using namespace tcanetpp;
 
 static const char Process[] = "transtag";
-static const char Version[] = "0.3.1";
+static const char Version[] = "0.3.2";
 
 
 
@@ -171,6 +171,7 @@ int main ( int argc, char **argv )
     }
 
     target = argv[optind];
+
     if ( target.empty() ) {
         std::cout << "No target defined." << std::endl;
         usage();

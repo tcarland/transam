@@ -1,14 +1,7 @@
 #define _TRANSAM_TRANSCHECK_CPP_
 
-extern "C" {
-# include <unistd.h>
-# include <getopt.h>
-# include <string.h>
-# include <errno.h>
-}
-
-#include <cstdio>
 #include <iostream>
+#include <iomanip>
 
 #include "transam.h"
 using namespace transam;
@@ -18,8 +11,6 @@ using namespace transam;
 using namespace tcanetpp;
 
 
-static const char Process[] = "transcheck";
-
 
 bool isValid ( std::string & result )
 {
@@ -28,44 +19,69 @@ bool isValid ( std::string & result )
     return false; 
 }
 
-void check ( std::string & encoder )
+bool check ( tcanetpp::CmdBuffer & cmdbuf, const std::string & exec )
 {
-    CmdBuffer    cmdbuf(4096);
     std::string  cmd, line;
+    bool         result = false;
 
     cmd  = "which ";
-    cmd.append(encoder);
+    cmd.append(exec);
 
     if ( ! cmdbuf.Open(cmd) ) {
         std::cout << "Error in cmdbuf.open()" << std::endl;
-        return;
+        return false;
     }
 
     line = cmdbuf.getLine();
 
-    if ( isValid(line) )
+    if ( (result = isValid(line)) )
         std::cout << "   [OK]" << std::endl;
     else
         std::cout << " MISSING!" << std::endl;
+
+    cmdbuf.Close();
+
+    return result;
 }
 
 
 int main ( int argc, char **argv )
 {
-    std::cout << "Checking for the MP3 Encoder: " << MP3_ENCODER;
-    check(MP3_ENCODER);
+    tcanetpp::CmdBuffer  cmdbuf;
+    bool  r, f = true;
 
-    std::cout << "Checking for the MP4 Encoder: " << MP4_ENCODER;
-    check(MP4_ENCODER);
-    
-    std::cout << "Checking for the FLAC Encoder: " << FLAC_ENCODER;
-    check(FLAC_ENCODER);
+    std::cout << std::endl;
+    std::cout << std::setw(32)<< std::setiosflags(std::ios_base::left)
+              << "Checking for the MP3 Encoder: " << std::setw(12) << MP3_ENCODER;
+    r = check(cmdbuf, MP3_ENCODER);
+    if ( ! r ) f = r;
 
-    std::cout << "Checking for the OGG Encoder: " << OGG_ENCODER;
-    check(OGG_ENCODER);
+    std::cout << std::setw(32) << "Checking for the MP4 Encoder: "
+              << std::setw(12) << MP4_ENCODER;
+    r = check(cmdbuf, MP4_ENCODER);
+    if ( ! r ) f = r;
     
-    std::cout << "Checking for the SHN Decoder: " << SHN_DECODER;
-    check(SHN_DECODER);
+    std::cout << std::setw(32) << "Checking for the FLAC Encoder: "
+              << std::setw(12) << FLAC_ENCODER;
+    r = check(cmdbuf, FLAC_ENCODER);
+    if ( ! r ) f = r;
+
+    std::cout << std::setw(32) << "Checking for the OGG Encoder: "
+              << std::setw(12) << OGG_ENCODER;
+    r = check(cmdbuf, OGG_ENCODER);
+    if ( ! r ) f = r;
+    
+    std::cout << std::setw(32) << "Checking for the SHN Decoder: "
+              << std::setw(12) << SHN_DECODER;
+    r = check(cmdbuf, SHN_DECODER);
+    if ( ! r ) f = r;
+
+    if ( ! f )
+        std::cout << "Some apps are missing, ensure the appropriate packages are "  << std::endl
+                  << "installed and in your system path if you plan to work with " << std::endl
+                  << "that given format." << std::endl;
+    else
+        std::cout << "All Good!" << std::endl;
     
     return 0;
 }

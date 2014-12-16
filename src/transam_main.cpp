@@ -1,9 +1,8 @@
 /**
-  *   @file transam_main.cpp
+  *   @file   transam_main.cpp
   *   @author tcarland@gmail.com
-  *   Copyright (c) 2011 Timothy Charlton Arland
   *
-  *   TODO: show taginfo, alternate output path
+  *   Copyright (c) 2011 Timothy Charlton Arland
  **/
 #define _TRANSAM_TRANSAM_CPP_
 
@@ -157,7 +156,6 @@ int main ( int argc, char **argv )
                                       {"clobber", no_argument, 0, 'W'},
                                       {0,0,0,0}
                                     };
-
 
     while ( (optChar = ::getopt_long(argc, argv, "dEhi:Lo:p:nt:vVW", l_opts, &optindx)) != EOF )
     {

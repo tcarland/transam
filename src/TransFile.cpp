@@ -161,8 +161,6 @@ TransFile::ReadPath ( const std::string & path, TransFileList & files, bool nota
         return false;
     }
 
-    //std::cout << "ReadFiles path: " << path << std::endl;
-
     while ( (dire = ::readdir(dirp)) != NULL )
     {
         name = dire->d_name;
@@ -195,7 +193,6 @@ TransFile::ReadPath ( const std::string & path, TransFileList & files, bool nota
 
         files.push_back(file);
     }
-
     ::closedir(dirp);
 
     return true;
