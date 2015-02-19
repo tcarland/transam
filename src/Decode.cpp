@@ -210,23 +210,28 @@ Decode::getDecoder ( const TransFile   & infile,
     {
         case AUDIO_MP3:
             cmd = MP3_DECODER;
-            cmd.append(MP3D_OPTS).append(outfile);
-            cmd.append(" ").append(infile.getFileName());
+            cmd.append(MP3D_OPTS);
+            cmd.append("\"").append(outfile).append("\" ");
+            cmd.append("\"").append(infile.getFileName()).append("\"");
             break;
         case AUDIO_MP4:
             cmd = MP4_DECODER;
-            cmd.append(MP4_IF).append(infile.getFileName());
-            cmd.append(MP4_OF).append(outfile);
+            cmd.append(MP4_IF);
+            cmd.append("\"").append(infile.getFileName()).append("\"");
+            cmd.append(MP4_OF);
+            cmd.append("\"").append(outfile).append("\"");
             break;
         case AUDIO_FLAC:
             cmd = FLAC_DECODER;
-            cmd.append(FLACD_OPTS).append(outfile);
-            cmd.append(" ").append(infile.getFileName());
+            cmd.append(FLACD_OPTS);
+            cmd.append("\"").append(outfile).append("\" ");
+            cmd.append("\"").append(infile.getFileName()).append("\"");
             break;
         case AUDIO_SHN:
             cmd = SHN_DECODER;
-            cmd.append(SHN_OPTS).append(infile.getFileName());
-            cmd.append(" ").append(outfile);
+            cmd.append(SHN_OPTS);
+            cmd.append("\"").append(infile.getFileName()).append("\" ");
+            cmd.append(outfile);
             break;
         case AUDIO_UNK:
         case AUDIO_WAV:
