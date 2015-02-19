@@ -85,11 +85,9 @@ TransFile::setTags ( const TagMap & map )
 bool
 TransFile::setTag ( const std::string & key, const std::string & val )
 {
-	TagLib::StringList vals;
-
-	vals.append(val);
-
-	return _pmap.replace(key, vals);
+    TagLib::StringList vals;
+    vals.append(val);
+    return _pmap.replace(key, vals);
 }
 
 const TagMap&

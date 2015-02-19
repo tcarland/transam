@@ -5,15 +5,17 @@ else
 endif
 
 NEED_SOCKET = 1
-NEED_PTHREADS = 1
 NEED_TCANETPP = 1
 NEED_TCACMDBUF = 1
-
+ifdef USE_PTHREADS
+NEED_PTHREADS = 1
+endif
 
 ifdef TRANSAM_DEBUG
 OPT_FLAGS= 	-g
 endif
 
+CXXFLAGS=       -std=c++0x
 INCLUDES=       -Iinclude $(shell pkg-config --cflags taglib)
 LIBS=		$(shell pkg-config --libs taglib)
 
