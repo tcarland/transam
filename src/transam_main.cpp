@@ -45,7 +45,7 @@ void version()
 
 void usage()
 {
-    std::cout << "Usage: " << Process << " [-dEhnvVW] [-t type] [-i infile] [-o outfile] <path>\n"
+    std::cout << "Usage: " << Process << " [-dEhnvVW] [-t type] [-o outfile] <file|path>\n"
               << "     -A | --apply-only     :  used with --set-tags to only tag the infiles, no decoding.\n"
               << "     -b | --bitrate        :  bitrate for the encoding process (default is 384).\n"
               << "     -d | --decode         :  decode only to a .wav file (default is to encode).\n"
@@ -53,12 +53,11 @@ void usage()
               << "     -h | --help           :  display help information and exit.\n"
               << "     -L | --list           :  list only the id3/4 tags for each file.\n"
               << "     -n | --dryrun         :  enable the 'dryrun' option, no changes are made.\n"
-              << "     -i | --infile <file>  :  name of the file to transcode.\n"
               << "     -o | --outfile <file> :  name of the target output file.\n"
               << "     -p | --outpath <path> :  alternate output path to place generated files.\n"
               << "     -t | --type <name>    :  The encoding type by extension (if applicable).\n"
               << "                           :  supported types are: flac, mp3, mp4, ogg, shn, wav\n"
-              << "     -T | --tags=\"KEY:val\" "
+              << "     -T | --tags=\"KEY:val\" :  Set tags on the given file(s)\n"
               << "     -W | --clobber        :  Allow the overwriting of files that already exist.\n"
               << "     -X | --notags         :  Disable converting metadata tags to new encoding.\n"
               << "     -v | --verbose        :  enable verbose output.\n"
@@ -120,15 +119,95 @@ void listTags ( const std::string & path, encoding_t type )
 }
 
 
+bool setTag ( TransFile & tf, StringList & tags )
+{
+
+    std::string key, val;
+    int         indx;
+
+    StringList::iterator  sIter;
+
+    for ( sIter = tags.begin(); sIter != tags.end(); ++sIter )
+    {
+        std::string & tag = *sIter;
+        indx = StringUtils::indexOf(tag, ":");
+
+        if ( indx < 0 ) {
+            std::cout << " Tag format invalid. Should be 'key:val'" << std::endl;
+            return false;
+        }
+
+        key  = tag.substr(0, indx);
+        val  = tag.substr(indx+1);
+
+        std::cout << "  Setting " << key << " : " << val << std::endl;
+
+        if ( ! tf.setTag(key, val) ) {
+            std::cout << "Error setting tag for " << tf.getFileName() << std::endl;
+            return false;
+        }
+    }
+
+    tf.saveTags();
+
+    return true;
+}
+
+
+bool setTags ( const std::string & tags, const std::string & target )
+{
+    TransFileList files;
+    StringList    taglist;
+    bool          res = true;
+
+    StringUtils::split(tags, '|', back_inserter(taglist));
+
+    if ( FileUtils::IsDirectory(target) )
+    {
+        if ( ! TransFile::ReadPath(target, files) ) {
+            std::cout << "ERROR reading files from path '" << target << "'" << std::endl;
+            return false;
+        }
+
+        files.sort();
+    }
+    else if ( FileUtils::IsReadable(target) )
+    {
+        TransFile ta(target, TransFile::GetEncoding(target));
+        ta.readTags();
+        files.push_back(ta);
+    }
+
+    TransFileList::iterator fIter;
+
+    for ( fIter = files.begin(); fIter != files.end(); ++fIter )
+    {
+        TransFile & tf = (TransFile&) *fIter;
+
+        std::cout << "File: " << tf.getFileName() << std::endl
+            << "  Current Tag: ";
+        tf.printTags();
+
+        res = setTag(tf, taglist);
+
+        std::cout << "  Updated Tag: ";
+        tf.printTags();
+    }
+
+    return res;
+}
+
+
 
 int main ( int argc, char **argv )
 {
     char optChar;
-    char *infile  = NULL;
     char *outfile = NULL;
     char *outpath = NULL;
     char *type    = NULL;
+    char *tagstr  = NULL;
     char *br      = NULL;
+    bool apply    = false;
     bool verbose  = false;
     bool dryrun   = false;
     bool decode   = false;
@@ -140,7 +219,8 @@ int main ( int argc, char **argv )
 
     uint16_t rate = TRANSAM_DEFAULT_BITRATE;
 
-    static struct option l_opts[] = { {"bitrate", required_argument, 0, 'b'},
+    static struct option l_opts[] = { {"apply-only", no_argument, 0, 'A'},
+                                      {"bitrate", required_argument, 0, 'b'},
                                       {"decode",  no_argument, 0, 'd'},
                                       {"dryrun",  no_argument, 0, 'n'},
                                       {"noerase", no_argument, 0, 'E'},
@@ -148,9 +228,10 @@ int main ( int argc, char **argv )
                                       {"list",    no_argument, 0, 'L'},
                                       {"infile",  required_argument, 0, 'i'},
                                       {"outfile", required_argument, 0, 'o'},
-									  {"outpath", required_argument, 0, 'p'},
+                                      {"outpath", required_argument, 0, 'p'},
                                       {"type",    required_argument, 0, 't'},
-                                      {"notags",  no_argument, 0, 'T'},
+                                      {"tag",     required_argument, 0, 'T'},
+                                      {"notags",  no_argument, 0, 'X'},
                                       {"verbose", no_argument, 0, 'v'},
                                       {"version", no_argument, 0, 'V'},
                                       {"clobber", no_argument, 0, 'W'},
@@ -160,6 +241,9 @@ int main ( int argc, char **argv )
     while ( (optChar = ::getopt_long(argc, argv, "dEhi:Lo:p:nt:vVW", l_opts, &optindx)) != EOF )
     {
         switch ( optChar ) {
+            case 'A':
+              apply = true;
+              break;
             case 'b':
               br = strdup(optarg);
               break;
@@ -171,9 +255,6 @@ int main ( int argc, char **argv )
               break;
             case 'h':
               usage();
-              break;
-            case 'i':
-              infile = strdup(optarg);
               break;
             case 'L':
               showtags = true;
@@ -191,6 +272,9 @@ int main ( int argc, char **argv )
               type  = strdup(optarg);
               break;
             case 'T':
+              tagstr = strdup(optarg);
+              break;
+            case 'X':
               notags = true;
               break;
             case 'v':
@@ -208,24 +292,31 @@ int main ( int argc, char **argv )
         }
     }
 
-    std::string inf, outf, outp, path;
+    std::string inf, outf, outp, path, tags;
 
     encoding_t  enctype = AUDIO_UNK;
 
-    if ( optind == argc && infile == NULL ) {
+    if ( optind == argc ) {
         std::cout << "No target defined." << std::endl;
         usage();
-    } else if ( infile == NULL ) {
-        path = argv[optind];
-        if ( path.empty() )
-            usage();
     }
-    // else set outfile?
 
-    if ( infile != NULL ) {
-        inf.assign(infile);
-        ::free(infile);
+    path = argv[optind];
+    if ( path.empty() )
+        usage();
+
+    if ( tagstr != NULL ) {
+        tags.assign(tagstr);
+        ::free(tagstr);
+        setTags(tags, path);
+        return 0;
     }
+
+    if ( ! FileUtils::IsDirectory(path) ) {
+        inf.assign(path);
+        path = "";
+    }
+
     if ( outfile != NULL ) {
         outf.assign(outfile);
         ::free(outfile);
@@ -257,6 +348,8 @@ int main ( int argc, char **argv )
     }
 
     if ( enctype < 2 && inf.empty() && ! decode ) {
+        if ( ! tags.empty() )
+            return 0;
         std::cout << "Error! Encoding type not provided or detected." << std::endl;
         usage();
     }
@@ -264,17 +357,17 @@ int main ( int argc, char **argv )
     if ( ! outp.empty() && ! FileUtils::IsDirectory(outp) )
     {
     	if ( FileUtils::IsReadable(outp) ) {
-    		std::cout << "Error: Output path is invalid (not a directory)." << std::endl;
-    		return -1;
+            std::cout << "Error: Output path is invalid (not a directory)." << std::endl;
+            return -1;
     	}
 
     	if ( (::mkdir(outp.c_str(), 0755)) != 0 ) {
-    		std::cout << "Error: Failed to create output directory! ";
-    		if ( errno == EACCES || errno == EPERM )
-    			std::cout << "No permissions";
-    		std::cout << std::endl;
-    		return -1;
-    	}
+            std::cout << "Error: Failed to create output directory! ";
+            if ( errno == EACCES || errno == EPERM )
+                std::cout << "No permissions";
+            std::cout << std::endl;
+            return -1;
+        }
     }
 
     Decode  decoder;

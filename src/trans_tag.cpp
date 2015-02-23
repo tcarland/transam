@@ -160,7 +160,7 @@ int main ( int argc, char **argv )
     }
 
     std::string    tags, target;
-	StringList     taglist;
+    StringList     taglist;
     TransFileList  files;
 
     TransFileList::iterator  fIter;
@@ -192,7 +192,7 @@ int main ( int argc, char **argv )
         return 0;
     }
 
-	StringUtils::split(tags, '|', back_inserter(taglist));
+    StringUtils::split(tags, '|', back_inserter(taglist));
 
     // operate tags on all files in directory (of the given encoding type if applicable)
     if ( FileUtils::IsDirectory(target) )
