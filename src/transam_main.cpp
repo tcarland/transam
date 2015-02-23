@@ -309,7 +309,8 @@ int main ( int argc, char **argv )
         tags.assign(tagstr);
         ::free(tagstr);
         setTags(tags, path);
-        return 0;
+        if ( apply )
+            return 0;
     }
 
     if ( ! FileUtils::IsDirectory(path) ) {
