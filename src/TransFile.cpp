@@ -180,7 +180,8 @@ TransFile::ReadPath ( const std::string & path, TransFileList & files, bool nota
         }
 
         if ( type == AUDIO_UNK ) {
-        	std::cout << " Skipping " << name << " unknown extension." << std::endl;
+        	std::cout << " Skipping " << name << " unknown extension." 
+                    << std::endl;
         	continue;
         }
 
@@ -224,6 +225,40 @@ TransFile::GetEncoding ( const std::string & name )
         return AUDIO_OGG;
         
     return AUDIO_UNK;
+}
+
+
+void 
+TransFile::ListTags ( const std::string & path, encoding_t type )
+{
+    TransFileList  files;
+    TransFileList::iterator  fIter;
+
+    if ( ! TransFile::ReadPath(path, files) )
+    {
+        std::cout << "ERROR reading files from path '" << path
+            << "'" << std::endl;
+        return;
+    }
+
+    files.sort();
+
+    std::cout << "Listing metadata for files in " << path << std::endl;
+
+    for ( fIter = files.begin(); fIter != files.end(); ++fIter )
+    {
+        TransFile & tf = (TransFile&) *fIter;
+        if ( ! tf.haveTags() ) {
+            std::cout << "NOTAGS: " << tf.getFileName() << std::endl;
+            continue;
+        }
+        if ( type > AUDIO_UNK && type == tf.type() )
+            tf.printTags();
+        else if ( type == AUDIO_UNK )
+            tf.printTags();
+    }
+
+    return;
 }
 
 

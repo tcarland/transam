@@ -86,39 +86,6 @@ encoding_t setEncodingType ( const std::string & typestr )
 }
 
 
-void listTags ( const std::string & path, encoding_t type )
-{
-    TransFileList  files;
-    TransFileList::iterator  fIter;
-
-    if ( ! TransFile::ReadPath(path, files) )
-    {
-        std::cout << "ERROR reading files from path '" << path
-            << "'" << std::endl;
-        return;
-    }
-
-    files.sort();
-
-    std::cout << "Listing metadata for files in " << path << std::endl;
-
-    for ( fIter = files.begin(); fIter != files.end(); ++fIter )
-    {
-        TransFile & tf = (TransFile&) *fIter;
-        if ( ! tf.haveTags() ) {
-            std::cout << "NOTAGS: " << tf.getFileName() << std::endl;
-            continue;
-        }
-        if ( type > AUDIO_UNK && type == tf.type() )
-            tf.printTags();
-        else if ( type == AUDIO_UNK )
-            tf.printTags();
-    }
-
-    return;
-}
-
-
 bool setTag ( TransFile & tf, StringList & tags )
 {
 
@@ -225,7 +192,7 @@ int main ( int argc, char **argv )
                                       {"dryrun",  no_argument, 0, 'n'},
                                       {"noerase", no_argument, 0, 'E'},
                                       {"help",    no_argument, 0, 'h'},
-                                      {"list",    no_argument, 0, 'L'},
+                                      {"list",    no_argument, 0, 'l'},
                                       {"infile",  required_argument, 0, 'i'},
                                       {"outfile", required_argument, 0, 'o'},
                                       {"outpath", required_argument, 0, 'p'},
@@ -238,7 +205,7 @@ int main ( int argc, char **argv )
                                       {0,0,0,0}
                                     };
 
-    while ( (optChar = ::getopt_long(argc, argv, "dEhi:Lo:p:nt:vVW", l_opts, &optindx)) != EOF )
+    while ( (optChar = ::getopt_long(argc, argv, "dEhi:lo:p:nt:vVW", l_opts, &optindx)) != EOF )
     {
         switch ( optChar ) {
             case 'A':
@@ -256,7 +223,7 @@ int main ( int argc, char **argv )
             case 'h':
               usage();
               break;
-            case 'L':
+            case 'l':
               showtags = true;
               break;
             case 'n':
@@ -343,7 +310,7 @@ int main ( int argc, char **argv )
             return -1;
         }
 
-        listTags(path, enctype);
+        TransFile::ListTags(path, enctype);
 
         return 0;
     }

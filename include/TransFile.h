@@ -1,8 +1,8 @@
 /** 
-  *   @file   TransFile.h
-  *   @author tcarland@gmail.com
+  * @file   TransFile.h
+  * @author tcarland@gmail.com
   *
-  *   Copyright (c) 2011 Timothy Charlton Arland <tcarland@gmail.com>
+  * Copyright (c) 2011 Timothy Charlton Arland <tcarland@gmail.com>
   *
  **/
 #ifndef _TRANSAM_TRANSFILE_H_
@@ -49,7 +49,7 @@ class TransFile {
 
     void          setTags      ( const TagMap      & tags );
     bool          setTag       ( const std::string & key,
-    							 const std::string & val );
+                                 const std::string & val );
     
     const TagMap& getTags() const;
 
@@ -64,6 +64,9 @@ class TransFile {
                                  bool        notag = false );
 
     static enc_t  GetEncoding  ( const std::string & name );
+
+    static void   ListTags     ( const std::string & path,
+                                 encoding_t          type );
 
   private: 
 
