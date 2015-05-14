@@ -110,7 +110,7 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path,
         {
             if ( ! this->notags() )
             {
-                if ( ! intf.readTags() )
+                if ( intf.type() != AUDIO_SHN && ! intf.readTags() )
                     std::cout << "decodePath() ERROR reading metadata tags: "
                               << intf.getFileName() << std::endl;
             }
