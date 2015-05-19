@@ -16,6 +16,8 @@
 
 #include "transam.h"
 
+#include "FileUtils.h"
+using namespace tcanetpp;
 
 
 namespace transam {
@@ -54,6 +56,7 @@ class TransFile {
     const TagMap& getTags() const;
 
     bool          haveTags();
+    bool          hasTags()    { return this->haveTags(); }
     bool          readTags();
     bool          saveTags();
     void          printTags();
@@ -67,6 +70,12 @@ class TransFile {
 
     static void   ListTags     ( const std::string & path,
                                  encoding_t          type );
+
+    static bool   SetTags      ( const std::string & tags,
+                                 const std::string & target );
+
+    static bool   SetTag       ( TransFile         & file,
+                                 StringList        & taglist );
 
   private: 
 

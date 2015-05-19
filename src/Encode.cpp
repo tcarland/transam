@@ -85,7 +85,7 @@ Encode:: encode ( TransFile & infile, TransFile & outfile )
     for ( sIter = lines.begin(); sIter != lines.end(); ++sIter )
         std::cout << " '" << *sIter << std::endl;
 
-    if ( ! this->notags() ) {
+    if ( ! this->notags() && infile.haveTags() ) {
         outfile.setTags(infile.getTags());
         outfile.saveTags();
     }

@@ -51,7 +51,7 @@ void usage()
               << "     -d | --decode         :  decode only to a .wav file (default is to encode).\n"
               << "     -E | --noerase        :  do NOT erase source WAV files after decode/encode.\n"
               << "     -h | --help           :  display help information and exit.\n"
-              << "     -L | --list           :  list only the id3/4 tags for each file.\n"
+              << "     -l | --list           :  list only the id3/4 tags for each file.\n"
               << "     -n | --dryrun         :  enable the 'dryrun' option, no changes are made.\n"
               << "     -o | --outfile <file> :  name of the target output file.\n"
               << "     -p | --outpath <path> :  alternate output path to place generated files.\n"
@@ -85,84 +85,6 @@ encoding_t setEncodingType ( const std::string & typestr )
     return type;
 }
 
-
-bool setTag ( TransFile & tf, StringList & tags )
-{
-
-    std::string key, val;
-    int         indx;
-
-    StringList::iterator  sIter;
-
-    for ( sIter = tags.begin(); sIter != tags.end(); ++sIter )
-    {
-        std::string & tag = *sIter;
-        indx = StringUtils::indexOf(tag, ":");
-
-        if ( indx < 0 ) {
-            std::cout << " Tag format invalid. Should be 'key:val'" << std::endl;
-            return false;
-        }
-
-        key  = tag.substr(0, indx);
-        val  = tag.substr(indx+1);
-
-        std::cout << "  Setting " << key << " : " << val << std::endl;
-
-        if ( ! tf.setTag(key, val) ) {
-            std::cout << "Error setting tag for " << tf.getFileName() << std::endl;
-            return false;
-        }
-    }
-
-    tf.saveTags();
-
-    return true;
-}
-
-
-bool setTags ( const std::string & tags, const std::string & target )
-{
-    TransFileList files;
-    StringList    taglist;
-    bool          res = true;
-
-    StringUtils::split(tags, '|', back_inserter(taglist));
-
-    if ( FileUtils::IsDirectory(target) )
-    {
-        if ( ! TransFile::ReadPath(target, files) ) {
-            std::cout << "ERROR reading files from path '" << target << "'" << std::endl;
-            return false;
-        }
-
-        files.sort();
-    }
-    else if ( FileUtils::IsReadable(target) )
-    {
-        TransFile ta(target, TransFile::GetEncoding(target));
-        ta.readTags();
-        files.push_back(ta);
-    }
-
-    TransFileList::iterator fIter;
-
-    for ( fIter = files.begin(); fIter != files.end(); ++fIter )
-    {
-        TransFile & tf = (TransFile&) *fIter;
-
-        std::cout << "File: " << tf.getFileName() << std::endl
-            << "  Current Tag: ";
-        tf.printTags();
-
-        res = setTag(tf, taglist);
-
-        std::cout << "  Updated Tag: ";
-        tf.printTags();
-    }
-
-    return res;
-}
 
 
 
@@ -205,7 +127,7 @@ int main ( int argc, char **argv )
                                       {0,0,0,0}
                                     };
 
-    while ( (optChar = ::getopt_long(argc, argv, "dEhi:lo:p:nt:vVW", l_opts, &optindx)) != EOF )
+    while ( (optChar = ::getopt_long(argc, argv, "AbdEhi:lLo:p:nt:T:XvVW", l_opts, &optindx)) != EOF )
     {
         switch ( optChar ) {
             case 'A':
@@ -223,6 +145,7 @@ int main ( int argc, char **argv )
             case 'h':
               usage();
               break;
+            case 'L':
             case 'l':
               showtags = true;
               break;
@@ -275,9 +198,10 @@ int main ( int argc, char **argv )
     if ( tagstr != NULL ) {
         tags.assign(tagstr);
         ::free(tagstr);
-        setTags(tags, path);
-        if ( apply )
+        if ( apply ) {
+            TransFile::SetTags(tags, path);
             return 0;
+        }
     }
 
     if ( ! FileUtils::IsDirectory(path) ) {
@@ -364,6 +288,11 @@ int main ( int argc, char **argv )
                 std::cout << "Error encoding files" << std::endl;
                 return -1;
             }
+            if ( ! tags.empty() ) {
+                if ( outp.empty() )
+                    outp.assign(".");
+                TransFile::SetTags(tags, outp);
+            }
         }
     }
     else
@@ -409,6 +338,8 @@ int main ( int argc, char **argv )
                 std::cout << "Error encoding files." << std::endl;
                 return -1;
             }
+            if ( ! tags.empty() )
+                TransFile::SetTags(tags, outtf.getFileName());
         }
     }
 

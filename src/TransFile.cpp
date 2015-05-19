@@ -261,6 +261,85 @@ TransFile::ListTags ( const std::string & path, encoding_t type )
     return;
 }
 
+bool
+TransFile::SetTags ( const std::string & tags, const std::string & target )
+{
+    TransFileList files;
+    StringList    taglist;
+    bool          res = true;
+
+    StringUtils::split(tags, '|', back_inserter(taglist));
+
+    if ( FileUtils::IsDirectory(target) )
+    {
+        if ( ! TransFile::ReadPath(target, files) ) {
+            std::cout << "ERROR reading files from path '" << target << "'" << std::endl;
+            return false;
+        }
+
+        files.sort();
+    }
+    else if ( FileUtils::IsReadable(target) )
+    {
+        TransFile ta(target, TransFile::GetEncoding(target));
+        ta.readTags();
+        files.push_back(ta);
+    }
+
+    TransFileList::iterator fIter;
+
+    for ( fIter = files.begin(); fIter != files.end(); ++fIter )
+    {
+        TransFile & tf = (TransFile&) *fIter;
+
+        std::cout << "File: " << tf.getFileName() << std::endl
+                  << "  Current Tag: ";
+        tf.printTags();
+
+        res = TransFile::SetTag(tf, taglist);
+
+        std::cout << "  Updated Tag: ";
+        tf.printTags();
+    }
+
+    return res;
+}
+
+
+bool 
+TransFile::SetTag ( TransFile & tf, StringList & taglist )
+{
+
+    std::string key, val;
+    int         indx;
+
+    StringList::iterator  sIter;
+
+    for ( sIter = taglist.begin(); sIter != taglist.end(); ++sIter )
+    {
+        std::string & tag = *sIter;
+        indx = StringUtils::indexOf(tag, ":");
+
+        if ( indx < 0 ) {
+            std::cout << " Tag format invalid. Should be 'key:val'" << std::endl;
+            return false;
+        }
+
+        key  = tag.substr(0, indx);
+        val  = tag.substr(indx+1);
+
+        if ( ! tf.setTag(key, val) ) {
+            std::cout << "Error setting tag for " << tf.getFileName() << std::endl;
+            return false;
+        }
+    }
+
+    tf.saveTags();
+
+    return true;
+}
+
+
 
 } // namespace 
 
