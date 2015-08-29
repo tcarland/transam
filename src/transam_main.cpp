@@ -46,8 +46,9 @@ void version()
 void usage()
 {
     std::cout << "Usage: " << Process << " [-dEhnvVW] [-t type] [-o outfile] <file|path>\n"
-              << "     -A | --apply-only     :  used with --set-tags to only tag the infiles, no decoding.\n"
-              << "     -b | --bitrate        :  bitrate for the encoding process (default is 384).\n"
+              << "     -A | --apply-only     :  apply tags provided only to the infiles, no decoding.\n"
+              << "     -b | --bitrate        :  bitrate for the encoding process (default is 384 or \n"
+              << "                              16/48k for flac). Use '24' to get 24/96k with flac\n"
               << "     -d | --decode         :  decode only to a .wav file (default is to encode).\n"
               << "     -E | --noerase        :  do NOT erase source WAV files after decode/encode.\n"
               << "     -h | --help           :  display help information and exit.\n"
@@ -56,8 +57,11 @@ void usage()
               << "     -o | --outfile <file> :  name of the target output file.\n"
               << "     -p | --outpath <path> :  alternate output path to place generated files.\n"
               << "     -t | --type <name>    :  The encoding type by extension (if applicable).\n"
-              << "                           :  supported types are: flac, mp3, mp4, ogg, shn, wav\n"
-              << "     -T | --tags=\"KEY:val\" :  Set tags on the given file(s)\n"
+              << "                           :  supported types: flac, mp3, mp4, ogg, shn, wav\n"
+              << "     -T | --tags=\"KEY:val\" :  Set ID3/4 tags on the given file(s). Useful Keys:\n"
+              << "                              ARTIST, ALBUMARTIST, DATE, TRACKNUMBER, TITLE,\n"
+              << "                              DISCNUMBER, COMMENT, GENRE. Using the format:\n"
+              << "                              \"KEY:val|KEY:val|KEY:val|...\"\n"
               << "     -W | --clobber        :  Allow the overwriting of files that already exist.\n"
               << "     -X | --notags         :  Disable converting metadata tags to new encoding.\n"
               << "     -v | --verbose        :  enable verbose output.\n"
@@ -134,7 +138,7 @@ int main ( int argc, char **argv )
               apply = true;
               break;
             case 'b':
-              br = strdup(optarg);
+              br    = ::strdup(optarg);
               break;
             case 'd':
               decode = true;
@@ -153,16 +157,16 @@ int main ( int argc, char **argv )
               dryrun = true;
               break;
             case 'o':
-              outfile = strdup(optarg);
+              outfile = ::strdup(optarg);
               break;
             case 'p':
-              outpath = strdup(optarg);
+              outpath = ::strdup(optarg);
               break;
             case 't':
-              type  = strdup(optarg);
+              type    = ::strdup(optarg);
               break;
             case 'T':
-              tagstr = strdup(optarg);
+              tagstr  = ::strdup(optarg);
               break;
             case 'X':
               notags = true;
@@ -248,12 +252,12 @@ int main ( int argc, char **argv )
 
     if ( ! outp.empty() && ! FileUtils::IsDirectory(outp) )
     {
-    	if ( FileUtils::IsReadable(outp) ) {
+        if ( FileUtils::IsReadable(outp) ) {
             std::cout << "Error: Output path is invalid (not a directory)." << std::endl;
             return -1;
-    	}
+        }
 
-    	if ( (::mkdir(outp.c_str(), 0755)) != 0 ) {
+        if ( (::mkdir(outp.c_str(), 0755)) != 0 ) {
             std::cout << "Error: Failed to create output directory! ";
             if ( errno == EACCES || errno == EPERM )
                 std::cout << "No permissions";
@@ -310,24 +314,24 @@ int main ( int argc, char **argv )
         intf.readTags();
 
         if ( outf.empty() ) {
-        	if ( enctype == AUDIO_UNK ) {
-        		std::cout << "ERROR! Encoding type is required. Output file is not defined."
-				          << std::endl;
-        	    return -1;
+            if ( enctype == AUDIO_UNK ) {
+                std::cout << "ERROR! Encoding type is required. Output file is not defined."
+                          << std::endl;
+                return -1;
             }
-        	outf = Encode::GetOutputName(wav, enctype);
+            outf = Encode::GetOutputName(wav, enctype);
         }
 
         if ( enctype == AUDIO_UNK ) {
-        	int indx = StringUtils::lastIndexOf(outf, ".");
-        	std::string ext = outf.substr(indx+1);
-        	enctype = setEncodingType(ext);
+            int indx = StringUtils::lastIndexOf(outf, ".");
+            std::string ext = outf.substr(indx+1);
+            enctype = setEncodingType(ext);
         }
 
         outtf = TransFile(outf, enctype);
 
         if ( intf.type() == AUDIO_WAV ) {
-        	std::cout << "Input file is already raw pcm/wav." << std::endl;
+            std::cout << "Input file is already raw pcm/wav." << std::endl;
         } else if ( ! decoder.decode(intf, wav) ) {
             std::cout << "Error decoding. " << std::endl;
             return -1;

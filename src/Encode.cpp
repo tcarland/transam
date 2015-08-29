@@ -310,6 +310,10 @@ Encode::getEncoderExec ( const std::string & infile,
             break;
         case AUDIO_FLAC:
             cmd = FLAC_ENCODER;
+            if ( this->bitrate() == 24 )
+                cmd.append(FLACE_2496);
+            else
+                cmd.append(FLACE_1648);
             cmd.append(FLACE_OPTS);
             cmd.append("\"").append(outfile).append("\" ");
             cmd.append(infile);
