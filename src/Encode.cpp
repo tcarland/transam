@@ -51,7 +51,7 @@ Encode:: encode ( TransFile & infile, TransFile & outfile )
         return false;
     }
 
-    if ( infile.type() != AUDIO_WAV )
+    if ( infile.type() < AUDIO_RAW || infile.type() > AUDIO_WAV )
     {
         std::cout << "encode() Error input format invalid: "
                   << infile.type() << std::endl;
@@ -312,11 +312,11 @@ Encode::getEncoderExec ( const std::string & infile,
             cmd = FLAC_ENCODER;
             if ( this->bitrate() == 24 )
                 cmd.append(FLACE_2496);
-            else
+            else if (this->bitrate() == 16 )
                 cmd.append(FLACE_1648);
             cmd.append(FLACE_OPTS);
             cmd.append("\"").append(outfile).append("\" ");
-            cmd.append(infile);
+            cmd.append("\"").append(infile).append("\" ");
             break;
         case AUDIO_OGG:
             break;

@@ -47,8 +47,8 @@ void usage()
 {
     std::cout << "Usage: " << Process << " [-dEhnvVW] [-t type] [-o outfile] <file|path>\n"
               << "     -A | --apply-only     :  apply tags provided only to the infiles, no decoding.\n"
-              << "     -b | --bitrate        :  bitrate for the encoding process (default is 384 or \n"
-              << "                              16/48k for flac). Use '24' to get 24/96k with flac\n"
+              << "     -b | --bitrate        :  bitrate for encoding (default=384). For flac encoding,\n"
+              << "                              Using '16' or '24' (24/96khz) requires raw input (-r).\n"
               << "     -d | --decode         :  decode only to a .wav file (default is to encode).\n"
               << "     -E | --noerase        :  do NOT erase source WAV files after decode/encode.\n"
               << "     -h | --help           :  display help information and exit.\n"
@@ -56,6 +56,7 @@ void usage()
               << "     -n | --dryrun         :  enable the 'dryrun' option, no changes are made.\n"
               << "     -o | --outfile <file> :  name of the target output file.\n"
               << "     -p | --outpath <path> :  alternate output path to place generated files.\n"
+              << "     -r | --raw            :  Decode files to raw PCM data '.raw'\n"
               << "     -t | --type <name>    :  The encoding type by extension (if applicable).\n"
               << "                           :  supported types: flac, mp3, mp4, ogg, shn, wav\n"
               << "     -T | --tags=\"KEY:val\" :  Set ID3/4 tags on the given file(s). Useful Keys:\n"
@@ -65,7 +66,10 @@ void usage()
               << "     -W | --clobber        :  Allow the overwriting of files that already exist.\n"
               << "     -X | --notags         :  Disable converting metadata tags to new encoding.\n"
               << "     -v | --verbose        :  enable verbose output.\n"
-              << "     -V | --version        :  display version info and exit.\n" << std::endl;
+              << "     -V | --version        :  display version info and exit.\n" 
+              << "   Note: This application makes use of external binaries for encoding and decoding.\n"
+              << "   The various apps needed are: 'lame' for mp3, 'neroAacEnc/Dec' for mp4, 'flac', \n"
+              << "   'oggenc/dec' and optionally 'shorten' for decoding shn files." << std::endl;
     exit(0);
 }
 
@@ -108,6 +112,7 @@ int main ( int argc, char **argv )
     bool notags   = false;
     bool clobber  = false;
     bool showtags = false;
+    bool raw      = false;
     int  optindx  = 0;
 
     uint16_t rate = TRANSAM_DEFAULT_BITRATE;
@@ -124,6 +129,7 @@ int main ( int argc, char **argv )
                                       {"outpath", required_argument, 0, 'p'},
                                       {"type",    required_argument, 0, 't'},
                                       {"tag",     required_argument, 0, 'T'},
+                                      {"raw",     no_argument, 0, 'r'},
                                       {"notags",  no_argument, 0, 'X'},
                                       {"verbose", no_argument, 0, 'v'},
                                       {"version", no_argument, 0, 'V'},
@@ -131,17 +137,17 @@ int main ( int argc, char **argv )
                                       {0,0,0,0}
                                     };
 
-    while ( (optChar = ::getopt_long(argc, argv, "AbdEhi:lLo:p:nt:T:XvVW", l_opts, &optindx)) != EOF )
+    while ( (optChar = ::getopt_long(argc, argv, "Ab:dEhi:lLo:p:nrt:T:XvVW", l_opts, &optindx)) != EOF )
     {
         switch ( optChar ) {
             case 'A':
-              apply = true;
+              apply   = true;
               break;
             case 'b':
-              br    = ::strdup(optarg);
+              br      = ::strdup(optarg);
               break;
             case 'd':
-              decode = true;
+              decode  = true;
               break;
             case 'E':
               noerase = true;
@@ -154,13 +160,16 @@ int main ( int argc, char **argv )
               showtags = true;
               break;
             case 'n':
-              dryrun = true;
+              dryrun  = true;
               break;
             case 'o':
               outfile = ::strdup(optarg);
               break;
             case 'p':
               outpath = ::strdup(optarg);
+              break;
+            case 'r':
+              raw     = true;
               break;
             case 't':
               type    = ::strdup(optarg);
@@ -169,7 +178,7 @@ int main ( int argc, char **argv )
               tagstr  = ::strdup(optarg);
               break;
             case 'X':
-              notags = true;
+              notags  = true;
               break;
             case 'v':
               verbose = true;
@@ -271,6 +280,7 @@ int main ( int argc, char **argv )
     decoder.dryrun(dryrun);
     decoder.notags(notags);
     decoder.clobber(clobber);
+    decoder.raw(raw);
 
     Encode  encoder(enctype, rate);
     encoder.debug(verbose);
@@ -309,7 +319,11 @@ int main ( int argc, char **argv )
         TransFile  intf, outtf, wav;
 
         intf = TransFile(inf, TransFile::GetEncoding(inf));
-        wav  = TransFile(Decode::GetOutputName(inf), AUDIO_WAV);
+
+        if ( intf.type() == AUDIO_RAW )
+            decoder.raw(true);
+
+        wav  = TransFile(decoder.getOutputName(inf), intf.type());
 
         intf.readTags();
 
@@ -330,7 +344,7 @@ int main ( int argc, char **argv )
 
         outtf = TransFile(outf, enctype);
 
-        if ( intf.type() == AUDIO_WAV ) {
+        if ( intf.type() <= AUDIO_WAV ) {
             std::cout << "Input file is already raw pcm/wav." << std::endl;
         } else if ( ! decoder.decode(intf, wav) ) {
             std::cout << "Error decoding. " << std::endl;

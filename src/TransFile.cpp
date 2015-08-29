@@ -211,8 +211,10 @@ TransFile::GetEncoding ( const std::string & name )
 
     ext = name.substr(indx+1);
 
-    if ( ext.compare("wav") == 0 || ext.compare("pcm") == 0 )
+    if ( ext.compare("wav") == 0 )
         return AUDIO_WAV;
+    else if ( ext.compare("pcm") == 0 || ext.compare("raw") == 0 )
+        return AUDIO_RAW;
     else if ( ext.compare("mp3") == 0 )
         return AUDIO_MP3;
     else if ( ext.compare("mp4") == 0 )

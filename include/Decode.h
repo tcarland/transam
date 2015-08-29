@@ -39,16 +39,17 @@ class Decode {
     void        clobber  ( bool clobber );
     bool        clobber() const;
 
+    void        raw      ( bool raw );
+    bool        raw() const;
+
     void        debug    ( bool debug );
     bool        debug() const;
 
-    std::string getDecoder  ( const TransFile   & infile,
-                              const std::string & outfile );
+    std::string getDecoder    ( const TransFile   & infile,
+                                const std::string & outfile );
 
-  public:
-
-    static std::string GetOutputName ( const std::string & infile,
-                                       const std::string & outpath = "" );
+    std::string getOutputName ( const std::string & infile,
+                                const std::string & outpath = "" );
   
 
   private:
@@ -56,6 +57,7 @@ class Decode {
     bool        _notags;
     bool        _dryrun;
     bool        _clobber;
+    bool        _raw;
     bool        _debug;
     
 };

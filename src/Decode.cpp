@@ -23,6 +23,7 @@ Decode::Decode()
     : _notags(false),
       _dryrun(false),
       _clobber(false),
+      _raw(false),
       _debug(false)
 {}
 
@@ -98,13 +99,13 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path,
     for ( fIter = files.begin(); fIter != files.end(); ++fIter )
     {
         TransFile & intf    = (TransFile&) *fIter;
-        std::string outfile = Decode::GetOutputName(intf.getFileName(), outpath);
+        std::string outfile = this->getOutputName(intf.getFileName(), outpath);
 
         if ( intf.type() < AUDIO_MP3 )
         {
             std::cout << "Decode::decodePath() input file " << intf.getFileName()
                       << " is already a wav/pcm file." << std::endl;
-            wavs.push_back(TransFile(outfile, AUDIO_WAV));
+            wavs.push_back(TransFile(outfile, intf.type()));
         }
         else 
         {
@@ -200,6 +201,20 @@ Decode::clobber() const
 
 //-------------------------------------------------------------------------
 
+void
+Decode::raw ( bool raw )
+{
+    _raw = raw;
+}
+
+bool
+Decode::raw() const 
+{
+    return _raw;
+}
+
+//-------------------------------------------------------------------------
+
 std::string
 Decode::getDecoder ( const TransFile   & infile,
                      const std::string & outfile )
@@ -210,6 +225,8 @@ Decode::getDecoder ( const TransFile   & infile,
     {
         case AUDIO_MP3:
             cmd = MP3_DECODER;
+            if ( this->raw() )
+                cmd.append(MP3D_RAW);
             cmd.append(MP3D_OPTS);
             cmd.append("\"").append(outfile).append("\" ");
             cmd.append("\"").append(infile.getFileName()).append("\"");
@@ -223,18 +240,25 @@ Decode::getDecoder ( const TransFile   & infile,
             break;
         case AUDIO_FLAC:
             cmd = FLAC_DECODER;
+            if ( this->raw() )
+                cmd.append(FLACD_RAW);
             cmd.append(FLACD_OPTS);
             cmd.append("\"").append(outfile).append("\" ");
             cmd.append("\"").append(infile.getFileName()).append("\"");
             break;
         case AUDIO_SHN:
             cmd = SHN_DECODER;
+            if ( this->raw() )
+                cmd.append(SHN_RAW);
             cmd.append(SHN_OPTS);
             cmd.append("\"").append(infile.getFileName()).append("\" ");
-            cmd.append(outfile);
+            cmd.append("\"").append(outfile).append("\" ");
             break;
         case AUDIO_UNK:
-        case AUDIO_WAV:
+        case AUDIO_WAV:  // TODO: Allow WAV to RAW
+        case AUDIO_RAW:
+            std::cout << "Decode::getDecoder() Skipping raw/pcm/wav file" << std::endl;
+            break;
         default:
             std::cout << "Decode::getDecoder() Unsupported format." << std::endl;
             break;
@@ -246,7 +270,7 @@ Decode::getDecoder ( const TransFile   & infile,
 //-------------------------------------------------------------------------
 
 std::string
-Decode::GetOutputName ( const std::string & infile, const std::string & outpath )
+Decode::getOutputName ( const std::string & infile, const std::string & outpath )
 {
     std::string  outf;
     int  indx;
@@ -254,7 +278,10 @@ Decode::GetOutputName ( const std::string & infile, const std::string & outpath 
     indx = StringUtils::lastIndexOf(infile, ".");
     outf = infile.substr(0, indx);
 
-    outf.append(".wav");
+    if ( this->raw() )
+        outf.append(".raw");
+    else
+        outf.append(".wav");
 
     if ( ! outpath.empty() )
     {
