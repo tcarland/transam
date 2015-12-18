@@ -118,26 +118,27 @@ int main ( int argc, char **argv )
     uint16_t rate = TRANSAM_DEFAULT_BITRATE;
 
     static struct option l_opts[] = { {"apply-only", no_argument, 0, 'A'},
-                                      {"bitrate", required_argument, 0, 'b'},
-                                      {"decode",  no_argument, 0, 'd'},
-                                      {"dryrun",  no_argument, 0, 'n'},
-                                      {"noerase", no_argument, 0, 'E'},
-                                      {"help",    no_argument, 0, 'h'},
-                                      {"list",    no_argument, 0, 'l'},
-                                      {"infile",  required_argument, 0, 'i'},
-                                      {"outfile", required_argument, 0, 'o'},
-                                      {"outpath", required_argument, 0, 'p'},
-                                      {"type",    required_argument, 0, 't'},
-                                      {"tag",     required_argument, 0, 'T'},
-                                      {"raw",     no_argument, 0, 'r'},
-                                      {"notags",  no_argument, 0, 'X'},
-                                      {"verbose", no_argument, 0, 'v'},
-                                      {"version", no_argument, 0, 'V'},
-                                      {"clobber", no_argument, 0, 'W'},
+                                      {"bitrate",  required_argument, 0, 'b'},
+                                      {"decode",   no_argument, 0, 'd'},
+                                      {"dryrun",   no_argument, 0, 'n'},
+                                      {"noerase",  no_argument, 0, 'E'},
+                                      {"help",     no_argument, 0, 'h'},
+                                      {"list",     no_argument, 0, 'l'},
+                                      {"infile",   required_argument, 0, 'i'},
+                                      {"outfile",  required_argument, 0, 'o'},
+                                      {"outpath",  required_argument, 0, 'p'},
+                                      {"type",     required_argument, 0, 't'},
+                                      {"tags",     required_argument, 0, 'T'},
+                                      {"raw",      no_argument, 0, 'r'},
+                                      {"recursive", no_argument, 0, 'R'},
+                                      {"notags",   no_argument, 0, 'X'},
+                                      {"verbose",  no_argument, 0, 'v'},
+                                      {"version",  no_argument, 0, 'V'},
+                                      {"clobber",  no_argument, 0, 'W'},
                                       {0,0,0,0}
                                     };
 
-    while ( (optChar = ::getopt_long(argc, argv, "Ab:dEhi:lLo:p:nrt:T:XvVW", l_opts, &optindx)) != EOF )
+    while ( (optChar = ::getopt_long(argc, argv, "Ab:dEhi:lLo:p:nrRt:T:XvVW", l_opts, &optindx)) != EOF )
     {
         switch ( optChar ) {
             case 'A':

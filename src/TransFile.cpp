@@ -103,6 +103,9 @@ TransFile::printTags()
 
     std::cout << "  ";
 
+    if ( _pmap.isEmpty() )
+        return;
+
     tIter = _pmap.find("ARTIST");
     if ( tIter != _pmap.end() )
         std::cout << tIter->second;
@@ -144,7 +147,7 @@ TransFile::haveTags()
 
 
 bool
-TransFile::ReadPath ( const std::string & path, TransFileList & files, bool notag )
+TransFile::ReadPath ( const std::string & path, TransFileList & files, bool recursive, bool notag )
 {
     DIR*            dirp;
     struct dirent * dire;
@@ -174,9 +177,16 @@ TransFile::ReadPath ( const std::string & path, TransFileList & files, bool nota
             return false;
         }
 
-        if ( S_ISLNK(fsb.st_mode) || S_ISDIR(fsb.st_mode) ) {
-            std::cout << " Skipping " << name << std::endl;
+        if ( S_ISLNK(fsb.st_mode) ) {
+            std::cout << " Skipping link: " << name << std::endl;
             continue;
+        }
+
+        if ( S_ISDIR(fsb.st_mode) ) {
+            if ( ! recursive )
+                continue;
+            if ( ! TransFile::ReadPath(name, files, recursive, notag) )
+                return false;
         }
 
         if ( type == AUDIO_UNK ) {
@@ -198,6 +208,7 @@ TransFile::ReadPath ( const std::string & path, TransFileList & files, bool nota
 }
 
 
+/** Returns the encoding id for a given encoding type. */
 enc_t
 TransFile::GetEncoding ( const std::string & name )
 {
@@ -231,12 +242,12 @@ TransFile::GetEncoding ( const std::string & name )
 
 
 void 
-TransFile::ListTags ( const std::string & path, encoding_t type )
+TransFile::ListTags ( const std::string & path, encoding_t type, bool recursive )
 {
     TransFileList  files;
     TransFileList::iterator  fIter;
 
-    if ( ! TransFile::ReadPath(path, files) )
+    if ( ! TransFile::ReadPath(path, files, recursive ) )
     {
         std::cout << "ERROR reading files from path '" << path
             << "'" << std::endl;
@@ -264,7 +275,7 @@ TransFile::ListTags ( const std::string & path, encoding_t type )
 }
 
 bool
-TransFile::SetTags ( const std::string & tags, const std::string & target )
+TransFile::SetTags ( const std::string & tags, const std::string & target, bool recursive )
 {
     TransFileList files;
     StringList    taglist;
@@ -274,7 +285,7 @@ TransFile::SetTags ( const std::string & tags, const std::string & target )
 
     if ( FileUtils::IsDirectory(target) )
     {
-        if ( ! TransFile::ReadPath(target, files) ) {
+        if ( ! TransFile::ReadPath(target, files, recursive) ) {
             std::cout << "ERROR reading files from path '" << target << "'" << std::endl;
             return false;
         }
@@ -296,12 +307,16 @@ TransFile::SetTags ( const std::string & tags, const std::string & target )
 
         std::cout << "File: " << tf.getFileName() << std::endl
                   << "  Current Tag: ";
-        tf.printTags();
+
+        if (  tf.hasTags() ) tf.printTags();
+        else std::cout << "       <none>" << std::endl;
 
         res = TransFile::SetTag(tf, taglist);
 
         std::cout << "  Updated Tag: ";
-        tf.printTags();
+        
+        if (  tf.hasTags() ) tf.printTags();
+        else std::cout << "       <none>" << std::endl;
     }
 
     return res;

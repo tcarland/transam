@@ -64,15 +64,18 @@ class TransFile {
 
     static bool   ReadPath     ( const std::string & path,
                                  TransFileList     & files,
-                                 bool        notag = false );
+                                 bool                recursive,
+                                 bool                notag = false );
 
     static enc_t  GetEncoding  ( const std::string & name );
 
     static void   ListTags     ( const std::string & path,
-                                 encoding_t          type );
+                                 encoding_t          type,
+                                 bool                recursive = false );
 
     static bool   SetTags      ( const std::string & tags,
-                                 const std::string & target );
+                                 const std::string & target,
+                                 bool                recursive = false );
 
     static bool   SetTag       ( TransFile         & file,
                                  StringList        & taglist );
