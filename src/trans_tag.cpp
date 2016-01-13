@@ -61,7 +61,7 @@ void listTags ( const std::string & path, encoding_t type )
     TransFileList  files;
     TransFileList::iterator  fIter;
 
-    if ( ! TransFile::ReadPath(path, files) )
+    if ( ! TransFile::ReadPath(path, files, false) )
     {
         std::cout << "ERROR reading files from path '" << path
             << "'" << std::endl;
@@ -197,7 +197,7 @@ int main ( int argc, char **argv )
     // operate tags on all files in directory (of the given encoding type if applicable)
     if ( FileUtils::IsDirectory(target) )
     {
-        if ( ! TransFile::ReadPath(target, files) ) {
+        if ( ! TransFile::ReadPath(target, files, false) ) {
             std::cout << "ERROR reading files from path '" << target << "'" << std::endl;
             return -1;
         }

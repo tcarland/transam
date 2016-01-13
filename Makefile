@@ -1,5 +1,5 @@
 ifdef TCAMAKE_PROJECT
-    TOPDIR = ../..
+    TOPDIR = ../../tnms
 else
     TOPDIR = .
 endif
@@ -18,6 +18,7 @@ endif
 CXXFLAGS=       -std=c++0x
 INCLUDES=       -Iinclude $(shell pkg-config --cflags taglib)
 LIBS=		$(shell pkg-config --libs taglib)
+LFLAGS=         -L/usr/lib/x86_64-linux-gnu
 
 
 BIN=		transam transcheck transtag

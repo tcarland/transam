@@ -28,7 +28,7 @@ int main ( int argc, char **argv )
     TransFileList  files;
     TransFileList::iterator  fIter;
 
-    if ( ! TransFile::ReadFiles(path, files, false) )
+    if ( ! TransFile::ReadPath(path, files, false) )
         std::cout << "Error reading path." << std::endl;
 
     for ( fIter = files.begin(); fIter != files.end(); ++fIter )

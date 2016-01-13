@@ -108,16 +108,23 @@ TransFile::printTags()
 
     tIter = _pmap.find("ARTIST");
     if ( tIter != _pmap.end() )
-        std::cout << tIter->second;
+        std::cout << tIter->second.front().to8Bit();
+
     tIter = _pmap.find("ALBUM");
     if ( tIter != _pmap.end() )
-        std::cout << " - " << tIter->second;
+        std::cout << " - " << tIter->second.front().to8Bit();
+
+    tIter = _pmap.find("DISCNUMBER");
+    if ( tIter != _pmap.end() )
+        std::cout << " - d" << tIter->second.front().to8Bit();
+
     tIter = _pmap.find("TRACKNUMBER");
     if ( tIter != _pmap.end() )
-        std::cout << " - t" << tIter->second;
+        std::cout << " - t" << tIter->second.front().to8Bit();
+
     tIter = _pmap.find("TITLE");
     if ( tIter != _pmap.end() )
-        std::cout << " - " << tIter->second;
+        std::cout << " - " << tIter->second.front().to8Bit();
 
     std::cout << std::endl;
 
@@ -140,9 +147,7 @@ TransFile::readTags()
 bool
 TransFile::haveTags()
 {
-	if ( _pmap.isEmpty() )
-		return false;
-	return true;
+    return(!_pmap.isEmpty());
 }
 
 
