@@ -182,10 +182,8 @@ TransFile::ReadPath ( const std::string & path, TransFileList & files, bool recu
             return false;
         }
 
-        if ( S_ISLNK(fsb.st_mode) ) {
-            std::cout << " Skipping link: " << name << std::endl;
+        if ( S_ISLNK(fsb.st_mode) )
             continue;
-        }
 
         if ( S_ISDIR(fsb.st_mode) ) {
             if ( ! recursive )
@@ -194,11 +192,8 @@ TransFile::ReadPath ( const std::string & path, TransFileList & files, bool recu
                 return false;
         }
 
-        if ( type == AUDIO_UNK ) {
-        	std::cout << " Skipping " << name << " unknown extension." 
-                    << std::endl;
-        	continue;
-        }
+        if ( type == AUDIO_UNK )
+            continue;
 
         file = TransFile(name, type);
 
@@ -267,7 +262,7 @@ TransFile::ListTags ( const std::string & path, encoding_t type, bool recursive 
     {
         TransFile & tf = (TransFile&) *fIter;
         if ( ! tf.haveTags() ) {
-            std::cout << "NOTAGS: " << tf.getFileName() << std::endl;
+            std::cout << " <NOTAGS> : " << tf.getFileName() << std::endl;
             continue;
         }
         if ( type > AUDIO_UNK && type == tf.type() )
@@ -313,15 +308,19 @@ TransFile::SetTags ( const std::string & tags, const std::string & target, bool 
         std::cout << "File: " << tf.getFileName() << std::endl
                   << "  Current Tag: ";
 
-        if (  tf.hasTags() ) tf.printTags();
-        else std::cout << "       <none>" << std::endl;
+        if (  tf.hasTags() ) 
+            tf.printTags();
+        else 
+            std::cout << "       <none>" << std::endl;
 
         res = TransFile::SetTag(tf, taglist);
 
         std::cout << "  Updated Tag: ";
         
-        if (  tf.hasTags() ) tf.printTags();
-        else std::cout << "       <none>" << std::endl;
+        if (  tf.hasTags() )
+            tf.printTags();
+        else
+            std::cout << "       <none>" << std::endl;
     }
 
     return res;
