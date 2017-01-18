@@ -1,8 +1,4 @@
-ifdef TCAMAKE_PROJECT
-    TOPDIR = ../../tnms
-else
-    TOPDIR = .
-endif
+TOPDIR = ..
 
 NEED_SOCKET = 1
 NEED_TCANETPP = 1
