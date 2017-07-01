@@ -45,7 +45,7 @@ class Decode {
     void        debug    ( bool debug );
     bool        debug() const;
 
-    std::string getDecoder    ( const TransFile   & infile,
+    std::string getDecoderExec( const TransFile   & infile,
                                 const std::string & outfile );
 
     std::string getOutputName ( const std::string & infile,

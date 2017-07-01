@@ -15,8 +15,11 @@
 #include "CmdBuffer.h"
 using namespace tcanetpp;
 
+
 namespace transam {
 
+
+//-------------------------------------------------------------------------
 
 
 Decode::Decode() 
@@ -30,6 +33,7 @@ Decode::Decode()
 
 Decode::~Decode()
 {}
+
 
 //-------------------------------------------------------------------------
 
@@ -47,7 +51,7 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
         return false;
     }
 
-    cmd = this->getDecoder(infile, outfile.getFileName());
+    cmd = this->getDecoderExec(infile, outfile.getFileName());
 
     if ( cmd.empty() ) {
         std::cout << "Decoder has no exec for '" << infile.getFileName()
@@ -216,8 +220,7 @@ Decode::raw() const
 //-------------------------------------------------------------------------
 
 std::string
-Decode::getDecoder ( const TransFile   & infile,
-                     const std::string & outfile )
+Decode::getDecoderExec ( const TransFile   & infile, const std::string & outfile )
 {
     std::string  cmd;
 
@@ -257,10 +260,10 @@ Decode::getDecoder ( const TransFile   & infile,
         case AUDIO_UNK:
         case AUDIO_WAV:  // TODO: Allow WAV to RAW
         case AUDIO_RAW:
-            std::cout << "Decode::getDecoder() Skipping raw/pcm/wav file" << std::endl;
+            std::cout << "Decode::getDecoderExec() Skipping raw/pcm/wav file" << std::endl;
             break;
         default:
-            std::cout << "Decode::getDecoder() Unsupported format." << std::endl;
+            std::cout << "Decode::getDecoderExec() Unsupported format." << std::endl;
             break;
     }
 

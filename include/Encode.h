@@ -16,15 +16,16 @@
 
 namespace transam {
 
-
+    
 typedef std::map<std::string, encoding_t> EncoderMap;
+
 
 
 class Encode {
 
   public:
 
-    Encode     ( encoding_t type, int bitrate = TRANSAM_DEFAULT_BITRATE );
+    Encode ( encoding_t type, int bitrate = TRANSAM_DEFAULT_BITRATE );
     ~Encode();
 
 
@@ -62,7 +63,8 @@ class Encode {
     static std::string GetOutputName ( const TransFile   & tf,
                                        encoding_t          type,
                                        const std::string & outpath = "");
-    static std::string GetExtension  ( encoding_t          type );
+
+    static std::string GetExtension  ( encoding_t  type );
 
 
   public:
@@ -74,6 +76,8 @@ class Encode {
     	EncoderMap   emap;
     	emap["mp3"]  = AUDIO_MP3;
         emap["mp4"]  = AUDIO_MP4;
+        emap["m4a"]  = AUDIO_MP4;
+        emap["aac"]  = AUDIO_MP4;
         emap["flac"] = AUDIO_FLAC;
         emap["shn"]  = AUDIO_SHN;
         emap["ogg"]  = AUDIO_OGG;
