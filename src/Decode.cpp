@@ -21,7 +21,6 @@ namespace transam {
 
 //-------------------------------------------------------------------------
 
-
 Decode::Decode() 
     : _notags(false),
       _dryrun(false),
@@ -34,7 +33,6 @@ Decode::Decode()
 Decode::~Decode()
 {}
 
-
 //-------------------------------------------------------------------------
 
 bool
@@ -44,9 +42,9 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
    
     if ( FileUtils::IsReadable(outfile.getFileName()) && ! this->clobber() )
     {
-        std::cout << "Decode::decode() output file exists: "
+        std::cout << "Decode target output file already exists: "
                   << outfile.getFileName() << std::endl
-                  << "    Set --clobber option to overwrite."
+                  << "   Set --clobber option to overwrite."
                   << std::endl;
         return false;
     }
@@ -55,7 +53,7 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
 
     if ( cmd.empty() ) {
         std::cout << "Decoder has no exec for '" << infile.getFileName()
-            << "'" << std::endl;
+                  << "'" << std::endl;
         return false;
     }
 
@@ -67,7 +65,7 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
     CmdBuffer  cmdbuf;
 
     if ( ! cmdbuf.Open(cmd) ) {
-        std::cout << "decode() Error in cmd open." << std::endl;
+        std::cout << "decode() Error in command" << std::endl;
         return false;
     }
 
@@ -96,7 +94,7 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path,
 
     if ( ! TransFile::ReadPath(path, files, _notags) ) {
         std::cout << "Reading files from path '" << path
-            << "' failed." << std::endl;
+                  << "' failed." << std::endl;
         return false;
     }
     
@@ -122,12 +120,12 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path,
 
             if ( outfile.empty() ) {
                 std::cout << "decodePath() ERROR generating output filename."
-                		  << std::endl;
+                          << std::endl;
                 return false;
             }
 
             if ( _debug )
-            	std::cout << "\noutfile: " << outfile << std::endl;
+                std::cout << "\noutfile: " << outfile << std::endl;
 
             TransFile outtf(outfile, AUDIO_WAV);
 
@@ -302,4 +300,3 @@ Decode::getOutputName ( const std::string & infile, const std::string & outpath 
 }  // namespace
 
 #endif  // _TRANSAM_DECODE_CPP_
-

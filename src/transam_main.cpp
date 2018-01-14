@@ -34,14 +34,13 @@ static
 const char Process[] = "transam";
 
 
-
 void version()
 {
-    std::cout << Process << " : " << TRANSAM_VERSION << std::endl
+    std::cout << Process << " : "
+              << TRANSAM_VERSION << std::endl
               << TRANSAM_LICENSE  << std::endl;
     exit(0);
 }
-
 
 void usage()
 {
@@ -92,8 +91,6 @@ encoding_t setEncodingType ( const std::string & typestr )
 
     return type;
 }
-
-
 
 
 int main ( int argc, char **argv )

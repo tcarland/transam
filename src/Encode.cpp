@@ -45,15 +45,15 @@ Encode:: encode ( TransFile & infile, TransFile & outfile )
     std::string  cmd;
 
     if ( FileUtils::IsReadable(outfile.getFileName()) && ! this->clobber() ) {
-        std::cout << "encode() output file exists: "
-        		  << outfile.getFileName() << std::endl
+        std::cout << "Encode output file exists: "
+                  << outfile.getFileName() << std::endl
                   << "  Set --clobber option to overwrite." << std::endl;
         return false;
     }
 
     if ( infile.type() < AUDIO_RAW || infile.type() > AUDIO_WAV )
     {
-        std::cout << "encode() Error input format invalid: "
+        std::cout << "Encode error, input format invalid: "
                   << infile.type() << std::endl;
         return false;
     }
@@ -61,7 +61,7 @@ Encode:: encode ( TransFile & infile, TransFile & outfile )
     cmd = this->getEncoderExec(infile.getFileName(), outfile.getFileName());
 
     if ( cmd.empty() ) {
-        std::cout << "encode() Error determining encoder." << std::endl;
+        std::cout << "Encode error determining encoder." << std::endl;
         return false;
     }
 
@@ -73,7 +73,7 @@ Encode:: encode ( TransFile & infile, TransFile & outfile )
     CmdBuffer  cmdbuf;
 
     if ( ! cmdbuf.Open(cmd) ) {
-        std::cout << "encode() Error in cmd open." << std::endl;
+        std::cout << "encode() Error in command open." << std::endl;
         return false;
     }
 
