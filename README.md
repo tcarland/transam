@@ -1,16 +1,16 @@
 transam - Transcoding for Audio Media
 =====================================
 
-A tool for performing transcoding between supported audio formats. This makes 
-use of external tools for the encoding/decoding of audio files, but allows for 
-the setting of tags and/or keeping the metadata/tags intact.
+A tool for performing transcoding between various audio formats. This makes 
+use of external tools for the encoding/decoding of audio files and also uses 
+taglib for setting tags and/or keeping the metadata/tags intact.
 
-#####Build Requirements:
+#### Build Requirements
 
   * taglib  (https://github.com/taglib/taglib)
   * tcanetpp (https://github.com/tcarland/tcanetpp.git)
 
-#####External Tools: 
+#### External Tools
 
 Transam simply wraps the usage of common audio tools that already decode and 
 encode the various formats we need. For this we choose the following tools
