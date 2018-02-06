@@ -1,0 +1,2 @@
+export PROFILE="transam_release"
+export TRANSAM_DEBUG=
