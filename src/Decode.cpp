@@ -64,7 +64,7 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
  
     CmdBuffer  cmdbuf;
 
-    if ( ! cmdbuf.Open(cmd) ) {
+    if ( ! cmdbuf.open(cmd) ) {
         std::cout << "decode() Error in command" << std::endl;
         return false;
     }
@@ -79,6 +79,7 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
 
     if ( ! this->notags() )
         outfile.setTags(infile.getTags());
+    cmdbuf.close();
 
     return true;
 }
@@ -276,7 +277,7 @@ Decode::getOutputName ( const std::string & infile, const std::string & outpath 
     std::string  outf;
     int  indx;
 
-    indx = StringUtils::lastIndexOf(infile, ".");
+    indx = StringUtils::LastIndexOf(infile, ".");
     outf = infile.substr(0, indx);
 
     if ( this->raw() )
@@ -286,7 +287,7 @@ Decode::getOutputName ( const std::string & infile, const std::string & outpath 
 
     if ( ! outpath.empty() )
     {
-        indx = StringUtils::lastIndexOf(outf, "/");
+        indx = StringUtils::LastIndexOf(outf, "/");
         if ( indx >= 0 )
             outf = outf.substr(indx+1);
         outf = outpath + "/" + outf;

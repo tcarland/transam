@@ -72,7 +72,7 @@ Encode:: encode ( TransFile & infile, TransFile & outfile )
 
     CmdBuffer  cmdbuf;
 
-    if ( ! cmdbuf.Open(cmd) ) {
+    if ( ! cmdbuf.open(cmd) ) {
         std::cout << "encode() Error in command open." << std::endl;
         return false;
     }
@@ -89,6 +89,7 @@ Encode:: encode ( TransFile & infile, TransFile & outfile )
         outfile.setTags(infile.getTags());
         outfile.saveTags();
     }
+    cmdbuf.close();
 
     return true;
 }
@@ -240,14 +241,14 @@ Encode::GetOutputName ( const TransFile   & tf, encoding_t type,
     std::string outf, ext;
     int         indx;
 
-    indx = StringUtils::lastIndexOf(tf.getFileName(), ".");
+    indx = StringUtils::LastIndexOf(tf.getFileName(), ".");
     outf = tf.getFileName().substr(0, indx);
     ext  = Encode::GetExtension(type);
     outf.append(ext);
 
     if ( ! outpath.empty() )
     {
-        indx = StringUtils::lastIndexOf(outf, "/");
+        indx = StringUtils::LastIndexOf(outf, "/");
         if ( indx >= 0 )
             outf = outf.substr(indx+1);
         outf = outpath + "/" + outf;
@@ -290,7 +291,7 @@ Encode::getEncoderExec ( const std::string & infile,
                          const std::string & outfile )
 {
     std::string  cmd;
-    std::string  br  = StringUtils::toString(this->bitrate());
+    std::string  br  = StringUtils::ToString(this->bitrate());
 
     switch ( this->_type ) 
     {

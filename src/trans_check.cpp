@@ -14,10 +14,11 @@ using namespace tcanetpp;
 
 bool isValid ( std::string & result )
 {
-    if ( StringUtils::startsWith(result, "/") )
+    if ( StringUtils::StartsWith(result, "/") )
         return true;
     return false; 
 }
+
 
 bool check ( tcanetpp::CmdBuffer & cmdbuf, const std::string & exec )
 {
@@ -27,7 +28,7 @@ bool check ( tcanetpp::CmdBuffer & cmdbuf, const std::string & exec )
     cmd  = "which ";
     cmd.append(exec);
 
-    if ( ! cmdbuf.Open(cmd) ) {
+    if ( ! cmdbuf.open(cmd) ) {
         std::cout << "Error in cmdbuf.open()" << std::endl;
         return false;
     }
@@ -39,7 +40,7 @@ bool check ( tcanetpp::CmdBuffer & cmdbuf, const std::string & exec )
     else
         std::cout << " MISSING!" << std::endl;
 
-    cmdbuf.Close();
+    cmdbuf.close();
 
     return result;
 }

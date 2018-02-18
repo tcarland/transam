@@ -215,7 +215,7 @@ TransFile::GetEncoding ( const std::string & name )
     std::string ext;
     int         indx;
 
-    indx = StringUtils::lastIndexOf(name, ".");
+    indx = StringUtils::LastIndexOf(name, ".");
 
     if ( indx <= 0 )
         return AUDIO_UNK;
@@ -281,7 +281,7 @@ TransFile::SetTags ( const std::string & tags, const std::string & target, bool 
     StringList    taglist;
     bool          res = true;
 
-    StringUtils::split(tags, '|', back_inserter(taglist));
+    StringUtils::Split(tags, '|', back_inserter(taglist));
 
     if ( FileUtils::IsDirectory(target) )
     {
@@ -339,7 +339,7 @@ TransFile::SetTag ( TransFile & tf, StringList & taglist )
     for ( sIter = taglist.begin(); sIter != taglist.end(); ++sIter )
     {
         std::string & tag = *sIter;
-        indx = StringUtils::indexOf(tag, ":");
+        indx = StringUtils::IndexOf(tag, ":");
 
         if ( indx < 0 ) {
             std::cout << " Tag format invalid. Should be 'key:val'" << std::endl;

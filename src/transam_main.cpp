@@ -233,7 +233,7 @@ int main ( int argc, char **argv )
         ::free(type);
     }
     if ( br != NULL ) {
-        rate = StringUtils::fromString<uint16_t>(br);
+        rate = StringUtils::FromString<uint16_t>(br);
         ::free(br);
     }
 
@@ -335,7 +335,7 @@ int main ( int argc, char **argv )
         }
 
         if ( enctype == AUDIO_UNK ) {
-            int indx = StringUtils::lastIndexOf(outf, ".");
+            int indx = StringUtils::LastIndexOf(outf, ".");
             std::string ext = outf.substr(indx+1);
             enctype = setEncodingType(ext);
         }
