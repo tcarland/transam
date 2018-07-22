@@ -59,11 +59,11 @@ void usage()
               << "     -t | --type <name>    :  The encoding type by extension (if applicable).\n"
               << "                           :  supported types: flac, mp3, mp4, ogg, shn, wav\n"
               << "     -T | --tags=\"KEY:val\" :  Set ID3/4 tags on the given file(s). Useful Keys:\n"
-              << "                              ARTIST, ALBUMARTIST, DATE, TRACKNUMBER, TITLE,\n"
-              << "                              DISCNUMBER, COMMENT, GENRE. Using the format:\n"
-              << "                              \"KEY:val|KEY:val|KEY:val|...\"\n"
+              << "                               ARTIST, ALBUMARTIST, DATE, TRACKNUMBER, TITLE,\n"
+              << "                               DISCNUMBER, COMMENT, GENRE. Using the format:\n"
+              << "                               \"KEY:val|KEY:val|KEY:val|...\"\n"
+              << "     -S | --skiptags       :  Do not copy metadata tags to new encoding.\n"
               << "     -W | --clobber        :  Allow the overwriting of files that already exist.\n"
-              << "     -X | --notags         :  Disable converting metadata tags to new encoding.\n"
               << "     -v | --verbose        :  enable verbose output.\n"
               << "     -V | --version        :  display version info and exit.\n" 
               << "   Note: This application makes use of external binaries for encoding and decoding.\n"
@@ -135,7 +135,7 @@ int main ( int argc, char **argv )
                                       {0,0,0,0}
                                     };
 
-    while ( (optChar = ::getopt_long(argc, argv, "Ab:dEhi:lLo:p:nrRt:T:XvVW", l_opts, &optindx)) != EOF )
+    while ( (optChar = ::getopt_long(argc, argv, "Ab:dEhi:lLo:p:nrRSt:T:vVW", l_opts, &optindx)) != EOF )
     {
         switch ( optChar ) {
             case 'A':
@@ -169,14 +169,14 @@ int main ( int argc, char **argv )
             case 'r':
               raw     = true;
               break;
+            case 'S':
+              notags  = true;
+              break;
             case 't':
               type    = ::strdup(optarg);
               break;
             case 'T':
               tagstr  = ::strdup(optarg);
-              break;
-            case 'X':
-              notags  = true;
               break;
             case 'v':
               verbose = true;

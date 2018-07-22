@@ -58,6 +58,7 @@ static std::string   FLAC_ENCODER = "flac";
 static std::string   FLAC_DECODER = "flac";
 static std::string   FLACD_OPTS   = " -d --output-name=";
 static std::string   FLACD_RAW    = " --force-raw-format";
+static std::string   FLACD_FORCE  = " -f";
 static std::string   FLACE_OPTS   = " -8 -V -f -o ";
 static std::string   FLACE_1648   = " --endian=little --sign=signed --channels=2 --bps=16 --sample-rate=48000";
 static std::string   FLACE_2496   = " --endian=little --sign=signed --channels=2 --bps=24 --sample-rate=96000";
