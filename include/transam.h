@@ -19,7 +19,7 @@
 namespace transam {
 
 
-#define TRANSAM_VERSION         "v0.7.7"
+#define TRANSAM_VERSION         "v0.7.8"
 #define TRANSAM_LICENSE         "Copyright (c)2010-2016 Timothy C. Arland <tcarland@gmail.com>"
 #define TRANSAM_DEFAULT_BITRATE 384
 

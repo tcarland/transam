@@ -10,9 +10,9 @@
 
 #include "Decode.h"
 
-#include "StringUtils.h"
-#include "FileUtils.h"
-#include "CmdBuffer.h"
+#include "util/StringUtils.h"
+#include "util/FileUtils.h"
+#include "util/CmdBuffer.h"
 using namespace tcanetpp;
 
 

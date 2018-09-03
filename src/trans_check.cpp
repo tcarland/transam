@@ -6,8 +6,8 @@
 #include "transam.h"
 using namespace transam;
 
-#include "CmdBuffer.h"
-#include "StringUtils.h"
+#include "util/CmdBuffer.h"
+#include "util/StringUtils.h"
 using namespace tcanetpp;
 
 

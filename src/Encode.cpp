@@ -12,9 +12,9 @@
 
 #include "Encode.h"
 
-#include "CmdBuffer.h"
-#include "StringUtils.h"
-#include "FileUtils.h"
+#include "util/CmdBuffer.h"
+#include "util/StringUtils.h"
+#include "util/FileUtils.h"
 using namespace tcanetpp;
 
 

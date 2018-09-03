@@ -25,8 +25,8 @@ extern "C" {
 #include "Encode.h"
 using namespace transam;
 
-#include "StringUtils.h"
-#include "FileUtils.h"
+#include "util/StringUtils.h"
+#include "util/FileUtils.h"
 using namespace tcanetpp;
 
 
