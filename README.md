@@ -25,7 +25,7 @@ available in all major linux distributions.
 These tools should be available via the PATH environment variable.
 This has been tested with the following versions:
 
- * LAME 64bits version 3.99.5 
+ * LAME 64bits version >=3.99.5 
  * NeroAac v1.5.1
  * Flac 1.3.2
  * Vorbis Tools 1.4.0

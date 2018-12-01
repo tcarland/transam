@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 
+#include "tstringlist.h"
 
 #include "TransFile.h"
 
@@ -70,6 +71,7 @@ TransFile::getFileName() const
     return _fileName;
 }
 
+
 encoding_t
 TransFile::type() const
 {
@@ -96,10 +98,11 @@ TransFile::getTags() const
     return _pmap;
 }
 
+
 void
-TransFile::printTags()
+TransFile::printTags() const
 {
-    TagMap::Iterator tIter;
+    TagMap::ConstIterator tIter;
 
     std::cout << "  ";
 
@@ -130,6 +133,29 @@ TransFile::printTags()
 
     return;
 }
+
+void
+TransFile::printAllTags() const
+{
+    TagMap::ConstIterator tIter;
+    TagLib::StringList::ConstIterator sIter;
+
+    std::cout << this->getFileName() << ":" << std::endl;
+
+    for ( tIter = _pmap.begin(); tIter != _pmap.end(); ++tIter ) 
+    {
+        std::cout << "  " << tIter->first;
+        TagLib::StringList & strlist = (TagLib::StringList&) tIter->second;
+        for ( sIter = strlist.begin(); sIter != strlist.end(); ++sIter )
+        {
+            TagLib::String & str = (TagLib::String&) *sIter;
+            std::cout << " : " << str;
+        }
+    std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
+
 
 bool
 TransFile::readTags()
@@ -268,7 +294,7 @@ TransFile::ListTags ( const std::string & path, encoding_t type, bool recursive 
         if ( type > AUDIO_UNK && type == tf.type() )
             tf.printTags();
         else if ( type == AUDIO_UNK )
-            tf.printTags();
+            tf.printAllTags();
     }
 
     return;

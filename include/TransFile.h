@@ -59,7 +59,8 @@ class TransFile {
     bool          hasTags()    { return this->haveTags(); }
     bool          readTags();
     bool          saveTags();
-    void          printTags();
+    void          printTags() const;
+    void          printAllTags() const;
 
 
     static bool   ReadPath     ( const std::string & path,
