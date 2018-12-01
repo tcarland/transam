@@ -1,4 +1,4 @@
-transam - Transcoding for Audio Media
+transam - Transcoding Audio Media
 =====================================
 
 A tool for performing transcoding between various audio formats. This makes 
