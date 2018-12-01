@@ -19,8 +19,8 @@
 namespace transam {
 
 
-#define TRANSAM_VERSION         "v0.7.8"
-#define TRANSAM_LICENSE         "Copyright (c)2010-2016 Timothy C. Arland <tcarland@gmail.com>"
+#define TRANSAM_VERSION         "v0.7.9"
+#define TRANSAM_LICENSE         "Copyright (c)2010-2018 Timothy C. Arland <tcarland@gmail.com>"
 #define TRANSAM_DEFAULT_BITRATE 384
 
 
@@ -76,4 +76,3 @@ static std::string   SHN_RAW      = " -t s16";
 } // namespace
 
 #endif // _TRANSAM_TRANSAM_H_
-
