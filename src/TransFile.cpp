@@ -142,7 +142,7 @@ TransFile::printAllTags() const
 
     std::cout << this->getFileName() << ":" << std::endl;
 
-    for ( tIter = _pmap.begin(); tIter != _pmap.end(); ++tIter ) 
+    for ( tIter = _pmap.begin(); tIter != _pmap.end(); ++tIter )
     {
         std::cout << "  " << tIter->first;
         TagLib::StringList & strlist = (TagLib::StringList&) tIter->second;
@@ -262,12 +262,12 @@ TransFile::GetEncoding ( const std::string & name )
         return AUDIO_SHN;
     else if ( ext.compare("ogg") == 0 )
         return AUDIO_OGG;
-        
+
     return AUDIO_UNK;
 }
 
 
-void 
+void
 TransFile::ListTags ( const std::string & path, encoding_t type, bool recursive )
 {
     TransFileList  files;
@@ -291,10 +291,13 @@ TransFile::ListTags ( const std::string & path, encoding_t type, bool recursive 
             std::cout << " <NOTAGS> : " << tf.getFileName() << std::endl;
             continue;
         }
+       /*
         if ( type > AUDIO_UNK && type == tf.type() )
             tf.printTags();
         else if ( type == AUDIO_UNK )
             tf.printAllTags();
+        */
+        tf.printTags();
     }
 
     return;
@@ -334,15 +337,15 @@ TransFile::SetTags ( const std::string & tags, const std::string & target, bool 
         std::cout << "File: " << tf.getFileName() << std::endl
                   << "  Current Tag: ";
 
-        if (  tf.hasTags() ) 
+        if (  tf.hasTags() )
             tf.printTags();
-        else 
+        else
             std::cout << "       <none>" << std::endl;
 
         res = TransFile::SetTag(tf, taglist);
 
         std::cout << "  Updated Tag: ";
-        
+
         if (  tf.hasTags() )
             tf.printTags();
         else
@@ -353,7 +356,7 @@ TransFile::SetTags ( const std::string & tags, const std::string & target, bool 
 }
 
 
-bool 
+bool
 TransFile::SetTag ( TransFile & tf, StringList & taglist )
 {
 
@@ -388,6 +391,6 @@ TransFile::SetTag ( TransFile & tf, StringList & taglist )
 
 
 
-} // namespace 
+} // namespace
 
 // _TRANSAM_TRANSFILE_CPP_
