@@ -9,6 +9,8 @@
 
 #include <sys/stat.h>
 #include <dirent.h>
+#include <iostream>
+#include <iomanip>
 
 #include "tstringlist.h"
 
@@ -78,6 +80,7 @@ TransFile::type() const
     return _type;
 }
 
+
 void
 TransFile::setTags ( const TagMap & map )
 {
@@ -90,6 +93,20 @@ TransFile::setTag ( const std::string & key, const std::string & val )
     TagLib::StringList vals;
     vals.append(val);
     return _pmap.replace(key, vals);
+}
+
+std::string
+TransFile::getTag ( const std::string & key )
+{
+    TagMap::ConstIterator tIter;
+    std::string val = "";
+
+    tIter = _pmap.find(key);
+
+    if ( tIter != _pmap.end() )
+        val = tIter->second.front().to8Bit();
+
+    return val;
 }
 
 const TagMap&
@@ -389,6 +406,55 @@ TransFile::SetTag ( TransFile & tf, StringList & taglist )
     return true;
 }
 
+bool
+TransFile::SetTrackNo ( const std::string & path, bool ask )
+{
+    TransFileList files;
+    TransFileList::iterator fIter;
+
+    if ( ! TransFile::ReadPath(path, files, false) ) {
+        std::cout << "ERROR reading files from path '" << path << "'" << std::endl;
+        return false;
+    }
+
+    files.sort();
+
+    int trackno = 1;
+    for ( fIter = files.begin(); fIter != files.end(); ++fIter )
+    {
+        TransFile & tf = (TransFile&) *fIter;
+
+        std::cout << std::setw(48) << std::setiosflags(std::ios_base::left) 
+                  << tf.getFileName() << std::setw(18) 
+                  << " => TRACKNUMBER:" << trackno << std::endl;
+        ++trackno;
+    }
+
+    char y = 'n';
+    if ( ask )
+    {
+        std::cout << "Renumber the tracks? (y/n) ";
+        std::cin >> y;
+
+        if ( y == 'y' || y == 'Y' )
+            std::cout << "Renumbering tracks.." << std::endl; 
+        else
+            return false;
+    }
+
+    trackno = 1;
+    for ( fIter = files.begin(); fIter != files.end(); ++fIter )
+    {
+        TransFile & tf = (TransFile&) *fIter;
+        tf.setTag("TRACKNUMBER", StringUtils::ToString(trackno));
+        tf.saveTags();
+        ++trackno;
+    }
+
+    TransFile::ListTags(path, AUDIO_UNK);
+    
+    return true;
+}
 
 
 } // namespace

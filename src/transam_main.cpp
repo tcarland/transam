@@ -46,9 +46,9 @@ void usage()
 {
     std::cout << "Usage: " << Process << " [-dEhnvVW] [-t type] [-o outfile] <file|path>\n"
               << "     -A | --apply-only     :  Apply tags provided only to the infiles, no decoding.\n"
-              << "     -b | --bitrate        :  Bitrate for encoding (default=384). For flac encoding,\n"
+              << "     -b | --bitrate        :  Bitrate for encoding (default=384). For flac encoding.\n"
               << "                              Using '16' or '24' (24/96khz) requires raw input (-r).\n"
-              << "     -d | --decode         :  Decode only to a .wav file (default is to encode).\n"
+              << "     -d | --decode-only    :  Decode only to a .wav file (default is to encode).\n"
               << "     -E | --noerase        :  Do NOT erase source WAV files after decode/encode.\n"
               << "     -h | --help           :  Display help information and exit.\n"
               << "     -l | --list           :  List the ID3/4 tags for all files and exit.\n"
@@ -56,6 +56,7 @@ void usage()
               << "     -o | --outfile <file> :  Name of the target output file.\n"
               << "     -p | --outpath <path> :  Alternate output path to place generated files.\n"
               << "     -r | --raw            :  Decode files to raw PCM data '.raw'\n"
+              << "     -R | --renum          :  Sets 'apply-only' and offers to renumber tracks.\n"
               << "     -t | --type <name>    :  The encoding type by extension (if applicable).\n"
               << "                           :  supported types: flac, mp3, mp4, ogg, shn, wav\n"
               << "     -T | --tags=\"KEY:val\" :  Set ID3/4 tags on the given file(s). Useful Keys:\n"
@@ -107,6 +108,7 @@ int main ( int argc, char **argv )
     bool decode   = false;
     bool noerase  = false;
     bool notags   = false;
+    bool renum    = false;
     bool clobber  = false;
     bool showtags = false;
     bool raw      = false;
@@ -116,7 +118,7 @@ int main ( int argc, char **argv )
 
     static struct option l_opts[] = { {"apply-only", no_argument, 0, 'A'},
                                       {"bitrate",  required_argument, 0, 'b'},
-                                      {"decode",   no_argument, 0, 'd'},
+                                      {"decode-only", no_argument, 0, 'd'},
                                       {"dryrun",   no_argument, 0, 'n'},
                                       {"noerase",  no_argument, 0, 'E'},
                                       {"help",     no_argument, 0, 'h'},
@@ -127,7 +129,7 @@ int main ( int argc, char **argv )
                                       {"type",     required_argument, 0, 't'},
                                       {"tags",     required_argument, 0, 'T'},
                                       {"raw",      no_argument, 0, 'r'},
-                                      {"recursive", no_argument, 0, 'R'},
+                                      {"renum",    no_argument, 0, 'R'},
                                       {"notags",   no_argument, 0, 'X'},
                                       {"verbose",  no_argument, 0, 'v'},
                                       {"version",  no_argument, 0, 'V'},
@@ -169,6 +171,9 @@ int main ( int argc, char **argv )
             case 'r':
               raw     = true;
               break;
+            case 'R':
+              apply   = true;
+              renum   = true;
             case 'S':
               notags  = true;
               break;
@@ -209,10 +214,16 @@ int main ( int argc, char **argv )
     if ( tagstr != NULL ) {
         tags.assign(tagstr);
         ::free(tagstr);
-        if ( apply ) {
+    }
+
+    if ( apply ) {
+        if ( ! tags.empty() ) {
             TransFile::SetTags(tags, path);
-            return 0;
         }
+        if ( renum ) {
+            TransFile::SetTrackNo(path);
+        }
+        return 0;
     }
 
     if ( ! FileUtils::IsDirectory(path) ) {

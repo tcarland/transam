@@ -52,7 +52,7 @@ class TransFile {
     void          setTags      ( const TagMap      & tags );
     bool          setTag       ( const std::string & key,
                                  const std::string & val );
-    
+    std::string   getTag       ( const std::string & key );
     const TagMap& getTags() const;
 
     bool          haveTags();
@@ -80,6 +80,9 @@ class TransFile {
 
     static bool   SetTag       ( TransFile         & file,
                                  StringList        & taglist );
+
+    static bool   SetTrackNo   ( const std::string & path, bool ask = true );
+
 
   private: 
 
