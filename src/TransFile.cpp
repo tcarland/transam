@@ -308,13 +308,11 @@ TransFile::ListTags ( const std::string & path, encoding_t type, bool recursive 
             std::cout << " <NOTAGS> : " << tf.getFileName() << std::endl;
             continue;
         }
-       /*
+       
         if ( type > AUDIO_UNK && type == tf.type() )
             tf.printTags();
         else if ( type == AUDIO_UNK )
             tf.printAllTags();
-        */
-        tf.printTags();
     }
 
     return;
