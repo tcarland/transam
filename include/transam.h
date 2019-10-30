@@ -2,7 +2,7 @@
   *  @file    transam.h
   *  @author  Timothy C. Arland <tcarland@gmail.com>
   *
-  *  Copyright (c) 2010 Timothy C. Arland <tcarland@gmail.com>
+  *  Copyright (c) 2010-2019 Timothy C. Arland <tcarland@gmail.com>
   *
   *  TRANS-AM  Transcoding for Audio Media
   *     Allows for single step transcoding from one format to another
@@ -19,8 +19,8 @@
 namespace transam {
 
 
-#define TRANSAM_VERSION         "v0.8.2"
-#define TRANSAM_LICENSE         "Copyright (c)2010-2018 Timothy C. Arland <tcarland@gmail.com>"
+#define TRANSAM_VERSION         "v0.8.3"
+#define TRANSAM_LICENSE         "Copyright (c)2010-2019 Timothy C. Arland <tcarland@gmail.com>"
 #define TRANSAM_DEFAULT_BITRATE 384
 
 
