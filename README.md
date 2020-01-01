@@ -1,9 +1,11 @@
 transam - Transcoding Audio Media
 =====================================
 
-A tool for performing transcoding between various audio formats. This makes
-use of external tools for the encoding/decoding of audio files and also uses
-taglib for setting tags and/or keeping the metadata/tags intact while transcoding.
+A tool for transcoding between various audio formats using a suite of various
+external tools. `taglib` is also supported for setting tags or keeping the
+metadata/tags intact while transcoding. Various features include support for
+listing tags/metadata, setting tags, setting tags while encoding, decode only
+to `wav/PCM` only, etc.
 
 #### Build Requirements
 
@@ -20,7 +22,7 @@ available in all major Linux distributions.
   * FLAC    - Free Lossless Audio Compression
   * Vorbis  - for ogg support
   * NeroAAC - for mp4/aac (better quality than libfaac)
-  * Shorten - optional for shn file support
+  * Shorten - optional for shn file support (decode only)
 
 These tools should be available via the system PATH environment variable.
 TransAm has been tested with the following versions:
