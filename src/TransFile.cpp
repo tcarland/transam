@@ -285,7 +285,7 @@ TransFile::GetEncoding ( const std::string & name )
 
 
 void
-TransFile::ListTags ( const std::string & path, encoding_t type, bool recursive )
+TransFile::ListTags ( const std::string & path, bool allTags, bool recursive )
 {
     TransFileList  files;
     TransFileList::iterator  fIter;
@@ -308,11 +308,11 @@ TransFile::ListTags ( const std::string & path, encoding_t type, bool recursive 
             std::cout << " <NOTAGS> : " << tf.getFileName() << std::endl;
             continue;
         }
-       
-        if ( type > AUDIO_UNK && type == tf.type() )
-            tf.printTags();
-        else if ( type == AUDIO_UNK )
+
+        if ( allTags )
             tf.printAllTags();
+        else
+            tf.printTags();
     }
 
     return;
@@ -422,8 +422,8 @@ TransFile::SetTrackNo ( const std::string & path, bool ask )
     {
         TransFile & tf = (TransFile&) *fIter;
 
-        std::cout << std::setw(48) << std::setiosflags(std::ios_base::left) 
-                  << tf.getFileName() << std::setw(18) 
+        std::cout << std::setw(48) << std::setiosflags(std::ios_base::left)
+                  << tf.getFileName() << std::setw(18)
                   << " => TRACKNUMBER:" << trackno << std::endl;
         ++trackno;
     }
@@ -435,7 +435,7 @@ TransFile::SetTrackNo ( const std::string & path, bool ask )
         std::cin >> y;
 
         if ( y == 'y' || y == 'Y' )
-            std::cout << "Renumbering tracks.." << std::endl; 
+            std::cout << "Renumbering tracks.." << std::endl;
         else
             return false;
     }
@@ -450,7 +450,7 @@ TransFile::SetTrackNo ( const std::string & path, bool ask )
     }
 
     TransFile::ListTags(path, AUDIO_UNK);
-    
+
     return true;
 }
 

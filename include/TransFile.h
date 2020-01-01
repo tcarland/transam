@@ -1,4 +1,4 @@
-/** 
+/**
   * @file   TransFile.h
   * @author tcarland@gmail.com
   *
@@ -71,7 +71,7 @@ class TransFile {
     static enc_t  GetEncoding  ( const std::string & name );
 
     static void   ListTags     ( const std::string & path,
-                                 encoding_t          type,
+                                 bool                allTags,
                                  bool                recursive = false );
 
     static bool   SetTags      ( const std::string & tags,
@@ -84,7 +84,7 @@ class TransFile {
     static bool   SetTrackNo   ( const std::string & path, bool ask = true );
 
 
-  private: 
+  private:
 
     void          setType();
 
@@ -101,4 +101,3 @@ class TransFile {
 } // namespace
 
 #endif //  _TRANSAM_TRANSFILE_H_
-

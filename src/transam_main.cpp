@@ -66,7 +66,7 @@ void usage()
               << "     -S | --skiptags       :  Do not copy metadata tags to new encoding.\n"
               << "     -W | --clobber        :  Allow the overwriting of files that already exist.\n"
               << "     -v | --verbose        :  Enable verbose output.\n"
-              << "     -V | --version        :  Display version info and exit.\n" 
+              << "     -V | --version        :  Display version info and exit.\n"
               << "   Note: This application makes use of external binaries for encoding and decoding.\n"
               << "   The various apps needed are: 'lame' for mp3, 'neroAacEnc/Dec' for mp4, 'flac', \n"
               << "   'oggenc/dec' and optionally 'shorten' for decoding shn files." << std::endl;
@@ -96,23 +96,23 @@ encoding_t setEncodingType ( const std::string & typestr )
 
 int main ( int argc, char **argv )
 {
-    char optChar;
-    char *outfile = NULL;
-    char *outpath = NULL;
-    char *type    = NULL;
-    char *tagstr  = NULL;
-    char *br      = NULL;
-    bool apply    = false;
-    bool verbose  = false;
-    bool dryrun   = false;
-    bool decode   = false;
-    bool noerase  = false;
-    bool notags   = false;
-    bool renum    = false;
-    bool clobber  = false;
-    bool showtags = false;
-    bool raw      = false;
-    int  optindx  = 0;
+    char  optChar;
+    char *outfile  = NULL;
+    char *outpath  = NULL;
+    char *type     = NULL;
+    char *tagstr   = NULL;
+    char *br       = NULL;
+    bool  apply    = false;
+    bool  verbose  = false;
+    bool  dryrun   = false;
+    bool  decode   = false;
+    bool  noerase  = false;
+    bool  notags   = false;
+    bool  renum    = false;
+    bool  clobber  = false;
+    bool  showtags = false;
+    bool  raw      = false;
+    int   optindx  = 0;
 
     uint16_t rate = TRANSAM_DEFAULT_BITRATE;
 
@@ -256,7 +256,7 @@ int main ( int argc, char **argv )
             return -1;
         }
 
-        TransFile::ListTags(path, enctype);
+        TransFile::ListTags(path, verbose, enctype);
 
         return 0;
     }
@@ -374,4 +374,3 @@ int main ( int argc, char **argv )
 
     return 0;
 }
-
