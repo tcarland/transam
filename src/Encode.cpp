@@ -1,9 +1,9 @@
 /**
-  *   @file   Encode.cpp 
+  *   @file   Encode.cpp
   *   @author tcarland@gmail.com
   *
   *   Copyright (c) 2011 Timothy Charlton Arland <tcarland@gmail.com>
-  * 
+  *
  **/
 #ifndef _TRANSAM_ENCODE_CPP_
 #define _TRANSAM_ENCODE_CPP_
@@ -25,7 +25,7 @@ namespace transam {
 EncoderMap Encode::Encoders = Encode::InitEncoders();
 
 
-Encode::Encode ( encoding_t type, int rate ) 
+Encode::Encode ( encoding_t type, int rate )
     : _type(type),
       _bitrate(rate),
       _notags(false),
@@ -79,7 +79,7 @@ Encode:: encode ( TransFile & infile, TransFile & outfile )
 
     StringBuffer  lines;
     StringBuffer::iterator sIter;
-    
+
     cmdbuf.getAllLines(lines);
 
     for ( sIter = lines.begin(); sIter != lines.end(); ++sIter )
@@ -235,7 +235,7 @@ Encode::debug() const
 //-------------------------------------------------------------------------
 
 std::string
-Encode::GetOutputName ( const TransFile   & tf, encoding_t type, 
+Encode::GetOutputName ( const TransFile   & tf, encoding_t type,
                         const std::string & outpath )
 {
     std::string outf, ext;
@@ -269,7 +269,7 @@ Encode::GetExtension ( encoding_t type )
             ext = ".mp3";
             break;
         case AUDIO_MP4:
-            ext = ".mp4";
+            ext = ".m4a";
             break;
         case AUDIO_FLAC:
             ext = ".flac";
@@ -293,7 +293,7 @@ Encode::getEncoderExec ( const std::string & infile,
     std::string  cmd;
     std::string  br  = StringUtils::ToString(this->bitrate());
 
-    switch ( this->_type ) 
+    switch ( this->_type )
     {
         case AUDIO_MP3:
             cmd = MP3_ENCODER;

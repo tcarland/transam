@@ -68,7 +68,7 @@ void usage()
               << "     -v | --verbose        :  Enable verbose output.\n"
               << "     -V | --version        :  Display version info and exit.\n"
               << "   Note: This application makes use of external binaries for encoding and decoding.\n"
-              << "   The various apps needed are: 'lame' for mp3, 'neroAacEnc/Dec' for mp4, 'flac', \n"
+              << "   The various apps needed are: 'lame' for mp3, 'neroAacEnc/Dec' for m4a, 'flac', \n"
               << "   'oggenc/dec' and optionally 'shorten' for decoding shn files." << std::endl;
     exit(0);
 }
@@ -221,7 +221,10 @@ int main ( int argc, char **argv )
             TransFile::SetTags(tags, path);
         }
         if ( renum ) {
-            TransFile::SetTrackNo(path);
+            bool ask = true;
+            if ( clobber )
+                ask = false;
+            TransFile::SetTrackNo(path, ask);
         }
         return 0;
     }
