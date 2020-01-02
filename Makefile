@@ -11,14 +11,13 @@ ifdef TRANSAM_DEBUG
 OPT_FLAGS= 	-g
 endif
 
-CXXFLAGS=       -std=c++0x
-INCLUDES=       -Iinclude $(shell pkg-config --cflags taglib)
-LIBS=		$(shell pkg-config --libs taglib)
-LFLAGS=         -L/usr/lib/x86_64-linux-gnu
+CXXFLAGS=	-std=c++0x
+INCLUDES=   -Iinclude $(shell pkg-config --cflags taglib)
+LIBS=	    $(shell pkg-config --libs taglib)
+LFLAGS=     -L/usr/lib/x86_64-linux-gnu
 
 BIN=		transam transcheck transtag
-OBJS=		src/TransFile.o src/Encode.o src/Decode.o \
-		src/transam_main.o
+OBJS=		src/TransFile.o src/Encode.o src/Decode.o src/transam_main.o
 TRCOBJ=		src/trans_check.o
 
 ALL_OBJS=	$(OBJS) $(TRCOBJ)

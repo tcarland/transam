@@ -5,7 +5,7 @@
   *  Copyright (c) 2010-2019 Timothy C. Arland <tcarland@gmail.com>
   *
   *  TRANS-AM  Transcoding for Audio Media
-  *     Allows for single step transcoding from one format to another
+  *     Allows for single-step transcoding from one format to another
   *   such as shn->flac or flac->mp4 while keeping metadata intact.
  **/
 #ifndef _TRANSAM_TRANSAM_H_
@@ -19,10 +19,10 @@
 namespace transam {
 
 
-#define TRANSAM_VERSION         "v0.8.4"
-#define TRANSAM_LICENSE         "Copyright (c)2010-2019 Timothy C. Arland <tcarland@gmail.com>"
-#define TRANSAM_DEFAULT_BITRATE 384
+#define TRANSAM_VERSION  "v0.8.4"
+#define TRANSAM_LICENSE  "Copyright (c)2010-2019 Timothy C. Arland <tcarland@gmail.com>"
 
+#define TRANSAM_DEFAULT_BITRATE 384
 
 
 // supported encoding types
