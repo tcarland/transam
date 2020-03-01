@@ -54,7 +54,7 @@ void usage()
               << "     -l | --list           :  List the ID3/4 tags for all files and exit.\n"
               << "     -n | --dryrun         :  Enable the 'dryrun' option, no changes are made.\n"
               << "     -o | --outfile <file> :  Name of the target output file.\n"
-              << "     -p | --outpath <path> :  Alternate output path to place generated files.\n"
+              << "     -P | --outpath <path> :  Alternate output path to place generated files.\n"
               << "     -r | --raw            :  Decode files to raw PCM data '.raw'\n"
               << "     -R | --renum          :  Sets 'apply-only' and offers to renumber tracks.\n"
               << "     -t | --type <name>    :  The encoding type by extension (if applicable).\n"
@@ -125,7 +125,7 @@ int main ( int argc, char **argv )
                                       {"list",     no_argument, 0, 'l'},
                                       {"infile",   required_argument, 0, 'i'},
                                       {"outfile",  required_argument, 0, 'o'},
-                                      {"outpath",  required_argument, 0, 'p'},
+                                      {"outpath",  required_argument, 0, 'P'},
                                       {"type",     required_argument, 0, 't'},
                                       {"tags",     required_argument, 0, 'T'},
                                       {"raw",      no_argument, 0, 'r'},
@@ -137,7 +137,7 @@ int main ( int argc, char **argv )
                                       {0,0,0,0}
                                     };
 
-    while ( (optChar = ::getopt_long(argc, argv, "Ab:dEhi:lLo:p:nrRSt:T:vVW", l_opts, &optindx)) != EOF )
+    while ( (optChar = ::getopt_long(argc, argv, "Ab:dEhi:lLo:P:nrRSt:T:vVW", l_opts, &optindx)) != EOF )
     {
         switch ( optChar ) {
             case 'A':
@@ -165,6 +165,7 @@ int main ( int argc, char **argv )
             case 'o':
               outfile = ::strdup(optarg);
               break;
+            case 'P':
             case 'p':
               outpath = ::strdup(optarg);
               break;
