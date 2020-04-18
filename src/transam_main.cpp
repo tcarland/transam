@@ -2,7 +2,7 @@
   *   @file   transam_main.cpp
   *   @author tcarland@gmail.com
   *
-  *   Copyright (c) 2010-2019 Timothy Charlton Arland
+  *   Copyright (c) 2010-2020 Timothy Charlton Arland
  **/
 #define _TRANSAM_TRANSAM_CPP_
 
@@ -268,7 +268,7 @@ int main ( int argc, char **argv )
     if ( enctype < 2 && inf.empty() && ! decode ) {
         if ( ! tags.empty() )
             return 0;
-        std::cout << "Error! Encoding type not provided or detected." << std::endl;
+        std::cout << "Error: Encoding type not provided or detected." << std::endl;
         usage();
     }
 
@@ -325,7 +325,7 @@ int main ( int argc, char **argv )
     else
     {
         if ( inf.empty() ) {
-            std::cout << "Error! Input file not provided." << std::endl;
+            std::cout << "Error: Input file not provided." << std::endl;
             usage();
         }
 
@@ -342,7 +342,7 @@ int main ( int argc, char **argv )
 
         if ( outf.empty() ) {
             if ( enctype == AUDIO_UNK ) {
-                std::cout << "ERROR! Encoding type is required. Output file is not defined."
+                std::cout << "Error: Encoding type is required. Output file is not defined."
                           << std::endl;
                 return -1;
             }

@@ -40,20 +40,20 @@ Encode::~Encode() {}
 //-------------------------------------------------------------------------
 
 bool
-Encode:: encode ( TransFile & infile, TransFile & outfile )
+Encode::encode ( TransFile & infile, TransFile & outfile )
 {
     std::string  cmd;
 
     if ( FileUtils::IsReadable(outfile.getFileName()) && ! this->clobber() ) {
         std::cout << "Encode output file exists: "
                   << outfile.getFileName() << std::endl
-                  << "  Set --clobber option to overwrite." << std::endl;
+                  << "  Set '--clobber' option to overwrite." << std::endl;
         return false;
     }
 
     if ( infile.type() < AUDIO_RAW || infile.type() > AUDIO_WAV )
     {
-        std::cout << "Encode error, input format invalid: "
+        std::cout << "Encode error, input format unknown or unsupported: "
                   << infile.type() << std::endl;
         return false;
     }
@@ -61,11 +61,11 @@ Encode:: encode ( TransFile & infile, TransFile & outfile )
     cmd = this->getEncoderExec(infile.getFileName(), outfile.getFileName());
 
     if ( cmd.empty() ) {
-        std::cout << "Encode error determining encoder." << std::endl;
+        std::cout << "Encoder error determining encoder type." << std::endl;
         return false;
     }
 
-    std::cout << " exec: '" << cmd << "'" << std::endl;
+    std::cout << "Encode exec: '" << cmd << "'" << std::endl;
 
     if ( this->dryrun() )
         return true;
@@ -108,11 +108,11 @@ Encode::encodeFiles ( TransFileList & infiles, TransFileList & outfiles,
         std::string  outfile = Encode::GetOutputName(intf, _type, outpath);
 
         if ( outfile.empty() ) {
-            std::cout << "Error generating output filename" << std::endl;
+            std::cout << "Encode Error generating output filename" << std::endl;
             return false;
         }
         if ( _debug )
-            std::cout << "\noutfile: " << outfile << std::endl;
+            std::cout << "\n  outfile: " << outfile << std::endl;
 
         TransFile  outtf(outfile, this->_type);
 
@@ -120,7 +120,7 @@ Encode::encodeFiles ( TransFileList & infiles, TransFileList & outfiles,
         {
             if ( ! FileUtils::IsReadable(outfile) && ! _dryrun )
             {
-                std::cout << "ERROR! Outfile not readable, problem with encoder exec?"
+                std::cout << "ERROR in EncodeFiles() output not readable, problem with encoder?"
                     << std::endl;
                 return false;
             }

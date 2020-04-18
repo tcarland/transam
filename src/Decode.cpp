@@ -1,9 +1,9 @@
 /**
-  *   @file   Decode.cpp 
+  *   @file   Decode.cpp
   *   @author tcarland@gmail.com
   *
   *   Copyright (c) 2011 Timothy Charlton Arland <tcarland@gmail.com>
-  * 
+  *
  **/
 #ifndef _TRANSAM_DECODE_CPP_
 #define _TRANSAM_DECODE_CPP_
@@ -21,7 +21,7 @@ namespace transam {
 
 //-------------------------------------------------------------------------
 
-Decode::Decode() 
+Decode::Decode()
     : _notags(false),
       _dryrun(false),
       _clobber(false),
@@ -39,7 +39,7 @@ bool
 Decode::decode ( const TransFile & infile, TransFile & outfile )
 {
     std::string cmd;
-   
+
     if ( FileUtils::IsReadable(outfile.getFileName()) && ! this->clobber() )
     {
         std::cout << "Decode target output file already exists: "
@@ -57,11 +57,11 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
         return false;
     }
 
-    std::cout << "exec: `" << cmd << "'" << std::endl;
+    std::cout << "Decode exec: `" << cmd << "'" << std::endl;
 
     if ( this->_dryrun )
         return true;
- 
+
     CmdBuffer  cmdbuf;
 
     if ( ! cmdbuf.open(cmd) ) {
@@ -94,11 +94,11 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path,
     TransFileList::iterator  fIter;
 
     if ( ! TransFile::ReadPath(path, files, _notags) ) {
-        std::cout << "Reading files from path '" << path
+        std::cout << "decodePath() Reading files from '" << path
                   << "' failed." << std::endl;
         return false;
     }
-    
+
     for ( fIter = files.begin(); fIter != files.end(); ++fIter )
     {
         TransFile & intf    = (TransFile&) *fIter;
@@ -110,7 +110,7 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path,
                       << " is already a wav/pcm file." << std::endl;
             wavs.push_back(TransFile(outfile, intf.type()));
         }
-        else 
+        else
         {
             if ( ! this->notags() )
             {
@@ -132,7 +132,7 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path,
 
             if ( this->decode(intf, outtf) ) {
                 wavs.push_back(outtf);
-            } else { 
+            } else {
                 return false;
             }
         }
@@ -211,7 +211,7 @@ Decode::raw ( bool raw )
 }
 
 bool
-Decode::raw() const 
+Decode::raw() const
 {
     return _raw;
 }
