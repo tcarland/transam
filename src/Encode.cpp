@@ -1,8 +1,6 @@
-/**
-  *   @file   Encode.cpp
-  *   @author tcarland@gmail.com
+/** @file  Encode.cpp
   *
-  *   Copyright (c) 2011 Timothy Charlton Arland <tcarland@gmail.com>
+  * Copyright (c) 2011-2020 Timothy Charlton Arland <tcarland@gmail.com>
   *
  **/
 #ifndef _TRANSAM_ENCODE_CPP_

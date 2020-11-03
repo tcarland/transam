@@ -1,8 +1,6 @@
-/**
-  *   @file   Decode.h 
-  *   @author tcarland@gmail.com
-  *
-  *   Copyright (c) 2011 Timothy Charlton Arland <tcarland@gmail.com>
+/**  @file   Decode.h 
+  * 
+  * Copyright (c) 2011-2020 Timothy Charlton Arland <tcarland@gmail.com>
   * 
  **/
 #ifndef _TRANSAM_DECODE_H_
@@ -21,7 +19,6 @@ class Decode {
 
     Decode();
     ~Decode();
-
 
     bool        decode      ( const TransFile   & infile,
                               TransFile         & outfile );

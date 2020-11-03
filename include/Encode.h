@@ -1,9 +1,6 @@
-/**
-  *   @file   Encode.h 
-  *   @author tcarland@gmail.com
+/**  @file Encode.h 
   *
-  *   Copyright (c) 2011 Timothy Charlton Arland <tcarland@gmail.com>
-  * 
+  * Copyright (c) 2011-2020 Timothy Charlton Arland <tcarland@gmail.com>
  **/
 #ifndef _TRANSAM_ENCODE_H_
 #define _TRANSAM_ENCODE_H_

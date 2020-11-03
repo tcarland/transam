@@ -1,8 +1,6 @@
-/**
-  *   @file   transam_main.cpp
-  *   @author tcarland@gmail.com
-  *
-  *   Copyright (c) 2010-2020 Timothy Charlton Arland
+/** @file transam_main.cpp
+  * 
+  * Copyright (c) 2010-2020 Timothy Charlton Arland
  **/
 #define _TRANSAM_TRANSAM_CPP_
 

@@ -1,7 +1,5 @@
-/**
-  * @file   TransFile.h
-  * @author tcarland@gmail.com
-  *
+/** @file TransFile.h
+  * 
   * Copyright (c) 2010-2020 Timothy Charlton Arland <tcarland@gmail.com>
   *
  **/

@@ -1,8 +1,6 @@
-/**
-  *   @file   Decode.cpp
-  *   @author tcarland@gmail.com
-  *
-  *   Copyright (c) 2011 Timothy Charlton Arland <tcarland@gmail.com>
+/**  @file Decode.cpp
+  * 
+  *  Copyright (c) 2011-2020 Timothy Charlton Arland <tcarland@gmail.com>
   *
  **/
 #ifndef _TRANSAM_DECODE_CPP_
@@ -219,7 +217,7 @@ Decode::raw() const
 //-------------------------------------------------------------------------
 
 std::string
-Decode::getDecoderExec ( const TransFile   & infile, const std::string & outfile )
+Decode::getDecoderExec ( const TransFile & infile, const std::string & outfile )
 {
     std::string  cmd;
 
