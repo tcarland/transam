@@ -1,3 +1,6 @@
+# Makefile for trans-am
+# TOPDIR is relative to parent directory of 'tcamake'
+#
 TOPDIR = ..
 
 NEED_PTHREADS = 1
@@ -7,7 +10,7 @@ NEED_SOCKET = 1
 NEED_TCANETPP = 1
 NEED_TCACMDBUF = 1
 
-ifdef TRANSAM_DEBUG
+ifdef TCAMAKE_DEBUG
 OPT_FLAGS= 	-g
 endif
 
@@ -16,25 +19,27 @@ INCLUDES=   -Iinclude $(shell pkg-config --cflags taglib)
 LIBS=	    $(shell pkg-config --libs taglib)
 LFLAGS=     -L/usr/lib/x86_64-linux-gnu
 
-BIN=		transam transcheck transtag
+BIN=		transam transcheck 
 OBJS=		src/TransFile.o src/Encode.o src/Decode.o src/transam_main.o
-TRCOBJ=		src/trans_check.o
+TESTOBJ=	src/trans_check.o
 
-ALL_OBJS=	$(OBJS) $(TRCOBJ)
+ALL_OBJS=	$(OBJS) $(TESTOBJ)
 ALL_BINS=	$(BIN)
 
-all: transam transcheck
 
 include $(TOPDIR)/tcamake/project_defs
 
+
+all: transam transcheck
 
 transam: $(OBJS)
 	$(make-cxxbin-rule)
 	@echo
 
-transcheck: $(TRCOBJ) src/TransFile.o
+transcheck: $(TESTOBJ) src/TransFile.o
 	$(make-cxxbin-rule)
 	@echo
+
 
 .PHONY: test
 test:
@@ -49,6 +54,8 @@ distclean: clean
 	@echo
 
 install:
-ifdef TRANSAM_PREFIX
+ifdef TCAMAKE_PREFIX
+	$(CP) transam $(TCAMAKE_PREFIX)/bin
+	$(CP) transcheck $(TCAMAKE_PREFIX)/bin
 	@echo
 endif

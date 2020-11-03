@@ -31,4 +31,4 @@
 .settings
 transam
 transcheck
-.vscode
+#.vscode
