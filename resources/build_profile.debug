@@ -1,6 +1,6 @@
 export PROFILE="transam_debug"
 
-export TRANSAM_PREFIX="/usr/local"
-export TRANSAM_DEBUG="true"
+export TCAMAKE_PREFIX="/usr/local"
+export TCAMAKE_DEBUG="true"
 export USE_PTHREADS="true"
 export USE_LIBRT="true"

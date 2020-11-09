@@ -63,4 +63,3 @@ class Decode {
 }  // namespace
 
 #endif  // _TRANSAM_DECODE_H_
-

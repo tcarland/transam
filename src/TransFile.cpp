@@ -10,7 +10,7 @@
 #include <iostream>
 #include <iomanip>
 
-#include "tstringlist.h"
+#include "tstringlist.h" // taglib
 
 #include "TransFile.h"
 

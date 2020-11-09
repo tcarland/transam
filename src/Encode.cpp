@@ -330,5 +330,4 @@ Encode::getEncoderExec ( const std::string & infile,
 
 }  // namespace
 
-
 #endif  // _TRANSAM_ENCODE_CPP_
