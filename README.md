@@ -2,15 +2,16 @@ transam - Transcoding Audio Media
 =====================================
 
 A tool for transcoding between various audio formats using a suite of various
-external tools. `taglib` is also supported for setting tags or keeping the
-metadata/tags intact while transcoding. Various features include support for
+external tools. `taglib` is also used for setting metadata tags or keeping the
+metadata intact while transcoding. Various features include support for
 listing tags/metadata, setting tags, setting tags while encoding, decode only
-to `wav/PCM` only, etc.
+to `wav/PCM` only.
 
 #### Build Requirements
 
   * taglib  (https://github.com/taglib/taglib)
   * tcanetpp (https://github.com/tcarland/tcanetpp.git)
+  * tcamake (https://github.com/tcarland/tcamake.git)
 
 #### External Tools
 

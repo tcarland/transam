@@ -27,7 +27,7 @@ ALL_OBJS=	$(OBJS) $(TESTOBJ)
 ALL_BINS=	$(BIN)
 
 
-include $(TOPDIR)/tcamake/project_defs
+include $(TOPDIR)/tcamake/tcamake_include
 
 
 all: transam transcheck

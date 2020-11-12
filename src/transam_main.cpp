@@ -65,9 +65,9 @@ void usage()
               << "     -W | --clobber        :  Allow the overwriting of files that already exist.\n"
               << "     -v | --verbose        :  Enable verbose output.\n"
               << "     -V | --version        :  Display version info and exit.\n"
-              << "   Note: This application makes use of external binaries for encoding and decoding.\n"
-              << "   The various apps needed are: 'lame' for mp3, 'neroAacEnc/Dec' for m4a, 'flac', \n"
-              << "   'oggenc/dec' and optionally 'shorten' for decoding shn files." << std::endl;
+              << " Note: This application makes use of external binaries for encoding and decoding.\n"
+              << " The various apps needed are: 'lame' for mp3, 'neroAacEnc/Dec' for m4a, 'flac', \n"
+              << " 'oggenc/dec' and optionally 'shorten' for decoding shn files." << std::endl;
     exit(0);
 }
 

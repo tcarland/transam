@@ -19,7 +19,6 @@ using namespace tcanetpp;
 namespace transam {
 
 
-
 EncoderMap Encode::Encoders = Encode::InitEncoders();
 
 
@@ -329,6 +328,5 @@ Encode::getEncoderExec ( const std::string & infile,
 //-------------------------------------------------------------------------
 
 }  // namespace
-
 
 #endif  // _TRANSAM_ENCODE_CPP_

@@ -48,7 +48,6 @@ class Decode {
     std::string getOutputName ( const std::string & infile,
                                 const std::string & outpath = "" );
   
-
   private:
 
     bool        _notags;
@@ -56,11 +55,9 @@ class Decode {
     bool        _clobber;
     bool        _raw;
     bool        _debug;
-    
 };
 
 
 }  // namespace
 
 #endif  // _TRANSAM_DECODE_H_
-
