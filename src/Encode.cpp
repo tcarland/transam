@@ -19,7 +19,6 @@ using namespace tcanetpp;
 namespace transam {
 
 
-
 EncoderMap Encode::Encoders = Encode::InitEncoders();
 
 

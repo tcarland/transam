@@ -34,6 +34,7 @@ TransFile::TransFile ( const std::string & filename, encoding_t type )
 TransFile::~TransFile()
 {}
 
+//-------------------------------------------------------------------------
 
 bool
 TransFile::operator< ( const TransFile & file ) const
@@ -49,6 +50,7 @@ TransFile::operator== ( const TransFile & file ) const
     return false;
 }
 
+//-------------------------------------------------------------------------
 
 bool
 TransFile::saveTags()
@@ -64,6 +66,7 @@ TransFile::saveTags()
     return true;
 }
 
+//-------------------------------------------------------------------------
 
 const std::string&
 TransFile::getFileName() const
@@ -78,6 +81,7 @@ TransFile::type() const
     return _type;
 }
 
+//-------------------------------------------------------------------------
 
 void
 TransFile::setTags ( const TagMap & map )
@@ -113,6 +117,7 @@ TransFile::getTags() const
     return _pmap;
 }
 
+//-------------------------------------------------------------------------
 
 void
 TransFile::printTags() const
@@ -171,6 +176,7 @@ TransFile::printAllTags() const
     std::cout << std::endl;
 }
 
+//-------------------------------------------------------------------------
 
 bool
 TransFile::readTags()
@@ -191,6 +197,7 @@ TransFile::haveTags()
     return(!_pmap.isEmpty());
 }
 
+//-------------------------------------------------------------------------
 
 bool
 TransFile::ReadPath ( const std::string & path, TransFileList & files, bool recursive, bool notag )
@@ -248,6 +255,7 @@ TransFile::ReadPath ( const std::string & path, TransFileList & files, bool recu
     return true;
 }
 
+//-------------------------------------------------------------------------
 
 /** Returns the encoding id for a given encoding type. */
 enc_t
@@ -281,6 +289,7 @@ TransFile::GetEncoding ( const std::string & name )
     return AUDIO_UNK;
 }
 
+//-------------------------------------------------------------------------
 
 void
 TransFile::ListTags ( const std::string & path, bool allTags, bool recursive )
@@ -315,6 +324,8 @@ TransFile::ListTags ( const std::string & path, bool allTags, bool recursive )
 
     return;
 }
+
+//-------------------------------------------------------------------------
 
 bool
 TransFile::SetTags ( const std::string & tags, const std::string & target, bool recursive )
@@ -368,6 +379,7 @@ TransFile::SetTags ( const std::string & tags, const std::string & target, bool 
     return res;
 }
 
+//-------------------------------------------------------------------------
 
 bool
 TransFile::SetTag ( TransFile & tf, StringList & taglist )
@@ -401,6 +413,8 @@ TransFile::SetTag ( TransFile & tf, StringList & taglist )
 
     return true;
 }
+
+//-------------------------------------------------------------------------
 
 bool
 TransFile::SetTrackNo ( const std::string & path, bool ask )
@@ -452,6 +466,7 @@ TransFile::SetTrackNo ( const std::string & path, bool ask )
     return true;
 }
 
+//-------------------------------------------------------------------------
 
 } // namespace
 
