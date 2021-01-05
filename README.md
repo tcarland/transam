@@ -1,11 +1,11 @@
-transam - Transcoding Audio Media
+Trans-AM - Transcoding Audio Media
 =====================================
 
-A tool for transcoding between various audio formats using a suite of various
-external tools. `taglib` is also used for setting metadata tags or keeping the
-metadata intact while transcoding. Various features include support for
-listing tags/metadata, setting tags, setting tags while encoding, decode only
-to `wav/PCM` only.
+TransAM is a tool for transcoding between various audio formats using a suite 
+of various external tools. `taglib` is also used for setting metadata tags or 
+keeping the metadata intact while transcoding. Various features include 
+support for listing tags/metadata, setting tags, setting tags while encoding, 
+decode to `wav/PCM` only.
 
 #### Build Requirements
 
