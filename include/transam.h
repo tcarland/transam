@@ -54,9 +54,11 @@ static std::string  MP4E_OPTS    = " -br ";
 static std::string  MP4_IF       = " -if ";
 static std::string  MP4_OF       = " -of ";
 
-// as libfaac improves, consider supporting this option over nero
+// consider switching to ffmpeg as libfaac improves.
+// ffmpeg [options] [[infile options] -i infile]... {[outfile options] outfile}...
 static std::string  AAC_ENCODER  = "ffmpeg";
-static std::string  AAC_OPTS     = " -w -c:a aac -b:a 256k";
+static std::string  AAC_OPTS     = " -c:a libfdk_aac -b:a 256k ";  // or -vbr 1:5
+static std::string  AAC_IF       = " -i ";
 
 static std::string  FLAC_ENCODER = "flac";
 static std::string  FLAC_DECODER = "flac";

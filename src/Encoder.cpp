@@ -299,6 +299,14 @@ Encoder::getEncoderExec ( const std::string & infile,
             cmd.append("\"").append(infile).append("\"");
             cmd.append(MP4_OF);
             cmd.append("\"").append(outfile).append("\"");
+
+            // ffmpeg
+            //cmd = AAC_ENCODER;
+            //cmd.append(AAC_IF);
+            //cmd.append("\"").append(infile).append("\"");
+            //cmd.append(AAC_OPTS);
+            //cmd.append("\"").append(outfile).append("\"")'
+
             break;
         case AUDIO_FLAC:
             cmd = FLAC_ENCODER;
