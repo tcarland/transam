@@ -1,10 +1,10 @@
-/**  @file Encode.h 
+/**  @file Encoder.h 
   *
-  *  Copyright (c) 2011-2020 Timothy Charlton Arland <tcarland@gmail.com>
+  *  Copyright (c) 2011-2021 Timothy Charlton Arland <tcarland@gmail.com>
   *
  **/
-#ifndef _TRANSAM_ENCODE_H_
-#define _TRANSAM_ENCODE_H_
+#ifndef _TRANSAM_ENCODER_H_
+#define _TRANSAM_ENCODER_H_
 
 #include <map>
 
@@ -19,12 +19,12 @@ typedef std::map<std::string, encoding_t> EncoderMap;
 
 
 
-class Encode {
+class Encoder {
 
   public:
 
-    Encode ( encoding_t type, int bitrate = TRANSAM_DEFAULT_BITRATE );
-    ~Encode();
+    Encoder ( encoding_t type, int bitrate = TRANSAM_DEFAULT_BITRATE );
+    ~Encoder();
 
 
     bool         encode      ( TransFile         & infile,
@@ -55,6 +55,8 @@ class Encode {
 
     std::string  getEncoderExec ( const std::string & infile,
                                   const std::string & outfile );
+
+    std::string& getErrorStr();
 
   public:
 
@@ -91,9 +93,10 @@ class Encode {
     bool        _erase;
     bool        _clobber;
     bool        _debug;
+    std::string _errstr;
 };
 
 
 }  // namespace
 
-#endif  // _TRANSAM_ENCODE_H_
+#endif  // _TRANSAM_ENCODER_H_

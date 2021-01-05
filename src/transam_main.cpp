@@ -1,6 +1,6 @@
 /** @file transam_main.cpp
   * 
-  * Copyright (c) 2010-2020 Timothy Charlton Arland
+  * Copyright (c) 2010-2021 Timothy Charlton Arland
  **/
 #define _TRANSAM_TRANSAM_CPP_
 
@@ -19,8 +19,8 @@ extern "C" {
 
 #include "transam.h"
 #include "TransFile.h"
-#include "Decode.h"
-#include "Encode.h"
+#include "Decoder.h"
+#include "Encoder.h"
 using namespace transam;
 
 #include "util/StringUtils.h"
@@ -83,7 +83,7 @@ encoding_t setEncodingType ( const std::string & typestr )
     encoding_t  type;
     EncoderMap::iterator fIter;
 
-    if ( (fIter = Encode::Encoders.find(typestr)) == Encode::Encoders.end() )
+    if ( (fIter = Encoder::Encoders.find(typestr)) == Encoder::Encoders.end() )
         return AUDIO_UNK;
 
     type = fIter->second;
@@ -286,14 +286,14 @@ int main ( int argc, char **argv )
         }
     }
 
-    Decode  decoder;
+    Decoder decoder;
     decoder.debug(verbose);
     decoder.dryrun(dryrun);
     decoder.notags(notags);
     decoder.clobber(clobber);
     decoder.raw(raw);
 
-    Encode  encoder(enctype, rate);
+    Encoder encoder(enctype, rate);
     encoder.debug(verbose);
     encoder.dryrun(dryrun);
     encoder.clobber(clobber);
@@ -305,12 +305,12 @@ int main ( int argc, char **argv )
         TransFileList::iterator fIter;
 
         if ( ! decoder.decodePath(wavs, path, outp) ) {
-            std::cout << "Error decoding files" << std::endl;
+            std::cout << "Error decoding files: " << decoder.getErrorStr() << std::endl;
             return -1;
         }
         if ( ! decode ) {
             if ( ! encoder.encodeFiles(wavs, outfiles, outp) ) {
-                std::cout << "Error encoding files" << std::endl;
+                std::cout << "Error encoding files: " << encoder.getErrorStr() << std::endl;
                 return -1;
             }
             if ( ! tags.empty() ) {
@@ -344,7 +344,7 @@ int main ( int argc, char **argv )
                           << std::endl;
                 return -1;
             }
-            outf = Encode::GetOutputName(wav, enctype);
+            outf = Encoder::GetOutputName(wav, enctype);
         }
 
         if ( enctype == AUDIO_UNK ) {
@@ -358,13 +358,13 @@ int main ( int argc, char **argv )
         if ( intf.type() <= AUDIO_WAV ) {
             std::cout << "Input file is already raw pcm/wav." << std::endl;
         } else if ( ! decoder.decode(intf, wav) ) {
-            std::cout << "Error decoding. " << std::endl;
+            std::cout << "Error in decoding: " << decoder.getErrorStr() << std::endl;
             return -1;
         }
 
         if ( ! decode ) {
             if ( ! encoder.encode(wav, outtf) ) {
-                std::cout << "Error encoding files." << std::endl;
+                std::cout << "Error encoding files: " + encoder.getErrorStr() << std::endl;
                 return -1;
             }
             if ( ! tags.empty() )

@@ -1,6 +1,6 @@
 /**  @file TransFile.cpp
   *
-  * Copyright (c) 2010-2020 Timothy Charlton Arland <tcarland@gmail.com>
+  * Copyright (c) 2010-2021 Timothy Charlton Arland <tcarland@gmail.com>
   *
  **/
 #define _TRANSAM_TRANSFILE_CPP_
@@ -368,12 +368,13 @@ TransFile::SetTags ( const std::string & tags, const std::string & target, bool 
 
         res = TransFile::SetTag(tf, taglist);
 
-        std::cout << "  Updated Tag: ";
-
-        if (  tf.hasTags() )
-            tf.printTags();
-        else
-            std::cout << "       <none>" << std::endl;
+        if ( res ) {
+            std::cout << "  Updated Tag: ";
+            if (  tf.hasTags() )
+                tf.printTags();
+            else
+                std::cout << "       <none>" << std::endl;
+        }
     }
 
     return res;
