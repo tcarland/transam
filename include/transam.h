@@ -41,6 +41,7 @@ typedef encoding_t enc_t;
 
 
 // Command and options for each encoding type
+// LAME is the primary mp3 encoder/decoder
 static std::string  MP3_ENCODER  = "lame";
 static std::string  MP3_DECODER  = "lame";
 static std::string  MP3E_OPTS    = " -h -b ";
@@ -60,6 +61,7 @@ static std::string  AAC_ENCODER  = "ffmpeg";
 static std::string  AAC_OPTS     = " -c:a libfdk_aac -b:a 256k ";  // or -vbr 1:5
 static std::string  AAC_IF       = " -i ";
 
+// FLAC
 static std::string  FLAC_ENCODER = "flac";
 static std::string  FLAC_DECODER = "flac";
 static std::string  FLACD_OPTS   = " -d --output-name=";
