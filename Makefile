@@ -20,7 +20,7 @@ LIBS=	    $(shell pkg-config --libs taglib)
 LFLAGS=     -L/usr/lib/x86_64-linux-gnu
 
 BIN=		transam transcheck 
-OBJS=		src/TransFile.o src/Encode.o src/Decode.o src/transam_main.o
+OBJS=		src/TransFile.o src/Encoder.o src/Decoder.o src/transam_main.o
 TESTOBJ=	src/trans_check.o
 
 ALL_OBJS=	$(OBJS) $(TESTOBJ)
