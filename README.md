@@ -29,9 +29,10 @@ The audio formats are supported via various opensource tools:
 - **shorten** is a legacy lossless format that is supported for decode only.
 
 Additionally, support for the Nero AAC encoder/decoder is provided for 
-legacy purposes as AAC support and quality has varied in the underlying 
-*libfaac* or *libavcodec* libraries used by *ffmpeg* while the Nero tools 
-still prove to be stable and efficient in providing quality AAC files.
+legacy purposes as AAC support and quality has traditionally varied in the 
+underlying *libfaac* or *libavcodec* libraries used by *ffmpeg*, while the 
+Nero implementation still proves to be stable and efficient in providing 
+quality AAC files. Of note, the ffmpeg aac encoder has improved since.
 
 
 ## Build Requirements
@@ -79,6 +80,10 @@ still be acquired separately from the following location(s):
  - http://wiki.hydrogenaud.io/index.php?title=Nero_AAC
  - https://web.archive.org/web/20160923100008/http://ftp6.nero.com/tools/NeroAACCodec-1.5.1.zip
 
+### Nero vs FFMPEG
+
+To use **NeroAAC**, use a filename extension of *.mp4*. 
+The extensions of *.m4a* or *.aac* will utilize **ffmpeg**.
 
 ## Codec Versions
 
@@ -87,5 +92,5 @@ still be acquired separately from the following location(s):
  * LAME 64 >=3.99.5
  * Flac 1.3.2
  * Vorbis Tools 1.4.0
- * NeroAAC v1.5.1
  * FFmpeg 4.2.x
+ * NeroAAC v1.5.1

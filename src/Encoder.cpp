@@ -275,10 +275,10 @@ Encoder::GetExtension ( encoding_t type )
             ext = ".mp3";
             break;
         case AUDIO_MP4:
-            ext = ".m4a";
+            ext = ".mp4";
             break;
         case AUDIO_AAC:
-            ext = ".aac";
+            ext = ".m4a";
             break;
         case AUDIO_FLAC:
             ext = ".flac";

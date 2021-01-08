@@ -294,7 +294,7 @@ Decoder::getOutputName ( const std::string & infile, const std::string & outpath
     outf = infile.substr(0, indx);
 
     if ( this->raw() )
-        outf.append(".raw");
+        outf.append(".pcm");
     else
         outf.append(".wav");
 

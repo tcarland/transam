@@ -91,7 +91,7 @@ class Encoder {
     	EncoderMap   emap;
     	emap["mp3"]  = AUDIO_MP3;
         emap["mp4"]  = AUDIO_MP4;
-        emap["m4a"]  = AUDIO_MP4;
+        emap["m4a"]  = AUDIO_AAC;
         emap["aac"]  = AUDIO_AAC;
         emap["flac"] = AUDIO_FLAC;
         emap["shn"]  = AUDIO_SHN;
