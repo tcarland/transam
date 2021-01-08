@@ -1,16 +1,22 @@
 TransAm - Transcoding Audio Media
 =====================================
 
-*TransAm* is a tool for transcoding between a variety audio formats. 
-Namely *mp3*, *flac*, *aac*, and Vorbis *ogg*.  It makes use of 
-existing (foss) audio tools for the decoding and/or encoding 
-of files. 
+*TransAm* is a tool for transcoding between a variety audio formats 
+while tracking or manipulating the audio metadata (eg. id3 tags). 
+Namely the *mp3*, *flac*, *aac*, and Vorbis *ogg* formats are supported.
+It makes use of existing (*FOSS*) audio tools for the decoding and/or encoding 
+of files.
 
- *TransAm* wraps these tools with sane defaults as well as tracking 
-and maintaining any *metadata* (id tags) on the files as well as 
-manipulating tags using the [taglib](https://github.com/taglib/taglib)
-library. Features include support for listing tags/metadata, setting tags, 
-setting tags while encoding, decode to `wav/PCM` only.
+<br>
+---
+## Overview
+
+ *TransAm* wraps the various audio tools with sane defaults as well as keeping
+tags/metadata intact across the transcoding process. It will keep tags intact 
+while transcoding or manipulate tags as defined by the user using
+ [taglib](https://github.com/taglib/taglib)
+The tool is intended to operate on directories of audio files and will
+decode only, transcode (decode/encode), or edit tags.
 
 ## Audio Tools
 
@@ -23,7 +29,8 @@ The audio formats are supported via various opensource tools:
 
 Additionally, support for the Nero AAC encoder/decoder is provided for 
 legacy purposes as AAC support and quality has varied in the underlying 
-*libfaac* or *libavcodec* libraries used by *ffmpeg*.
+*libfaac* or *libavcodec* libraries used by *ffmpeg* while the Nero tools 
+still prove to be stable and efficient in providing quality AAC files.
 
 
 ## Build Requirements
@@ -37,11 +44,15 @@ use of *tcamake* for a build environment.
 
   The *taglib* library can installed via the systems package manager.
 
+<br>
 
-## External Tools
+---
 
-The various tools should be installed and available via the system PATH 
-environment variable using the system package manager.
+## External Encoder support
+
+The various tools are expected to be available via the system PATH.
+Nearly all tools (save NeroAAC) are available via distribution package 
+managers. These packages should be installed accordingly.
 
 RHEL/CentOS (yum) based distributions:
 - flac
@@ -59,19 +70,20 @@ Ubuntu (apt) based distributions:
 - ffmpeg
 - libtag1-dev
 
-## NeroAAC
+### NeroAAC
 
-NeroAAC is proprietary implementation that is no longer maintained, but 
-remains a stable and highly efficient AAC encoder/decoder. It can still 
-be acquired separately from 
+NeroAAC is a proprietary codec that is no longer maintained, but 
+remains a stable and efficient option for an AAC encoder/decoder. It can 
+still be acquired separately from the following location(s):
  - http://wiki.hydrogenaud.io/index.php?title=Nero_AAC
  - https://web.archive.org/web/20160923100008/http://ftp6.nero.com/tools/NeroAACCodec-1.5.1.zip
 
-## Versions
 
-TransAm has been tested with the following versions:
+## Codec Versions
 
- * LAME 64bits version >=3.99.5
+*TransAm* has been tested with the following versions:
+
+ * LAME 64 >=3.99.5
  * Flac 1.3.2
  * Vorbis Tools 1.4.0
  * NeroAAC v1.5.1
