@@ -39,7 +39,7 @@ namespace transam {
 #define TRANSAM_VERSION  "v21.01"
 #define TRANSAM_LICENSE  "Copyright (c)2010-2021 Timothy C. Arland <tcarland@gmail.com>"
 
-#define TRANSAM_DEFAULT_BITRATE 384
+#define TRANSAM_DEFAULT_BITRATE 256
 
 
 // supported encoding types
@@ -47,11 +47,12 @@ typedef enum encoding_types {
     AUDIO_UNK     = 0,
     AUDIO_RAW     = 1,
     AUDIO_WAV     = 2,
-    AUDIO_MP3     = 3,
-    AUDIO_MP4     = 4,
-    AUDIO_FLAC    = 5,
-    AUDIO_SHN     = 6,
-    AUDIO_OGG     = 7
+    AUDIO_MP3     = 3, // lame
+    AUDIO_MP4     = 4, // nero
+    AUDIO_AAC     = 5, // ffmpeg
+    AUDIO_FLAC    = 6, // flac
+    AUDIO_OGG     = 7, // vorbis
+    AUDIO_SHN     = 8  // shorten
 } encoding_t;
 
 typedef encoding_t enc_t;
@@ -75,8 +76,13 @@ static std::string  MP4_OF       = " -of ";
 // consider switching to ffmpeg as libfaac improves.
 // ffmpeg [options] [[infile options] -i infile]... {[outfile options] outfile}...
 static std::string  AAC_ENCODER  = "ffmpeg";
-static std::string  AAC_OPTS     = " -c:a libfdk_aac -b:a 256k ";  // or -vbr 1:5
+static std::string  AAC_DECODER  = "ffmpeg";
+static std::string  AAC_FDKOPTS  = " -c:a libfdk_aac "; // fraunhaufer lib
+static std::string  AAC_AACOPTS  = " -c:a aac ";
+static std::string  AAC_CBR      = "-b:a 128k ";
+static std::string  AAC_VBR      = "-vbr 5 ";
 static std::string  AAC_IF       = " -i ";
+static std::string  AAC_FORMAT   = "-f adts";  // AAC-LE 
 
 // FLAC
 static std::string  FLAC_ENCODER = "flac";

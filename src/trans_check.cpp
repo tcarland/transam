@@ -61,6 +61,10 @@ int main ( int argc, char **argv )
               << std::setw(12) << MP4_ENCODER;
     r = check(cmdbuf, MP4_ENCODER);
     if ( ! r ) f = r;
+
+    std::cout << std::setw(32) << "Checking for the AAC Encoder: "
+              << std::setw(12) << AAC_ENCODER;
+    r = check(cmdbuf, AAC_ENCODER);
     
     std::cout << std::setw(32) << "Checking for the FLAC Encoder: "
               << std::setw(12) << FLAC_ENCODER;
@@ -82,7 +86,7 @@ int main ( int argc, char **argv )
                   << "installed and in your system path if you plan to work with " << std::endl
                   << "that given format." << std::endl;
     else
-        std::cout << "All Good!" << std::endl;
+        std::cout << "All Apps found!" << std::endl;
     
     return 0;
 }

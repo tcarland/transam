@@ -247,6 +247,12 @@ Decoder::getDecoderExec ( const TransFile & infile, const std::string & outfile 
             cmd.append(MP4_OF);
             cmd.append("\"").append(outfile).append("\"");
             break;
+        case AUDIO_AAC:
+            cmd = AAC_DECODER;
+            cmd.append(AAC_IF);
+            cmd.append("\"").append(infile.getFileName()).append("\" ");
+            cmd.append("\"").append(outfile).append("\"");
+            break;
         case AUDIO_FLAC:
             cmd = FLAC_DECODER;
             if ( this->raw() )

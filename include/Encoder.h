@@ -92,7 +92,7 @@ class Encoder {
     	emap["mp3"]  = AUDIO_MP3;
         emap["mp4"]  = AUDIO_MP4;
         emap["m4a"]  = AUDIO_MP4;
-        emap["aac"]  = AUDIO_MP4;
+        emap["aac"]  = AUDIO_AAC;
         emap["flac"] = AUDIO_FLAC;
         emap["shn"]  = AUDIO_SHN;
         emap["ogg"]  = AUDIO_OGG;

@@ -21,6 +21,7 @@ decode only, transcode (decode/encode), or edit tags.
 ## Audio Tools
 
 The audio formats are supported via various opensource tools:
+
 - **LAME** for *mp3* files (http://lame.sf.net)
 - **FLAC** or Free Lossless Audio Compression (https://github.com/xiph/flac)
 - **libvorbis** for *ogg* support. (https://xiph.org/vorbis/)

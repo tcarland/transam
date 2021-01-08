@@ -277,6 +277,9 @@ Encoder::GetExtension ( encoding_t type )
         case AUDIO_MP4:
             ext = ".m4a";
             break;
+        case AUDIO_AAC:
+            ext = ".aac";
+            break;
         case AUDIO_FLAC:
             ext = ".flac";
             break;
@@ -294,7 +297,7 @@ Encoder::GetExtension ( encoding_t type )
 
 std::string
 Encoder::getEncoderExec ( const std::string & infile,
-                         const std::string & outfile )
+                          const std::string & outfile )
 {
     std::string  cmd;
     std::string  br  = StringUtils::ToString(this->bitrate());
@@ -307,21 +310,21 @@ Encoder::getEncoderExec ( const std::string & infile,
             cmd.append(" \"").append(infile).append("\"");
             cmd.append(" \"").append(outfile).append("\"");
             break;
-        case AUDIO_MP4:
+        case AUDIO_MP4:  //nero aac encoder
             cmd = MP4_ENCODER;
             cmd.append(MP4E_OPTS).append(br);
             cmd.append(MP4_IF);
             cmd.append("\"").append(infile).append("\"");
             cmd.append(MP4_OF);
             cmd.append("\"").append(outfile).append("\"");
-
-            // ffmpeg
-            //cmd = AAC_ENCODER;
-            //cmd.append(AAC_IF);
-            //cmd.append("\"").append(infile).append("\"");
-            //cmd.append(AAC_OPTS);
-            //cmd.append("\"").append(outfile).append("\"")'
-
+            break;
+        case AUDIO_AAC:  //ffmpeg aac encoder
+            cmd = AAC_ENCODER;
+            cmd.append(AAC_IF);
+            cmd.append("\"").append(infile).append("\"");
+            cmd.append(AAC_AACOPTS);
+            cmd.append(AAC_CBR);
+            cmd.append("\"").append(outfile).append("\"");
             break;
         case AUDIO_FLAC:
             cmd = FLAC_ENCODER;

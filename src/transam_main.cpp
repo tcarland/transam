@@ -58,7 +58,7 @@ void version()
 
 void usage()
 {
-    std::cout << "Usage: " << Process << " [-dEhnvVW] [-t type] [-o outfile] <file|path>\n"
+    std::cout << "Usage: " << Process << " [-dEhnvVW] [-t type] [-o outfile] <infile|path>\n"
               << "     -A | --apply-only     :  Apply tags provided only to the infiles, no decoding.\n"
               << "     -b | --bitrate        :  Bitrate for encoding (default=384). For flac encoding.\n"
               << "                              Using '16' or '24' (24/96khz) requires raw input (-r).\n"
@@ -70,7 +70,7 @@ void usage()
               << "     -o | --outfile <file> :  Name of the target output file.\n"
               << "     -P | --outpath <path> :  Alternate output path to place generated files.\n"
               << "     -r | --raw            :  Decode files to raw PCM data '.raw'\n"
-              << "     -R | --renum          :  Sets 'apply-only' and offers to renumber tracks.\n"
+              << "     -R | --renum          :  Sets 'apply-only' and offers to re-number tracks.\n"
               << "     -t | --type <name>    :  The encoding type by extension (if applicable).\n"
               << "                           :  supported types: flac, mp3, mp4, ogg, shn, wav\n"
               << "     -T | --tags=\"KEY:val\" :  Set ID3/4 tags on the given file(s). Useful Keys:\n"
@@ -82,8 +82,8 @@ void usage()
               << "     -v | --verbose        :  Enable verbose output.\n"
               << "     -V | --version        :  Display version info and exit.\n"
               << " Note: This application makes use of external binaries for encoding and decoding.\n"
-              << " The various apps needed are: 'lame' for mp3, 'neroAacEnc/Dec' for m4a, 'flac', \n"
-              << " 'oggenc/dec' and optionally 'shorten' for decoding shn files." << std::endl;
+              << " The various apps are: 'lame' for mp3, 'neroAacEnc/Dec' for m4a, 'flac', \n"
+              << " 'oggenc/dec' for vorbis, 'ffmpeg' for aac, and 'shorten' for decoding shn files." << std::endl;
     exit(0);
 }
 
