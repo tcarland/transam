@@ -43,6 +43,7 @@ Encoder::Encoder ( encoding_t type, int rate )
       _dryrun(false),
       _erase(true),
       _clobber(false),
+      _ffmpeg(true),
       _debug(false)
 {}
 
@@ -213,6 +214,20 @@ Encoder::clobber() const
 //-------------------------------------------------------------------------
 
 void
+Encoder::ffmpeg ( bool f )
+{
+    _ffmpeg = f;
+}
+
+bool
+Encoder::ffmpeg() const
+{
+    return _ffmpeg;
+}
+
+//-------------------------------------------------------------------------
+
+void
 Encoder::erase ( bool erase )
 {
     _erase = erase;
@@ -300,9 +315,15 @@ Encoder::getEncoderExec ( const std::string & infile,
                           const std::string & outfile )
 {
     std::string  cmd;
-    std::string  br  = StringUtils::ToString(this->bitrate());
+    std::string  br   = StringUtils::ToString(this->bitrate());
+    encoding_t   type = this->_type;
 
-    switch ( this->_type )
+    if ( type == AUDIO_MP4 && this->ffmpeg() )
+        type = AUDIO_AAC;
+    else if ( type == AUDIO_AAC && ! this->ffmpeg() )
+        type = AUDIO_MP4;
+
+    switch ( type )
     {
         case AUDIO_MP3:
             cmd = MP3_ENCODER;

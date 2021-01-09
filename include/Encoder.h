@@ -49,22 +49,25 @@ class Encoder {
                                TransFileList     & outfiles,
                                const std::string & outpath = "");
 
-    void         bitrate   ( int bitrate );
+    void         bitrate ( int bitrate );
     int          bitrate() const;
 
-    void         notags    ( bool notags );
+    void         notags  ( bool notags );
     bool         notags() const;
 
-    void         clobber   ( bool clobber );
+    void         clobber ( bool clobber );
     bool         clobber() const;
 
-    void         dryrun    ( bool dryrun );
+    void         dryrun  ( bool dryrun );
     bool         dryrun() const;
 
-    void         erase     ( bool erase );
+    void         erase   ( bool erase );
     bool         erase() const;
+    
+    void         ffmpeg  ( bool f );
+    bool         ffmpeg() const;
 
-    void         debug     ( bool debug );
+    void         debug   ( bool debug );
     bool         debug() const;
 
 
@@ -107,6 +110,7 @@ class Encoder {
     bool        _dryrun;
     bool        _erase;
     bool        _clobber;
+    bool        _ffmpeg;
     bool        _debug;
     std::string _errstr;
 };

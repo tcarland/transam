@@ -40,10 +40,6 @@ transcheck: $(TESTOBJ) src/TransFile.o
 	$(make-cxxbin-rule)
 	@echo
 
-
-.PHONY: test
-test:
-
 clean:
 	$(RM) $(ALL_OBJS) \
 	*.d *.D *.o src/*.d src/*.D src/*.bd src/*.o

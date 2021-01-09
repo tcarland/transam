@@ -50,7 +50,7 @@ use of *tcamake* for a build environment.
 
 ---
 
-## External Encoder support
+## External Codec support
 
 The various tools are expected to be available via the system PATH.
 Nearly all tools (save NeroAAC) are available via distribution package 
@@ -72,6 +72,7 @@ Ubuntu (apt) based distributions:
 - ffmpeg
 - libtag1-dev
 
+
 ### NeroAAC
 
 NeroAAC is a proprietary codec that is no longer maintained, but 
@@ -80,10 +81,11 @@ still be acquired separately from the following location(s):
  - http://wiki.hydrogenaud.io/index.php?title=Nero_AAC
  - https://web.archive.org/web/20160923100008/http://ftp6.nero.com/tools/NeroAACCodec-1.5.1.zip
 
+
 ### Nero vs FFMPEG
 
-To use **NeroAAC**, use a filename extension of *.mp4*. 
-The extensions of *.m4a* or *.aac* will utilize **ffmpeg**.
+To use **NeroAAC** over **ffmpeg**,  use the `-F` or `--no-ffmpeg` option.
+*ffmpeg* is the default encoder/decoder for *AAC* files.
 
 ## Codec Versions
 
@@ -94,3 +96,32 @@ The extensions of *.m4a* or *.aac* will utilize **ffmpeg**.
  * Vorbis Tools 1.4.0
  * FFmpeg 4.2.x
  * NeroAAC v1.5.1
+
+## Examples
+
+Transcode the files in the current directory to mp3 with a constant bitrate of 256k,
+and keepting tags intact.
+```
+transam -b 256 -t mp3 .
+```
+
+Set the Artist and Album name for tracks in the current directory only.
+```
+transam -A -T "ARTIST:Grateful Dead|ALBUM:Aoxomoxoa" .
+```
+
+Decode the input files to wav pcm and do not re-encode.
+```
+transam -d -r .
+```
+
+Transcode the input files to AAC, but leave the decoded WAV files intact. Overwrite 
+any existing files.
+```
+transam -t m4a --no-erase --clobber .
+```
+
+Renumber the tracks in a directory
+```
+transam -R .
+```

@@ -54,6 +54,9 @@ class Decoder {
     void         raw      ( bool raw );
     bool         raw() const;
 
+    void         ffmpeg   ( bool f );
+    bool         ffmpeg() const;
+
     void         debug    ( bool debug );
     bool         debug() const;
 
@@ -71,6 +74,7 @@ class Decoder {
     bool        _dryrun;
     bool        _clobber;
     bool        _raw;
+    bool        _ffmpeg;
     bool        _debug;
     std::string _errstr;
 };

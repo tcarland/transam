@@ -63,7 +63,8 @@ void usage()
               << "     -b | --bitrate        :  Bitrate for encoding (default=384). For flac encoding.\n"
               << "                              Using '16' or '24' (24/96khz) requires raw input (-r).\n"
               << "     -d | --decode-only    :  Decode only to a .wav file (default is to encode).\n"
-              << "     -E | --noerase        :  Do NOT erase source WAV files after decode/encode.\n"
+              << "     -E | --no-erase       :  Do NOT erase source WAV files after decode/encode.\n"
+              << "     -F | --no-ffmpeg      :  Do not use the 'ffmpeg' app for aac (requires NeroAAC).\n"
               << "     -h | --help           :  Display help information and exit.\n"
               << "     -l | --list           :  List the ID3/4 tags for all files and exit.\n"
               << "     -n | --dryrun         :  Enable the 'dryrun' option, no changes are made.\n"
@@ -126,6 +127,7 @@ int main ( int argc, char **argv )
     bool  clobber  = false;
     bool  showtags = false;
     bool  raw      = false;
+    bool  ffmpeg   = true; 
     int   optindx  = 0;
 
     uint16_t rate = TRANSAM_DEFAULT_BITRATE;
@@ -133,8 +135,9 @@ int main ( int argc, char **argv )
     static struct option l_opts[] = { {"apply-only", no_argument, 0, 'A'},
                                       {"bitrate",  required_argument, 0, 'b'},
                                       {"decode-only", no_argument, 0, 'd'},
+                                      {"no-erase",  no_argument, 0, 'E'},
+                                      {"no-ffmpeg", no_argument, 0, 'F'},
                                       {"dryrun",   no_argument, 0, 'n'},
-                                      {"noerase",  no_argument, 0, 'E'},
                                       {"help",     no_argument, 0, 'h'},
                                       {"list",     no_argument, 0, 'l'},
                                       {"infile",   required_argument, 0, 'i'},
@@ -144,14 +147,14 @@ int main ( int argc, char **argv )
                                       {"tags",     required_argument, 0, 'T'},
                                       {"raw",      no_argument, 0, 'r'},
                                       {"renum",    no_argument, 0, 'R'},
-                                      {"notags",   no_argument, 0, 'X'},
+                                      {"skiptags", no_argument, 0, 's'},
                                       {"verbose",  no_argument, 0, 'v'},
                                       {"version",  no_argument, 0, 'V'},
                                       {"clobber",  no_argument, 0, 'W'},
                                       {0,0,0,0}
                                     };
 
-    while ( (optChar = ::getopt_long(argc, argv, "Ab:dEhi:lLo:P:nrRSt:T:vVW", l_opts, &optindx)) != EOF )
+    while ( (optChar = ::getopt_long(argc, argv, "Ab:dEFhi:lLo:P:nrRst:T:vVW", l_opts, &optindx)) != EOF )
     {
         switch ( optChar ) {
             case 'A':
@@ -165,6 +168,9 @@ int main ( int argc, char **argv )
               break;
             case 'E':
               noerase = true;
+              break;
+            case 'F':
+              ffmpeg = false;
               break;
             case 'h':
               usage();
@@ -307,12 +313,14 @@ int main ( int argc, char **argv )
     decoder.dryrun(dryrun);
     decoder.notags(notags);
     decoder.clobber(clobber);
+    decoder.ffmpeg(ffmpeg);
     decoder.raw(raw);
 
     Encoder encoder(enctype, rate);
     encoder.debug(verbose);
     encoder.dryrun(dryrun);
     encoder.clobber(clobber);
+    encoder.ffmpeg(ffmpeg);
     encoder.erase(!noerase);
 
     if ( ! path.empty() )

@@ -39,6 +39,7 @@ Decoder::Decoder()
       _dryrun(false),
       _clobber(false),
       _raw(false),
+      _ffmpeg(true),
       _debug(false)
 {}
 
@@ -212,6 +213,20 @@ Decoder::clobber() const
 //-------------------------------------------------------------------------
 
 void
+Decoder::ffmpeg ( bool f )
+{
+    _ffmpeg = f;
+}
+
+bool
+Decoder::ffmpeg() const
+{
+    return _ffmpeg;
+}
+
+//-------------------------------------------------------------------------
+
+void
 Decoder::raw ( bool raw )
 {
     _raw = raw;
@@ -229,8 +244,14 @@ std::string
 Decoder::getDecoderExec ( const TransFile & infile, const std::string & outfile )
 {
     std::string  cmd;
+    encoding_t   type = infile.getType();
 
-    switch ( infile.getType() )
+    if ( type == AUDIO_AAC && ! this->ffmpeg() )
+        type = AUDIO_MP4;
+    else if ( type == AUDIO_MP4 && this->ffmpeg() )
+        type = AUDIO_AAC;
+
+    switch ( type )
     {
         case AUDIO_MP3:
             cmd = MP3_DECODER;
