@@ -294,9 +294,7 @@ TransFile::GetEncoding ( const std::string & name )
         return AUDIO_MP3;
     else if ( ext.compare("mp4") == 0 )
         return AUDIO_MP4;
-    else if ( ext.compare("m4a") == 0 )
-        return AUDIO_AAC;
-    else if ( ext.compare("aac") == 0 )
+    else if ( ext.compare("m4a") == 0 || ext.compare("aac") == 0 )
         return AUDIO_AAC;
     else if ( ext.compare("flac") == 0 )
         return AUDIO_FLAC;
