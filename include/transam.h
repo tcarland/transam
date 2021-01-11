@@ -1,28 +1,27 @@
 /**
-  *  @file    transam.h
-  *  @author  Timothy C. Arland <tcarland@gmail.com>
+  * @file    transam.h
   *
-  *  Trans-AM -  Transcoding for Audio Media
+  *  Trans.A.M. -  Transcoding for Audio Media
   * 
-  *  Allows for single-step transcoding from one audio format to another
-  *  such as flac->mp3 or flac->mp4 while keeping metadata intact. 
+  * Allows for single-step transcoding from one audio format to another
+  * such as flac->mp3 or flac->mp4 while keeping metadata intact. 
   *
   * Copyright (c) 2010-2021 Timothy Charlton Arland <tcarland@gmail.com>
   *
-  * This file is part of TransAM.
+  * This file is part of TransAm.
   * 
-  * TransAM is free software: you can redistribute it and/or modify
+  * TransAm is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
   * the Free Software Foundation, either version 3 of the License, or
   * (at your option) any later version.
   *
-  * TransAM is distributed in the hope that it will be useful,
+  * TransAm is distributed in the hope that it will be useful,
   * but WITHOUT ANY WARRANTY; without even the implied warranty of
   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   * GNU General Public License for more details.
   *
   * You should have received a copy of the GNU General Public License
-  * along with TransAM.  If not, see <https://www.gnu.org/licenses/>.
+  * along with TransAm.  If not, see <https://www.gnu.org/licenses/>.
   * 
  **/
 #ifndef _TRANSAM_TRANSAM_H_
