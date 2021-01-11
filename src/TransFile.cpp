@@ -1,7 +1,22 @@
 /**  @file TransFile.cpp
   *
-  * Copyright (c) 2010-2020 Timothy Charlton Arland <tcarland@gmail.com>
+  * Copyright (c) 2010-2021 Timothy Charlton Arland <tcarland@gmail.com>
   *
+  * This file is part of TransAm.
+  * 
+  * TransAm is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * TransAm is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with TransAm.  If not, see <https://www.gnu.org/licenses/>.
+  * 
  **/
 #define _TRANSAM_TRANSFILE_CPP_
 
@@ -279,6 +294,8 @@ TransFile::GetEncoding ( const std::string & name )
         return AUDIO_MP3;
     else if ( ext.compare("mp4") == 0 )
         return AUDIO_MP4;
+    else if ( ext.compare("m4a") == 0 || ext.compare("aac") == 0 )
+        return AUDIO_AAC;
     else if ( ext.compare("flac") == 0 )
         return AUDIO_FLAC;
     else if ( ext.compare("shn") == 0 )
@@ -368,12 +385,13 @@ TransFile::SetTags ( const std::string & tags, const std::string & target, bool 
 
         res = TransFile::SetTag(tf, taglist);
 
-        std::cout << "  Updated Tag: ";
-
-        if (  tf.hasTags() )
-            tf.printTags();
-        else
-            std::cout << "       <none>" << std::endl;
+        if ( res ) {
+            std::cout << "  Updated Tag: ";
+            if (  tf.hasTags() )
+                tf.printTags();
+            else
+                std::cout << "       <none>" << std::endl;
+        }
     }
 
     return res;

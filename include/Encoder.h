@@ -1,10 +1,25 @@
-/**  @file Encode.h 
+/**  @file Encoder.h 
   *
-  *  Copyright (c) 2011-2020 Timothy Charlton Arland <tcarland@gmail.com>
+  * Copyright (c) 2010-2021 Timothy Charlton Arland <tcarland@gmail.com>
   *
+  * This file is part of TransAm.
+  * 
+  * TransAm is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * TransAm is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with TransAm.  If not, see <https://www.gnu.org/licenses/>.
+  * 
  **/
-#ifndef _TRANSAM_ENCODE_H_
-#define _TRANSAM_ENCODE_H_
+#ifndef _TRANSAM_ENCODER_H_
+#define _TRANSAM_ENCODER_H_
 
 #include <map>
 
@@ -19,12 +34,12 @@ typedef std::map<std::string, encoding_t> EncoderMap;
 
 
 
-class Encode {
+class Encoder {
 
   public:
 
-    Encode ( encoding_t type, int bitrate = TRANSAM_DEFAULT_BITRATE );
-    ~Encode();
+    Encoder ( encoding_t type, int bitrate = TRANSAM_DEFAULT_BITRATE );
+    ~Encoder();
 
 
     bool         encode      ( TransFile         & infile,
@@ -34,27 +49,32 @@ class Encode {
                                TransFileList     & outfiles,
                                const std::string & outpath = "");
 
-    void         bitrate   ( int bitrate );
+    void         bitrate ( int bitrate );
     int          bitrate() const;
 
-    void         notags    ( bool notags );
+    void         notags  ( bool notags );
     bool         notags() const;
 
-    void         clobber   ( bool clobber );
+    void         clobber ( bool clobber );
     bool         clobber() const;
 
-    void         dryrun    ( bool dryrun );
+    void         dryrun  ( bool dryrun );
     bool         dryrun() const;
 
-    void         erase     ( bool erase );
+    void         erase   ( bool erase );
     bool         erase() const;
+    
+    void         ffmpeg  ( bool f );
+    bool         ffmpeg() const;
 
-    void         debug     ( bool debug );
+    void         debug   ( bool debug );
     bool         debug() const;
 
 
     std::string  getEncoderExec ( const std::string & infile,
                                   const std::string & outfile );
+
+    std::string& getErrorStr();
 
   public:
 
@@ -74,8 +94,8 @@ class Encode {
     	EncoderMap   emap;
     	emap["mp3"]  = AUDIO_MP3;
         emap["mp4"]  = AUDIO_MP4;
-        emap["m4a"]  = AUDIO_MP4;
-        emap["aac"]  = AUDIO_MP4;
+        emap["m4a"]  = AUDIO_AAC;
+        emap["aac"]  = AUDIO_AAC;
         emap["flac"] = AUDIO_FLAC;
         emap["shn"]  = AUDIO_SHN;
         emap["ogg"]  = AUDIO_OGG;
@@ -90,10 +110,12 @@ class Encode {
     bool        _dryrun;
     bool        _erase;
     bool        _clobber;
+    bool        _ffmpeg;
     bool        _debug;
+    std::string _errstr;
 };
 
 
 }  // namespace
 
-#endif  // _TRANSAM_ENCODE_H_
+#endif  // _TRANSAM_ENCODER_H_

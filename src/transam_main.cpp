@@ -1,6 +1,22 @@
 /** @file transam_main.cpp
   * 
-  * Copyright (c) 2010-2020 Timothy Charlton Arland
+  * Copyright (c) 2010-2021 Timothy Charlton Arland <tcarland@gmail.com>
+  *
+  * This file is part of TransAm.
+  * 
+  * TransAm is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * TransAm is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with TransAm.  If not, see <https://www.gnu.org/licenses/>.
+  * 
  **/
 #define _TRANSAM_TRANSAM_CPP_
 
@@ -19,8 +35,8 @@ extern "C" {
 
 #include "transam.h"
 #include "TransFile.h"
-#include "Decode.h"
-#include "Encode.h"
+#include "Decoder.h"
+#include "Encoder.h"
 using namespace transam;
 
 #include "util/StringUtils.h"
@@ -42,19 +58,20 @@ void version()
 
 void usage()
 {
-    std::cout << "Usage: " << Process << " [-dEhnvVW] [-t type] [-o outfile] <file|path>\n"
+    std::cout << "Usage: " << Process << " [-dEhnvVW] [-t type] [-o outfile] <infile|path>\n"
               << "     -A | --apply-only     :  Apply tags provided only to the infiles, no decoding.\n"
               << "     -b | --bitrate        :  Bitrate for encoding (default=384). For flac encoding.\n"
               << "                              Using '16' or '24' (24/96khz) requires raw input (-r).\n"
               << "     -d | --decode-only    :  Decode only to a .wav file (default is to encode).\n"
-              << "     -E | --noerase        :  Do NOT erase source WAV files after decode/encode.\n"
+              << "     -E | --no-erase       :  Do NOT erase source WAV files after decode/encode.\n"
+              << "     -F | --no-ffmpeg      :  Do not use the 'ffmpeg' app for aac (requires NeroAAC).\n"
               << "     -h | --help           :  Display help information and exit.\n"
               << "     -l | --list           :  List the ID3/4 tags for all files and exit.\n"
               << "     -n | --dryrun         :  Enable the 'dryrun' option, no changes are made.\n"
               << "     -o | --outfile <file> :  Name of the target output file.\n"
               << "     -P | --outpath <path> :  Alternate output path to place generated files.\n"
               << "     -r | --raw            :  Decode files to raw PCM data '.raw'\n"
-              << "     -R | --renum          :  Sets 'apply-only' and offers to renumber tracks.\n"
+              << "     -R | --renum          :  Sets 'apply-only' and offers to re-number tracks.\n"
               << "     -t | --type <name>    :  The encoding type by extension (if applicable).\n"
               << "                           :  supported types: flac, mp3, mp4, ogg, shn, wav\n"
               << "     -T | --tags=\"KEY:val\" :  Set ID3/4 tags on the given file(s). Useful Keys:\n"
@@ -66,8 +83,8 @@ void usage()
               << "     -v | --verbose        :  Enable verbose output.\n"
               << "     -V | --version        :  Display version info and exit.\n"
               << " Note: This application makes use of external binaries for encoding and decoding.\n"
-              << " The various apps needed are: 'lame' for mp3, 'neroAacEnc/Dec' for m4a, 'flac', \n"
-              << " 'oggenc/dec' and optionally 'shorten' for decoding shn files." << std::endl;
+              << " The various apps are: 'lame' for mp3, 'neroAacEnc/Dec' for m4a, 'flac', \n"
+              << " 'oggenc/dec' for vorbis, 'ffmpeg' for aac, and 'shorten' for decoding shn files." << std::endl;
     exit(0);
 }
 
@@ -83,7 +100,7 @@ encoding_t setEncodingType ( const std::string & typestr )
     encoding_t  type;
     EncoderMap::iterator fIter;
 
-    if ( (fIter = Encode::Encoders.find(typestr)) == Encode::Encoders.end() )
+    if ( (fIter = Encoder::Encoders.find(typestr)) == Encoder::Encoders.end() )
         return AUDIO_UNK;
 
     type = fIter->second;
@@ -110,6 +127,7 @@ int main ( int argc, char **argv )
     bool  clobber  = false;
     bool  showtags = false;
     bool  raw      = false;
+    bool  ffmpeg   = true; 
     int   optindx  = 0;
 
     uint16_t rate = TRANSAM_DEFAULT_BITRATE;
@@ -117,8 +135,9 @@ int main ( int argc, char **argv )
     static struct option l_opts[] = { {"apply-only", no_argument, 0, 'A'},
                                       {"bitrate",  required_argument, 0, 'b'},
                                       {"decode-only", no_argument, 0, 'd'},
+                                      {"no-erase",  no_argument, 0, 'E'},
+                                      {"no-ffmpeg", no_argument, 0, 'F'},
                                       {"dryrun",   no_argument, 0, 'n'},
-                                      {"noerase",  no_argument, 0, 'E'},
                                       {"help",     no_argument, 0, 'h'},
                                       {"list",     no_argument, 0, 'l'},
                                       {"infile",   required_argument, 0, 'i'},
@@ -128,14 +147,14 @@ int main ( int argc, char **argv )
                                       {"tags",     required_argument, 0, 'T'},
                                       {"raw",      no_argument, 0, 'r'},
                                       {"renum",    no_argument, 0, 'R'},
-                                      {"notags",   no_argument, 0, 'X'},
+                                      {"skiptags", no_argument, 0, 's'},
                                       {"verbose",  no_argument, 0, 'v'},
                                       {"version",  no_argument, 0, 'V'},
                                       {"clobber",  no_argument, 0, 'W'},
                                       {0,0,0,0}
                                     };
 
-    while ( (optChar = ::getopt_long(argc, argv, "Ab:dEhi:lLo:P:nrRSt:T:vVW", l_opts, &optindx)) != EOF )
+    while ( (optChar = ::getopt_long(argc, argv, "Ab:dEFhi:lLo:P:nrRst:T:vVW", l_opts, &optindx)) != EOF )
     {
         switch ( optChar ) {
             case 'A':
@@ -149,6 +168,9 @@ int main ( int argc, char **argv )
               break;
             case 'E':
               noerase = true;
+              break;
+            case 'F':
+              ffmpeg = false;
               break;
             case 'h':
               usage();
@@ -286,17 +308,19 @@ int main ( int argc, char **argv )
         }
     }
 
-    Decode  decoder;
+    Decoder decoder;
     decoder.debug(verbose);
     decoder.dryrun(dryrun);
     decoder.notags(notags);
     decoder.clobber(clobber);
+    decoder.ffmpeg(ffmpeg);
     decoder.raw(raw);
 
-    Encode  encoder(enctype, rate);
+    Encoder encoder(enctype, rate);
     encoder.debug(verbose);
     encoder.dryrun(dryrun);
     encoder.clobber(clobber);
+    encoder.ffmpeg(ffmpeg);
     encoder.erase(!noerase);
 
     if ( ! path.empty() )
@@ -305,12 +329,12 @@ int main ( int argc, char **argv )
         TransFileList::iterator fIter;
 
         if ( ! decoder.decodePath(wavs, path, outp) ) {
-            std::cout << "Error decoding files" << std::endl;
+            std::cout << "Error decoding files: " << decoder.getErrorStr() << std::endl;
             return -1;
         }
         if ( ! decode ) {
             if ( ! encoder.encodeFiles(wavs, outfiles, outp) ) {
-                std::cout << "Error encoding files" << std::endl;
+                std::cout << "Error encoding files: " << encoder.getErrorStr() << std::endl;
                 return -1;
             }
             if ( ! tags.empty() ) {
@@ -344,7 +368,7 @@ int main ( int argc, char **argv )
                           << std::endl;
                 return -1;
             }
-            outf = Encode::GetOutputName(wav, enctype);
+            outf = Encoder::GetOutputName(wav, enctype);
         }
 
         if ( enctype == AUDIO_UNK ) {
@@ -358,13 +382,13 @@ int main ( int argc, char **argv )
         if ( intf.type() <= AUDIO_WAV ) {
             std::cout << "Input file is already raw pcm/wav." << std::endl;
         } else if ( ! decoder.decode(intf, wav) ) {
-            std::cout << "Error decoding. " << std::endl;
+            std::cout << "Error in decoding: " << decoder.getErrorStr() << std::endl;
             return -1;
         }
 
         if ( ! decode ) {
             if ( ! encoder.encode(wav, outtf) ) {
-                std::cout << "Error encoding files." << std::endl;
+                std::cout << "Error encoding files: " + encoder.getErrorStr() << std::endl;
                 return -1;
             }
             if ( ! tags.empty() )

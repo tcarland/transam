@@ -1,12 +1,27 @@
-/**  @file Decode.cpp
+/**  @file Decoder.cpp
   * 
-  *  Copyright (c) 2011-2020 Timothy Charlton Arland <tcarland@gmail.com>
+  * Copyright (c) 2010-2021 Timothy Charlton Arland <tcarland@gmail.com>
   *
+  * This file is part of TransAm.
+  * 
+  * TransAm is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * TransAm is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with TransAm.  If not, see <https://www.gnu.org/licenses/>.
+  * 
  **/
-#ifndef _TRANSAM_DECODE_CPP_
-#define _TRANSAM_DECODE_CPP_
+#ifndef _TRANSAM_DECODER_CPP_
+#define _TRANSAM_DECODER_CPP_
 
-#include "Decode.h"
+#include "Decoder.h"
 
 #include "util/StringUtils.h"
 #include "util/FileUtils.h"
@@ -19,39 +34,36 @@ namespace transam {
 
 //-------------------------------------------------------------------------
 
-Decode::Decode()
+Decoder::Decoder()
     : _notags(false),
       _dryrun(false),
       _clobber(false),
       _raw(false),
+      _ffmpeg(true),
       _debug(false)
 {}
 
 
-Decode::~Decode()
+Decoder::~Decoder()
 {}
 
 //-------------------------------------------------------------------------
 
 bool
-Decode::decode ( const TransFile & infile, TransFile & outfile )
+Decoder::decode ( const TransFile & infile, TransFile & outfile )
 {
     std::string cmd;
 
     if ( FileUtils::IsReadable(outfile.getFileName()) && ! this->clobber() )
     {
-        std::cout << "Decode target output file already exists: "
-                  << outfile.getFileName() << std::endl
-                  << "   Set --clobber option to overwrite."
-                  << std::endl;
+        _errstr = "Decode target output file already exists, set --clobber option to overwrite.";
         return false;
     }
 
     cmd = this->getDecoderExec(infile, outfile.getFileName());
 
     if ( cmd.empty() ) {
-        std::cout << "Decoder has no exec for '" << infile.getFileName()
-                  << "'" << std::endl;
+        _errstr = "Decoder has no exec for file " + infile.getFileName();
         return false;
     }
 
@@ -63,7 +75,7 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
     CmdBuffer  cmdbuf;
 
     if ( ! cmdbuf.open(cmd) ) {
-        std::cout << "decode() Error in command" << std::endl;
+        _errstr = "Decoder error in command";
         return false;
     }
 
@@ -85,15 +97,14 @@ Decode::decode ( const TransFile & infile, TransFile & outfile )
 //-------------------------------------------------------------------------
 
 bool
-Decode::decodePath ( TransFileList & wavs, const std::string & path,
+Decoder::decodePath ( TransFileList & wavs, const std::string & path,
                      const std::string & outpath )
 {
     TransFileList  files;
     TransFileList::iterator  fIter;
 
     if ( ! TransFile::ReadPath(path, files, _notags) ) {
-        std::cout << "decodePath() Reading files from '" << path
-                  << "' failed." << std::endl;
+        _errstr = "decodePath() failed to read files from path: " + path;
         return false;
     }
 
@@ -118,8 +129,7 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path,
             }
 
             if ( outfile.empty() ) {
-                std::cout << "decodePath() ERROR generating output filename."
-                          << std::endl;
+                _errstr = "decodePath() ERROR generating output filename.";
                 return false;
             }
 
@@ -147,13 +157,13 @@ Decode::decodePath ( TransFileList & wavs, const std::string & path,
 //-------------------------------------------------------------------------
 
 void
-Decode::dryrun ( bool dryrun )
+Decoder::dryrun ( bool dryrun )
 {
     _dryrun = dryrun;
 }
 
 bool
-Decode::dryrun() const
+Decoder::dryrun() const
 {
     return _dryrun;
 }
@@ -161,13 +171,13 @@ Decode::dryrun() const
 //-------------------------------------------------------------------------
 
 void
-Decode::debug ( bool debug )
+Decoder::debug ( bool debug )
 {
     _debug = debug;
 }
 
 bool
-Decode::debug() const
+Decoder::debug() const
 {
     return _debug;
 }
@@ -175,13 +185,13 @@ Decode::debug() const
 //-------------------------------------------------------------------------
 
 void
-Decode::notags ( bool notags )
+Decoder::notags ( bool notags )
 {
     _notags = notags;
 }
 
 bool
-Decode::notags() const
+Decoder::notags() const
 {
     return _notags;
 }
@@ -189,13 +199,13 @@ Decode::notags() const
 //-------------------------------------------------------------------------
 
 void
-Decode::clobber ( bool clobber )
+Decoder::clobber ( bool clobber )
 {
     _clobber = clobber;
 }
 
 bool
-Decode::clobber() const
+Decoder::clobber() const
 {
     return _clobber;
 }
@@ -203,13 +213,27 @@ Decode::clobber() const
 //-------------------------------------------------------------------------
 
 void
-Decode::raw ( bool raw )
+Decoder::ffmpeg ( bool f )
+{
+    _ffmpeg = f;
+}
+
+bool
+Decoder::ffmpeg() const
+{
+    return _ffmpeg;
+}
+
+//-------------------------------------------------------------------------
+
+void
+Decoder::raw ( bool raw )
 {
     _raw = raw;
 }
 
 bool
-Decode::raw() const
+Decoder::raw() const
 {
     return _raw;
 }
@@ -217,11 +241,17 @@ Decode::raw() const
 //-------------------------------------------------------------------------
 
 std::string
-Decode::getDecoderExec ( const TransFile & infile, const std::string & outfile )
+Decoder::getDecoderExec ( const TransFile & infile, const std::string & outfile )
 {
     std::string  cmd;
+    encoding_t   type = infile.getType();
 
-    switch ( infile.getType() )
+    if ( type == AUDIO_AAC && ! this->ffmpeg() )
+        type = AUDIO_MP4;
+    else if ( type == AUDIO_MP4 && this->ffmpeg() )
+        type = AUDIO_AAC;
+
+    switch ( type )
     {
         case AUDIO_MP3:
             cmd = MP3_DECODER;
@@ -236,6 +266,12 @@ Decode::getDecoderExec ( const TransFile & infile, const std::string & outfile )
             cmd.append(MP4_IF);
             cmd.append("\"").append(infile.getFileName()).append("\"");
             cmd.append(MP4_OF);
+            cmd.append("\"").append(outfile).append("\"");
+            break;
+        case AUDIO_AAC:
+            cmd = AAC_DECODER;
+            cmd.append(AAC_IF);
+            cmd.append("\"").append(infile.getFileName()).append("\" ");
             cmd.append("\"").append(outfile).append("\"");
             break;
         case AUDIO_FLAC:
@@ -257,10 +293,10 @@ Decode::getDecoderExec ( const TransFile & infile, const std::string & outfile )
         case AUDIO_UNK:
         case AUDIO_WAV:  // TODO: Allow WAV to RAW
         case AUDIO_RAW:
-            std::cout << "Decode::getDecoderExec() Skipping raw/pcm/wav file" << std::endl;
+            std::cout << "Decoder::getDecoderExec() Skipping raw/pcm/wav file" << std::endl;
             break;
         default:
-            std::cout << "Decode::getDecoderExec() Unsupported format." << std::endl;
+            std::cout << "Decoder::getDecoderExec() Unsupported format." << std::endl;
             break;
     }
 
@@ -270,7 +306,7 @@ Decode::getDecoderExec ( const TransFile & infile, const std::string & outfile )
 //-------------------------------------------------------------------------
 
 std::string
-Decode::getOutputName ( const std::string & infile, const std::string & outpath )
+Decoder::getOutputName ( const std::string & infile, const std::string & outpath )
 {
     std::string  outf;
     int  indx;
@@ -279,7 +315,7 @@ Decode::getOutputName ( const std::string & infile, const std::string & outpath 
     outf = infile.substr(0, indx);
 
     if ( this->raw() )
-        outf.append(".raw");
+        outf.append(".pcm");
     else
         outf.append(".wav");
 
@@ -292,6 +328,14 @@ Decode::getOutputName ( const std::string & infile, const std::string & outpath 
     }
 
     return outf;
+}
+
+//-------------------------------------------------------------------------
+
+std::string&
+Decoder::getErrorStr()
+{
+    return _errstr;
 }
 
 //-------------------------------------------------------------------------

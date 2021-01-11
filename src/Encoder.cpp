@@ -1,14 +1,28 @@
-/** @file  Encode.cpp
+/** @file  Encoder.cpp
   *
-  * Copyright (c) 2011-2020 Timothy Charlton Arland <tcarland@gmail.com>
+  * Copyright (c) 2010-2021 Timothy Charlton Arland <tcarland@gmail.com>
+  *
+  * This file is part of TransAm.
+  * 
+  * TransAm is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * TransAm is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with TransAm.  If not, see <https://www.gnu.org/licenses/>.
   *
  **/
-#ifndef _TRANSAM_ENCODE_CPP_
-#define _TRANSAM_ENCODE_CPP_
+#define _TRANSAM_ENCODER_CPP_
 
 #include <unistd.h>
 
-#include "Encode.h"
+#include "Encoder.h"
 
 #include "util/CmdBuffer.h"
 #include "util/StringUtils.h"
@@ -19,46 +33,44 @@ using namespace tcanetpp;
 namespace transam {
 
 
-EncoderMap Encode::Encoders = Encode::InitEncoders();
+EncoderMap Encoder::Encoders = Encoder::InitEncoders();
 
 
-Encode::Encode ( encoding_t type, int rate )
+Encoder::Encoder ( encoding_t type, int rate )
     : _type(type),
       _bitrate(rate),
       _notags(false),
       _dryrun(false),
       _erase(true),
       _clobber(false),
+      _ffmpeg(true),
       _debug(false)
 {}
 
-Encode::~Encode() {}
+Encoder::~Encoder() {}
 
 //-------------------------------------------------------------------------
 
 bool
-Encode::encode ( TransFile & infile, TransFile & outfile )
+Encoder::encode ( TransFile & infile, TransFile & outfile )
 {
     std::string  cmd;
 
     if ( FileUtils::IsReadable(outfile.getFileName()) && ! this->clobber() ) {
-        std::cout << "Encode output file exists: "
-                  << outfile.getFileName() << std::endl
-                  << "  Set '--clobber' option to overwrite." << std::endl;
+        _errstr = "Encoder::encode() output file exists, use '--clobber' to overwrite";
         return false;
     }
 
     if ( infile.type() < AUDIO_RAW || infile.type() > AUDIO_WAV )
     {
-        std::cout << "Encode error, input format unknown or unsupported: "
-                  << infile.type() << std::endl;
+        _errstr ="Encoder::encode() Input format unknown or unsupported";
         return false;
     }
 
     cmd = this->getEncoderExec(infile.getFileName(), outfile.getFileName());
 
     if ( cmd.empty() ) {
-        std::cout << "Encoder error determining encoder type." << std::endl;
+        _errstr = "Encoder::encode() error determining encoder type.";
         return false;
     }
 
@@ -70,7 +82,7 @@ Encode::encode ( TransFile & infile, TransFile & outfile )
     CmdBuffer  cmdbuf;
 
     if ( ! cmdbuf.open(cmd) ) {
-        std::cout << "encode() Error in command open." << std::endl;
+        _errstr = "Encoder::encode() Error in command exec";
         return false;
     }
 
@@ -94,7 +106,7 @@ Encode::encode ( TransFile & infile, TransFile & outfile )
 //-------------------------------------------------------------------------
 
 bool
-Encode::encodeFiles ( TransFileList & infiles, TransFileList & outfiles,
+Encoder::encodeFiles ( TransFileList & infiles, TransFileList & outfiles,
                       const std::string & outpath )
 {
     TransFileList::iterator fIter;
@@ -102,10 +114,10 @@ Encode::encodeFiles ( TransFileList & infiles, TransFileList & outfiles,
     for ( fIter = infiles.begin(); fIter != infiles.end(); ++fIter )
     {
         TransFile  & intf    = (TransFile&) *fIter;
-        std::string  outfile = Encode::GetOutputName(intf, _type, outpath);
+        std::string  outfile = Encoder::GetOutputName(intf, _type, outpath);
 
         if ( outfile.empty() ) {
-            std::cout << "Encode Error generating output filename" << std::endl;
+           _errstr = "Encode Error generating output filename";
             return false;
         }
         if ( _debug )
@@ -117,8 +129,7 @@ Encode::encodeFiles ( TransFileList & infiles, TransFileList & outfiles,
         {
             if ( ! FileUtils::IsReadable(outfile) && ! _dryrun )
             {
-                std::cout << "ERROR in EncodeFiles() output not readable, problem with encoder?"
-                    << std::endl;
+                _errstr = "encodeFiles() output not readable, problem with encoder?";
                 return false;
             }
 
@@ -135,7 +146,6 @@ Encode::encodeFiles ( TransFileList & infiles, TransFileList & outfiles,
         }
         else
         {
-            std::cout << "ERROR! in decode()" << std::endl;
             return false;
         }
     }
@@ -148,13 +158,13 @@ Encode::encodeFiles ( TransFileList & infiles, TransFileList & outfiles,
 //-------------------------------------------------------------------------
 
 int
-Encode::bitrate() const
+Encoder::bitrate() const
 {
     return _bitrate;
 }
 
 void
-Encode::bitrate ( int rate )
+Encoder::bitrate ( int rate )
 {
     _bitrate = rate;
 }
@@ -162,13 +172,13 @@ Encode::bitrate ( int rate )
 //-------------------------------------------------------------------------
 
 void
-Encode::notags ( bool notags )
+Encoder::notags ( bool notags )
 {
     _notags = notags;
 }
 
 bool
-Encode::notags() const
+Encoder::notags() const
 {
     return _notags;
 }
@@ -176,13 +186,13 @@ Encode::notags() const
 //-------------------------------------------------------------------------
 
 void
-Encode::dryrun ( bool dryrun )
+Encoder::dryrun ( bool dryrun )
 {
     _dryrun = dryrun;
 }
 
 bool
-Encode::dryrun() const
+Encoder::dryrun() const
 {
     return _dryrun;
 }
@@ -190,13 +200,13 @@ Encode::dryrun() const
 //-------------------------------------------------------------------------
 
 void
-Encode::clobber ( bool clobber )
+Encoder::clobber ( bool clobber )
 {
     _clobber = clobber;
 }
 
 bool
-Encode::clobber() const
+Encoder::clobber() const
 {
     return _clobber;
 }
@@ -204,13 +214,27 @@ Encode::clobber() const
 //-------------------------------------------------------------------------
 
 void
-Encode::erase ( bool erase )
+Encoder::ffmpeg ( bool f )
+{
+    _ffmpeg = f;
+}
+
+bool
+Encoder::ffmpeg() const
+{
+    return _ffmpeg;
+}
+
+//-------------------------------------------------------------------------
+
+void
+Encoder::erase ( bool erase )
 {
     _erase = erase;
 }
 
 bool
-Encode::erase() const
+Encoder::erase() const
 {
     return _erase;
 }
@@ -218,13 +242,13 @@ Encode::erase() const
 //-------------------------------------------------------------------------
 
 void
-Encode::debug ( bool debug )
+Encoder::debug ( bool debug )
 {
     _debug = debug;
 }
 
 bool
-Encode::debug() const
+Encoder::debug() const
 {
     return _debug;
 }
@@ -232,7 +256,7 @@ Encode::debug() const
 //-------------------------------------------------------------------------
 
 std::string
-Encode::GetOutputName ( const TransFile   & tf, encoding_t type,
+Encoder::GetOutputName ( const TransFile   & tf, encoding_t type,
                         const std::string & outpath )
 {
     std::string outf, ext;
@@ -240,7 +264,7 @@ Encode::GetOutputName ( const TransFile   & tf, encoding_t type,
 
     indx = StringUtils::LastIndexOf(tf.getFileName(), ".");
     outf = tf.getFileName().substr(0, indx);
-    ext  = Encode::GetExtension(type);
+    ext  = Encoder::GetExtension(type);
     outf.append(ext);
 
     if ( ! outpath.empty() )
@@ -257,7 +281,7 @@ Encode::GetOutputName ( const TransFile   & tf, encoding_t type,
 //-------------------------------------------------------------------------
 
 std::string
-Encode::GetExtension ( encoding_t type )
+Encoder::GetExtension ( encoding_t type )
 {
     std::string  ext = ".unk";
 
@@ -266,6 +290,9 @@ Encode::GetExtension ( encoding_t type )
             ext = ".mp3";
             break;
         case AUDIO_MP4:
+            ext = ".mp4";
+            break;
+        case AUDIO_AAC:
             ext = ".m4a";
             break;
         case AUDIO_FLAC:
@@ -284,13 +311,19 @@ Encode::GetExtension ( encoding_t type )
 //-------------------------------------------------------------------------
 
 std::string
-Encode::getEncoderExec ( const std::string & infile,
-                         const std::string & outfile )
+Encoder::getEncoderExec ( const std::string & infile,
+                          const std::string & outfile )
 {
     std::string  cmd;
-    std::string  br  = StringUtils::ToString(this->bitrate());
+    std::string  br   = StringUtils::ToString(this->bitrate());
+    encoding_t   type = this->_type;
 
-    switch ( this->_type )
+    if ( type == AUDIO_MP4 && this->ffmpeg() )
+        type = AUDIO_AAC;
+    else if ( type == AUDIO_AAC && ! this->ffmpeg() )
+        type = AUDIO_MP4;
+
+    switch ( type )
     {
         case AUDIO_MP3:
             cmd = MP3_ENCODER;
@@ -298,12 +331,20 @@ Encode::getEncoderExec ( const std::string & infile,
             cmd.append(" \"").append(infile).append("\"");
             cmd.append(" \"").append(outfile).append("\"");
             break;
-        case AUDIO_MP4:
+        case AUDIO_MP4:  //nero aac encoder
             cmd = MP4_ENCODER;
             cmd.append(MP4E_OPTS).append(br);
             cmd.append(MP4_IF);
             cmd.append("\"").append(infile).append("\"");
             cmd.append(MP4_OF);
+            cmd.append("\"").append(outfile).append("\"");
+            break;
+        case AUDIO_AAC:  //ffmpeg aac encoder
+            cmd = AAC_ENCODER;
+            cmd.append(AAC_IF);
+            cmd.append("\"").append(infile).append("\"");
+            cmd.append(AAC_AACOPTS);
+            cmd.append(AAC_CBR);
             cmd.append("\"").append(outfile).append("\"");
             break;
         case AUDIO_FLAC:
@@ -327,6 +368,14 @@ Encode::getEncoderExec ( const std::string & infile,
 
 //-------------------------------------------------------------------------
 
+std::string&
+Encoder::getErrorStr() 
+{
+    return _errstr;
+}
+
+//-------------------------------------------------------------------------
+
 }  // namespace
 
-#endif  // _TRANSAM_ENCODE_CPP_
+// _TRANSAM_ENCODER_CPP_

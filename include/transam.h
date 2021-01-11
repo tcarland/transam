@@ -1,12 +1,28 @@
 /**
-  *  @file    transam.h
-  *  @author  Timothy C. Arland <tcarland@gmail.com>
+  * @file    transam.h
   *
-  *  Copyright (c) 2010-2020 Timothy C. Arland <tcarland@gmail.com>
+  *  Trans.A.M. -  Transcoding for Audio Media
+  * 
+  * Allows for single-step transcoding from one audio format to another
+  * such as flac->mp3 or flac->mp4 while keeping metadata intact. 
   *
-  *    TRANS-AM  Transcoding for Audio Media
-  *  Allows for single-step transcoding from one audio format to another
-  *  such as flac->mp3 or flac->mp4 while keeping metadata intact.
+  * Copyright (c) 2010-2021 Timothy Charlton Arland <tcarland@gmail.com>
+  *
+  * This file is part of TransAm.
+  * 
+  * TransAm is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * TransAm is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with TransAm.  If not, see <https://www.gnu.org/licenses/>.
+  * 
  **/
 #ifndef _TRANSAM_TRANSAM_H_
 #define _TRANSAM_TRANSAM_H_
@@ -19,10 +35,10 @@
 namespace transam {
 
 
-#define TRANSAM_VERSION  "v20.09"
-#define TRANSAM_LICENSE  "Copyright (c)2010-2020 Timothy C. Arland <tcarland@gmail.com>"
+#define TRANSAM_VERSION  "v21.01"
+#define TRANSAM_LICENSE  "Copyright (c)2010-2021 Timothy C. Arland <tcarland@gmail.com>"
 
-#define TRANSAM_DEFAULT_BITRATE 384
+#define TRANSAM_DEFAULT_BITRATE 256
 
 
 // supported encoding types
@@ -30,17 +46,19 @@ typedef enum encoding_types {
     AUDIO_UNK     = 0,
     AUDIO_RAW     = 1,
     AUDIO_WAV     = 2,
-    AUDIO_MP3     = 3,
-    AUDIO_MP4     = 4,
-    AUDIO_FLAC    = 5,
-    AUDIO_SHN     = 6,
-    AUDIO_OGG     = 7
+    AUDIO_MP3     = 3, // lame
+    AUDIO_MP4     = 4, // nero
+    AUDIO_AAC     = 5, // ffmpeg
+    AUDIO_FLAC    = 6, // flac
+    AUDIO_OGG     = 7, // vorbis
+    AUDIO_SHN     = 8  // shorten
 } encoding_t;
 
 typedef encoding_t enc_t;
 
 
 // Command and options for each encoding type
+// LAME is the primary mp3 encoder/decoder
 static std::string  MP3_ENCODER  = "lame";
 static std::string  MP3_DECODER  = "lame";
 static std::string  MP3E_OPTS    = " -h -b ";
@@ -54,10 +72,18 @@ static std::string  MP4E_OPTS    = " -br ";
 static std::string  MP4_IF       = " -if ";
 static std::string  MP4_OF       = " -of ";
 
-// as libfaac improves, consider supporting this option over nero
+// consider switching to ffmpeg as libfaac improves.
+// ffmpeg [options] [[infile options] -i infile]... {[outfile options] outfile}...
 static std::string  AAC_ENCODER  = "ffmpeg";
-static std::string  AAC_OPTS     = " -w -c:a aac -b:a 256k";
+static std::string  AAC_DECODER  = "ffmpeg";
+static std::string  AAC_FDKOPTS  = " -c:a libfdk_aac "; // fraunhaufer lib
+static std::string  AAC_AACOPTS  = " -c:a aac ";
+static std::string  AAC_CBR      = "-b:a 128k ";
+static std::string  AAC_VBR      = "-vbr 5 ";
+static std::string  AAC_IF       = " -i ";
+static std::string  AAC_FORMAT   = "-f adts";  // AAC-LE 
 
+// FLAC
 static std::string  FLAC_ENCODER = "flac";
 static std::string  FLAC_DECODER = "flac";
 static std::string  FLACD_OPTS   = " -d --output-name=";
