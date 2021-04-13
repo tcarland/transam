@@ -284,7 +284,6 @@ int main ( int argc, char **argv )
                 return -1;
             }
             TransFile tf(inf, TransFile::GetEncoding(inf));
-            tf.readTags();
             tf.printTags(shtagfmt);
             return 0;
         }

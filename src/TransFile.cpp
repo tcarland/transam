@@ -44,6 +44,7 @@ TransFile::TransFile ( const std::string & filename, encoding_t type )
     : _fileName(filename),
       _type(type)
 {
+    this->readTags();
 }
 
 TransFile::~TransFile()
