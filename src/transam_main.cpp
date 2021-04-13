@@ -66,7 +66,8 @@ void usage()
               << "     -E | --no-erase       :  Do NOT erase source WAV files after decode/encode.\n"
               << "     -F | --no-ffmpeg      :  Do not use the 'ffmpeg' app for aac (requires NeroAAC).\n"
               << "     -h | --help           :  Display help information and exit.\n"
-              << "     -l | --list           :  List the ID3/4 tags for all files and exit.\n"
+              << "     -l | --list           :  List the ID3/4 tags for the given target.\n"
+              << "     -L | --listtags       :  List the ID3/4 tags in the --tags format \n"
               << "     -n | --dryrun         :  Enable the 'dryrun' option, no changes are made.\n"
               << "     -o | --outfile <file> :  Name of the target output file.\n"
               << "     -P | --outpath <path> :  Alternate output path to place generated files.\n"
@@ -126,6 +127,7 @@ int main ( int argc, char **argv )
     bool  renum    = false;
     bool  clobber  = false;
     bool  showtags = false;
+    bool  shtagfmt = false;
     bool  raw      = false;
     bool  ffmpeg   = true; 
     int   optindx  = 0;
@@ -176,6 +178,7 @@ int main ( int argc, char **argv )
               usage();
               break;
             case 'L':
+              shtagfmt = true;
             case 'l':
               showtags = true;
               break;
@@ -276,8 +279,14 @@ int main ( int argc, char **argv )
     if ( showtags )
     {
         if ( path.empty() ) {
-            std::cout << "Path required with the --list option" << std::endl;
-            return -1;
+            if ( inf.empty() ) { 
+                std::cout << "Path required with the --list option" << std::endl;
+                return -1;
+            }
+            TransFile tf(inf, TransFile::GetEncoding(inf));
+            tf.readTags();
+            tf.printTags(shtagfmt);
+            return 0;
         }
 
         TransFile::ListTags(path, verbose, enctype);

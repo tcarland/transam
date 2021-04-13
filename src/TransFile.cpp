@@ -135,34 +135,65 @@ TransFile::getTags() const
 //-------------------------------------------------------------------------
 
 void
-TransFile::printTags() const
+TransFile::printTags ( bool usetagfmt ) const
 {
     TagMap::ConstIterator tIter;
-
-    std::cout << "  ";
 
     if ( _pmap.isEmpty() )
         return;
 
     tIter = _pmap.find("ARTIST");
-    if ( tIter != _pmap.end() )
+    if ( tIter != _pmap.end() ) {
+        if ( usetagfmt ) 
+            std::cout << "ARTIST:'";
         std::cout << tIter->second.front().to8Bit();
+        if ( usetagfmt ) 
+            std::cout << "'";
+    }
 
     tIter = _pmap.find("ALBUM");
-    if ( tIter != _pmap.end() )
-        std::cout << " - " << tIter->second.front().to8Bit();
+    if ( tIter != _pmap.end() ) {
+        if ( usetagfmt )
+            std::cout << "|ALBUM:'";
+        else
+            std::cout << " - ";
+        std::cout << tIter->second.front().to8Bit();
+        if ( usetagfmt )
+            std::cout << "'";
+    }
 
     tIter = _pmap.find("DISCNUMBER");
-    if ( tIter != _pmap.end() )
-        std::cout << " - d" << tIter->second.front().to8Bit();
+    if ( tIter != _pmap.end() ) {
+        if ( usetagfmt)
+            std::cout << "|DISCNUMBER:'";
+        else 
+            std::cout << " - d";
+        std::cout << tIter->second.front().to8Bit();
+        if ( usetagfmt)
+            std::cout << "'";
+    }
 
     tIter = _pmap.find("TRACKNUMBER");
-    if ( tIter != _pmap.end() )
-        std::cout << " - t" << tIter->second.front().to8Bit();
+    if ( tIter != _pmap.end() ) {
+        if ( usetagfmt )
+            std::cout << "|TRACKNUBMER:'";
+        else
+            std::cout << " - t";
+        std::cout << tIter->second.front().to8Bit();
+        if ( usetagfmt )
+            std::cout << "'";
+    }
 
     tIter = _pmap.find("TITLE");
-    if ( tIter != _pmap.end() )
-        std::cout << " - " << tIter->second.front().to8Bit();
+    if ( tIter != _pmap.end() ) {
+        if ( usetagfmt )
+            std::cout << "|TITLE:'";
+        else
+            std::cout << " - ";
+        std::cout << tIter->second.front().to8Bit();
+        if ( usetagfmt )
+            std::cout << "'";
+    }
 
     std::cout << std::endl;
 
@@ -186,7 +217,7 @@ TransFile::printAllTags() const
             TagLib::String & str = (TagLib::String&) *sIter;
             std::cout << " : " << str;
         }
-    std::cout << std::endl;
+        std::cout << std::endl;
     }
     std::cout << std::endl;
 }

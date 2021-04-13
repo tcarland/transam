@@ -72,7 +72,7 @@ class TransFile {
     bool          hasTags()    { return this->haveTags(); }
     bool          readTags();
     bool          saveTags();
-    void          printTags() const;
+    void          printTags    ( bool usetagfmt = false ) const;
     void          printAllTags() const;
 
 
