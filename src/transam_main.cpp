@@ -280,7 +280,7 @@ int main ( int argc, char **argv )
     {
         if ( path.empty() ) {
             if ( inf.empty() ) { 
-                std::cout << "Path required with the --list option" << std::endl;
+                std::cout << "Path or file required with the --list option" << std::endl;
                 return -1;
             }
             TransFile tf(inf, TransFile::GetEncoding(inf));

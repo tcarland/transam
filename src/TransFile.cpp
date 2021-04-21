@@ -140,6 +140,9 @@ TransFile::printTags ( bool usetagfmt ) const
 {
     TagMap::ConstIterator tIter;
 
+    if ( ! usetagfmt )
+        std::cout << this->getFileName() << " : ";
+
     if ( _pmap.isEmpty() )
         return;
 
