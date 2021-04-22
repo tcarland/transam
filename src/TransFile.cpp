@@ -208,23 +208,23 @@ TransFile::printTags ( bool usetagfmt ) const
             std::cout << "'";
     }
 
-    tIter = _pmap.find("TRACKNUMBER");
-    if ( tIter != _pmap.end() ) {
-        if ( usetagfmt )
-            std::cout << "|TRACKNUMBER:'";
-        else
-            std::cout << " - t";
-        std::cout << tIter->second.front().to8Bit();
-        if ( usetagfmt )
-            std::cout << "'";
-    }
-
     tIter = _pmap.find ("GENRE");
     if ( tIter != _pmap.end() ) {
         if ( usetagfmt )
             std::cout <<"|GENRE:'";
         else
             std::cout << " - ";
+        std::cout << tIter->second.front().to8Bit();
+        if ( usetagfmt )
+            std::cout << "'";
+    }
+
+    tIter = _pmap.find("TRACKNUMBER");
+    if ( tIter != _pmap.end() ) {
+        if ( usetagfmt )
+            std::cout << "|TRACKNUMBER:'";
+        else
+            std::cout << " - t";
         std::cout << tIter->second.front().to8Bit();
         if ( usetagfmt )
             std::cout << "'";
