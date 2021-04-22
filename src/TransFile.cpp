@@ -36,6 +36,28 @@ using namespace tcanetpp;
 namespace transam {
 
 
+TagNameMap TransFile::TagIndex = { 
+    {"TITLE", "TITLE"},
+    {"TRACKNAME", "TITLE"},
+    {"TRACK", "TITLE"},
+    {"ALBUM", "ALBUM"},
+    {"ALBUMNAME", "ALBUM"},
+    {"ALBUMTITLE", "ALBUM"},
+    {"ARTIST", "ARTIST"},
+    {"ARTISTNAME", "ARTIST"},
+    {"TRACKNUMBER", "TRACKNUMBER"},
+    {"TRACKNO", "TRACKNUMBER"},
+    {"DISCNUMBER", "DISCNUMBER"},
+    {"DISCNO", "DISCNUMBER"},
+    {"DISKNUMBER", "DISCNUMBER"},
+    {"DATE", "DATE"},
+    {"ORIGINALDATE", "ORIGINALDATE"},
+    {"GENRE", "GENRE"},
+    {"COMMENT", "COMMENT"}
+};
+
+//-------------------------------------------------------------------------
+
 TransFile::TransFile()
     : _type(AUDIO_UNK)
 {}
@@ -108,9 +130,18 @@ TransFile::setTags ( const TagMap & map )
 bool
 TransFile::setTag ( const std::string & key, const std::string & val )
 {
+    std::string tag;
+    TagNameMap::iterator tIter = TagIndex.find(key);
+
+    if ( tIter == TagIndex.end() )
+        return false;
+    else
+        tag = tIter->second;
+
     TagLib::StringList vals;
     vals.append(val);
-    return _pmap.replace(key, vals);
+
+    return _pmap.replace(tag, vals);
 }
 
 std::string
@@ -436,7 +467,7 @@ TransFile::SetTags ( const std::string & tags, const std::string & target, bool 
             if (  tf.hasTags() )
                 tf.printTags();
             else
-                std::cout << "       <none>" << std::endl;
+                std::cout << "  SetTag Failed" << std::endl;
         }
     }
 

@@ -22,6 +22,7 @@
 #define _TRANSAM_TRANSFILE_H_
 
 #include <list>
+#include <map>
 
 // taglib
 #include "fileref.h"
@@ -41,6 +42,8 @@ class TransFile;
 typedef std::list<TransFile>    TransFileList;
 typedef std::list<std::string>  StringList;
 typedef TagLib::PropertyMap     TagMap;
+
+typedef std::map<std::string, std::string> TagNameMap;
 
 
 class TransFile {
@@ -97,17 +100,21 @@ class TransFile {
     static bool   SetTrackNo   ( const std::string & path, bool ask = true );
 
 
-  private:
+  protected:
 
     void          setType();
 
+  public:
+
+    static TagNameMap  TagIndex;
+  
   private:
 
     std::string   _fileName;
 
     TagMap        _pmap;
     encoding_t    _type;
-
+    
 };
 
 
