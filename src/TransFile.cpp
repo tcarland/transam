@@ -36,6 +36,31 @@ using namespace tcanetpp;
 namespace transam {
 
 
+TagNameMap TransFile::TagIndex = { 
+    {"TITLE", "TITLE"},
+    {"TRACKNAME", "TITLE"},
+    {"TRACK", "TITLE"},
+    {"ALBUM", "ALBUM"},
+    {"ALBUMNAME", "ALBUM"},
+    {"ALBUMTITLE", "ALBUM"},
+    {"ARTIST", "ARTIST"},
+    {"ARTISTNAME", "ARTIST"},
+    {"TRACKNUMBER", "TRACKNUMBER"},
+    {"TRACKNO", "TRACKNUMBER"},
+    {"DISCNUMBER", "DISCNUMBER"},
+    {"DISCNO", "DISCNUMBER"},
+    {"DISKNUMBER", "DISCNUMBER"},
+    {"DATE", "DATE"},
+    {"ORIGINALDATE", "ORIGINALDATE"},
+    {"GENRE", "GENRE"},
+    {"COMMENT", "COMMENT"}
+};
+
+bool TransFile::_AnyTags = false;
+
+
+//-------------------------------------------------------------------------
+
 TransFile::TransFile()
     : _type(AUDIO_UNK)
 {}
@@ -44,6 +69,7 @@ TransFile::TransFile ( const std::string & filename, encoding_t type )
     : _fileName(filename),
       _type(type)
 {
+    this->readTags();
 }
 
 TransFile::~TransFile()
@@ -107,9 +133,20 @@ TransFile::setTags ( const TagMap & map )
 bool
 TransFile::setTag ( const std::string & key, const std::string & val )
 {
+    std::string tag;
+    TagNameMap::iterator tIter = TagIndex.find(key);
+
+    if ( ! TransFile::_AnyTags ) {
+        if ( tIter == TagIndex.end() )
+            return false;
+        else
+            tag = tIter->second;
+    }
+
     TagLib::StringList vals;
     vals.append(val);
-    return _pmap.replace(key, vals);
+
+    return _pmap.replace(tag, vals);
 }
 
 std::string
@@ -135,34 +172,79 @@ TransFile::getTags() const
 //-------------------------------------------------------------------------
 
 void
-TransFile::printTags() const
+TransFile::printTags ( bool usetagfmt ) const
 {
     TagMap::ConstIterator tIter;
 
-    std::cout << "  ";
+    if ( ! usetagfmt )
+        std::cout << "'" << this->getFileName() << "': ";
 
     if ( _pmap.isEmpty() )
         return;
 
     tIter = _pmap.find("ARTIST");
-    if ( tIter != _pmap.end() )
+    if ( tIter != _pmap.end() ) {
+        if ( usetagfmt ) 
+            std::cout << "ARTIST:'";
         std::cout << tIter->second.front().to8Bit();
+        if ( usetagfmt ) 
+            std::cout << "'";
+    }
 
     tIter = _pmap.find("ALBUM");
-    if ( tIter != _pmap.end() )
-        std::cout << " - " << tIter->second.front().to8Bit();
+    if ( tIter != _pmap.end() ) {
+        if ( usetagfmt )
+            std::cout << "|ALBUM:'";
+        else
+            std::cout << " - ";
+        std::cout << tIter->second.front().to8Bit();
+        if ( usetagfmt )
+            std::cout << "'";
+    }
 
     tIter = _pmap.find("DISCNUMBER");
-    if ( tIter != _pmap.end() )
-        std::cout << " - d" << tIter->second.front().to8Bit();
+    if ( tIter != _pmap.end() ) {
+        if ( usetagfmt)
+            std::cout << "|DISCNUMBER:'";
+        else 
+            std::cout << " - d";
+        std::cout << tIter->second.front().to8Bit();
+        if ( usetagfmt)
+            std::cout << "'";
+    }
+
+    tIter = _pmap.find ("GENRE");
+    if ( tIter != _pmap.end() ) {
+        if ( usetagfmt )
+            std::cout <<"|GENRE:'";
+        else
+            std::cout << " - ";
+        std::cout << tIter->second.front().to8Bit();
+        if ( usetagfmt )
+            std::cout << "'";
+    }
 
     tIter = _pmap.find("TRACKNUMBER");
-    if ( tIter != _pmap.end() )
-        std::cout << " - t" << tIter->second.front().to8Bit();
+    if ( tIter != _pmap.end() ) {
+        if ( usetagfmt )
+            std::cout << "|TRACKNUMBER:'";
+        else
+            std::cout << " - t";
+        std::cout << tIter->second.front().to8Bit();
+        if ( usetagfmt )
+            std::cout << "'";
+    }
 
     tIter = _pmap.find("TITLE");
-    if ( tIter != _pmap.end() )
-        std::cout << " - " << tIter->second.front().to8Bit();
+    if ( tIter != _pmap.end() ) {
+        if ( usetagfmt )
+            std::cout << "|TITLE:'";
+        else
+            std::cout << " - ";
+        std::cout << tIter->second.front().to8Bit();
+        if ( usetagfmt )
+            std::cout << "'";
+    }
 
     std::cout << std::endl;
 
@@ -186,7 +268,7 @@ TransFile::printAllTags() const
             TagLib::String & str = (TagLib::String&) *sIter;
             std::cout << " : " << str;
         }
-    std::cout << std::endl;
+        std::cout << std::endl;
     }
     std::cout << std::endl;
 }
@@ -390,7 +472,7 @@ TransFile::SetTags ( const std::string & tags, const std::string & target, bool 
             if (  tf.hasTags() )
                 tf.printTags();
             else
-                std::cout << "       <none>" << std::endl;
+                std::cout << "  SetTag Failed" << std::endl;
         }
     }
 
@@ -482,6 +564,14 @@ TransFile::SetTrackNo ( const std::string & path, bool ask )
     TransFile::ListTags(path, AUDIO_UNK);
 
     return true;
+}
+
+//-------------------------------------------------------------------------
+
+void
+TransFile::AllowAnyTag ( bool any )
+{
+    _AnyTags = any;
 }
 
 //-------------------------------------------------------------------------

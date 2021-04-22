@@ -35,7 +35,7 @@
 namespace transam {
 
 
-#define TRANSAM_VERSION  "v21.01"
+#define TRANSAM_VERSION  "v21.04"
 #define TRANSAM_LICENSE  "Copyright (c)2010-2021 Timothy C. Arland <tcarland@gmail.com>"
 
 #define TRANSAM_DEFAULT_BITRATE 256
@@ -43,9 +43,9 @@ namespace transam {
 
 // supported encoding types
 typedef enum encoding_types {
-    AUDIO_UNK     = 0,
-    AUDIO_RAW     = 1,
-    AUDIO_WAV     = 2,
+    AUDIO_UNK     = 0, // unknown|unsupported
+    AUDIO_RAW     = 1, // raw|pcm
+    AUDIO_WAV     = 2, // wav
     AUDIO_MP3     = 3, // lame
     AUDIO_MP4     = 4, // nero
     AUDIO_AAC     = 5, // ffmpeg
@@ -58,7 +58,7 @@ typedef encoding_t enc_t;
 
 
 // Command and options for each encoding type
-// LAME is the primary mp3 encoder/decoder
+// LAME is the preferred mp3 encoder/decoder
 static std::string  MP3_ENCODER  = "lame";
 static std::string  MP3_DECODER  = "lame";
 static std::string  MP3E_OPTS    = " -h -b ";

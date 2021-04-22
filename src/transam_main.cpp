@@ -59,30 +59,31 @@ void version()
 void usage()
 {
     std::cout << "Usage: " << Process << " [-dEhnvVW] [-t type] [-o outfile] <infile|path>\n"
-              << "     -A | --apply-only     :  Apply tags provided only to the infiles, no decoding.\n"
+              << "     -A | --apply-only     :  Apply tags to the infiles, no decoding.\n"
+              << "     -a | --anytags        :  Disable tag name checking when apply tag names. \n"
               << "     -b | --bitrate        :  Bitrate for encoding (default=384). For flac encoding.\n"
               << "                              Using '16' or '24' (24/96khz) requires raw input (-r).\n"
               << "     -d | --decode-only    :  Decode only to a .wav file (default is to encode).\n"
               << "     -E | --no-erase       :  Do NOT erase source WAV files after decode/encode.\n"
               << "     -F | --no-ffmpeg      :  Do not use the 'ffmpeg' app for aac (requires NeroAAC).\n"
               << "     -h | --help           :  Display help information and exit.\n"
-              << "     -l | --list           :  List the ID3/4 tags for all files and exit.\n"
+              << "     -l | --list           :  List the ID3/4 tags for the given target.\n"
+              << "     -L | --listtags       :  List the ID3/4 tags in the --tags format for a file. \n"
               << "     -n | --dryrun         :  Enable the 'dryrun' option, no changes are made.\n"
-              << "     -o | --outfile <file> :  Name of the target output file.\n"
+              << "     -o | --outfile <file> :  Name of the target output file, when <infile> is given.\n"
               << "     -P | --outpath <path> :  Alternate output path to place generated files.\n"
-              << "     -r | --raw            :  Decode files to raw PCM data '.raw'\n"
+              << "     -r | --raw            :  Decode files to raw PCM data. \n"
               << "     -R | --renum          :  Sets 'apply-only' and offers to re-number tracks.\n"
               << "     -t | --type <name>    :  The encoding type by extension (if applicable).\n"
               << "                           :  supported types: flac, mp3, mp4, ogg, shn, wav\n"
               << "     -T | --tags=\"KEY:val\" :  Set ID3/4 tags on the given file(s). Useful Keys:\n"
-              << "                               ARTIST, ALBUMARTIST, DATE, TRACKNUMBER, TITLE,\n"
-              << "                               DISCNUMBER, COMMENT, GENRE. Using the format:\n"
-              << "                               \"KEY:val|KEY:val|KEY:val|...\"\n"
+              << "                              ARTIST, ALBUM, TRACKNUMBER, TITLE, DISCNUMBER, GENRE \n"
+              << "                              Using the format: \"KEY:val|KEY:val|KEY:val|...\"\n"
               << "     -S | --skiptags       :  Do not copy metadata tags to new encoding.\n"
               << "     -W | --clobber        :  Allow the overwriting of files that already exist.\n"
               << "     -v | --verbose        :  Enable verbose output.\n"
-              << "     -V | --version        :  Display version info and exit.\n"
-              << " Note: This application makes use of external binaries for encoding and decoding.\n"
+              << "     -V | --version        :  Display version info and exit.\n\n"
+              << " This application makes use of external binaries for encoding and decoding.\n"
               << " The various apps are: 'lame' for mp3, 'neroAacEnc/Dec' for m4a, 'flac', \n"
               << " 'oggenc/dec' for vorbis, 'ffmpeg' for aac, and 'shorten' for decoding shn files." << std::endl;
     exit(0);
@@ -126,6 +127,8 @@ int main ( int argc, char **argv )
     bool  renum    = false;
     bool  clobber  = false;
     bool  showtags = false;
+    bool  shtagfmt = false;
+    bool  anytags  = false;
     bool  raw      = false;
     bool  ffmpeg   = true; 
     int   optindx  = 0;
@@ -133,32 +136,36 @@ int main ( int argc, char **argv )
     uint16_t rate = TRANSAM_DEFAULT_BITRATE;
 
     static struct option l_opts[] = { {"apply-only", no_argument, 0, 'A'},
-                                      {"bitrate",  required_argument, 0, 'b'},
+                                      {"anytags",    no_argument, 0, 'a'},
+                                      {"bitrate",    required_argument, 0, 'b'},
                                       {"decode-only", no_argument, 0, 'd'},
-                                      {"no-erase",  no_argument, 0, 'E'},
-                                      {"no-ffmpeg", no_argument, 0, 'F'},
-                                      {"dryrun",   no_argument, 0, 'n'},
-                                      {"help",     no_argument, 0, 'h'},
-                                      {"list",     no_argument, 0, 'l'},
-                                      {"infile",   required_argument, 0, 'i'},
-                                      {"outfile",  required_argument, 0, 'o'},
-                                      {"outpath",  required_argument, 0, 'P'},
-                                      {"type",     required_argument, 0, 't'},
-                                      {"tags",     required_argument, 0, 'T'},
-                                      {"raw",      no_argument, 0, 'r'},
-                                      {"renum",    no_argument, 0, 'R'},
-                                      {"skiptags", no_argument, 0, 's'},
-                                      {"verbose",  no_argument, 0, 'v'},
-                                      {"version",  no_argument, 0, 'V'},
-                                      {"clobber",  no_argument, 0, 'W'},
+                                      {"no-erase",   no_argument, 0, 'E'},
+                                      {"no-ffmpeg",  no_argument, 0, 'F'},
+                                      {"dryrun",     no_argument, 0, 'n'},
+                                      {"help",       no_argument, 0, 'h'},
+                                      {"list",       no_argument, 0, 'l'},
+                                      {"infile",     required_argument, 0, 'i'},
+                                      {"outfile",    required_argument, 0, 'o'},
+                                      {"outpath",    required_argument, 0, 'P'},
+                                      {"type",       required_argument, 0, 't'},
+                                      {"tags",       required_argument, 0, 'T'},
+                                      {"raw",        no_argument, 0, 'r'},
+                                      {"renum",      no_argument, 0, 'R'},
+                                      {"skiptags",   no_argument, 0, 's'},
+                                      {"verbose",    no_argument, 0, 'v'},
+                                      {"version",    no_argument, 0, 'V'},
+                                      {"clobber",    no_argument, 0, 'W'},
                                       {0,0,0,0}
                                     };
 
-    while ( (optChar = ::getopt_long(argc, argv, "Ab:dEFhi:lLo:P:nrRst:T:vVW", l_opts, &optindx)) != EOF )
+    while ( (optChar = ::getopt_long(argc, argv, "Aab:dEFhi:lLo:P:nrRst:T:vVW", l_opts, &optindx)) != EOF )
     {
         switch ( optChar ) {
             case 'A':
               apply   = true;
+              break;
+            case 'a':
+              anytags = true;
               break;
             case 'b':
               br      = ::strdup(optarg);
@@ -176,6 +183,7 @@ int main ( int argc, char **argv )
               usage();
               break;
             case 'L':
+              shtagfmt = true;
             case 'l':
               showtags = true;
               break;
@@ -237,6 +245,9 @@ int main ( int argc, char **argv )
         ::free(tagstr);
     }
 
+    if ( anytags )
+        TransFile::AllowAnyTag(anytags);
+
     if ( apply ) {
         if ( ! tags.empty() ) {
             TransFile::SetTags(tags, path);
@@ -276,8 +287,13 @@ int main ( int argc, char **argv )
     if ( showtags )
     {
         if ( path.empty() ) {
-            std::cout << "Path required with the --list option" << std::endl;
-            return -1;
+            if ( inf.empty() ) { 
+                std::cout << "Path or file required with the --list option" << std::endl;
+                return -1;
+            }
+            TransFile tf(inf, TransFile::GetEncoding(inf));
+            tf.printTags(shtagfmt);
+            return 0;
         }
 
         TransFile::ListTags(path, verbose, enctype);

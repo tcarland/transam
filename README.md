@@ -2,7 +2,7 @@ Trans.A.M. - Transcoding Audio Media
 =====================================
 
 *TransAm* is a tool for transcoding between a variety audio formats 
-while tracking or manipulating the audio metadata (eg. id3 tags). 
+while tracking or manipulating the audio metadata, ie. id3 tags. 
 Namely the *mp3*, *flac*, *aac*, and Vorbis *ogg* formats are supported.
 It makes use of existing (*FOSS*) audio tools for the decoding and/or encoding 
 of files.
@@ -13,7 +13,7 @@ of files.
 
 ## Overview
 
- *TransAm* wraps the various audio tools with sane defaults as well as keeping
+ *TransAm* wraps various audio tools with sane defaults as well as keeping
 tags/metadata intact across the transcoding process. It will keep tags intact 
 while transcoding or manipulate tags as defined by the user using
  [taglib](https://github.com/taglib/taglib)
@@ -31,10 +31,12 @@ The audio formats are supported via various opensource tools:
 - **shorten** is a legacy lossless format that is supported for decode only.
 
 Additionally, support for the Nero AAC encoder/decoder is provided for 
-legacy purposes as AAC support and quality has traditionally varied in the 
+legacy purposes as AAC support and quality has historically varied in the 
 underlying *libfaac* or *libavcodec* libraries used by *ffmpeg*, while the 
 Nero implementation still proves to be stable and efficient in providing 
-quality AAC files. Of note, the ffmpeg aac encoder has improved since.
+quality AAC files. Of note, the ffmpeg aac encoder has improved since the 
+project was originally created and is now the default encoder for mp4/aac 
+files. To prefer the use of the Nero Encoder, pass the `--no-ffmpeg` option.
 
 
 ## Build Requirements
@@ -78,7 +80,7 @@ Ubuntu (apt) based distributions:
 ### NeroAAC
 
 NeroAAC is a proprietary codec that is no longer maintained, but 
-remains a stable and efficient option for an AAC encoder/decoder. It can 
+remains a stable and efficient option as an AAC encoder/decoder. It can 
 still be acquired separately from the following location(s):
  - http://wiki.hydrogenaud.io/index.php?title=Nero_AAC
  - https://web.archive.org/web/20160923100008/http://ftp6.nero.com/tools/NeroAACCodec-1.5.1.zip
@@ -86,7 +88,7 @@ still be acquired separately from the following location(s):
 
 ### Nero vs FFMPEG
 
-To use **NeroAAC** over **ffmpeg**,  use the `-F` or `--no-ffmpeg` option.
+To prefer **NeroAAC** over **ffmpeg**,  use the `-F` or `--no-ffmpeg` option.
 *ffmpeg* is the default encoder/decoder for *AAC* files.
 
 ## Codec Versions
@@ -94,7 +96,7 @@ To use **NeroAAC** over **ffmpeg**,  use the `-F` or `--no-ffmpeg` option.
 *TransAm* has been tested with the following versions:
 
  * LAME 64 >=3.99.5
- * Flac 1.3.2
+ * Flac 1.3.3
  * Vorbis Tools 1.4.0
  * FFmpeg 4.2.x
  * NeroAAC v1.5.1
