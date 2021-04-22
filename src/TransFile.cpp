@@ -56,6 +56,9 @@ TagNameMap TransFile::TagIndex = {
     {"COMMENT", "COMMENT"}
 };
 
+bool TransFile::_AnyTags = false;
+
+
 //-------------------------------------------------------------------------
 
 TransFile::TransFile()
@@ -133,10 +136,12 @@ TransFile::setTag ( const std::string & key, const std::string & val )
     std::string tag;
     TagNameMap::iterator tIter = TagIndex.find(key);
 
-    if ( tIter == TagIndex.end() )
-        return false;
-    else
-        tag = tIter->second;
+    if ( ! TransFile::_AnyTags ) {
+        if ( tIter == TagIndex.end() )
+            return false;
+        else
+            tag = tIter->second;
+    }
 
     TagLib::StringList vals;
     vals.append(val);
@@ -559,6 +564,14 @@ TransFile::SetTrackNo ( const std::string & path, bool ask )
     TransFile::ListTags(path, AUDIO_UNK);
 
     return true;
+}
+
+//-------------------------------------------------------------------------
+
+void
+TransFile::AllowAnyTag ( bool any )
+{
+    _AnyTags = any;
 }
 
 //-------------------------------------------------------------------------

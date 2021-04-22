@@ -99,6 +99,7 @@ class TransFile {
 
     static bool   SetTrackNo   ( const std::string & path, bool ask = true );
 
+    static void   AllowAnyTag  ( bool any );
 
   protected:
 
@@ -111,9 +112,10 @@ class TransFile {
   private:
 
     std::string   _fileName;
-
     TagMap        _pmap;
     encoding_t    _type;
+
+    static bool   _AnyTags;
     
 };
 
