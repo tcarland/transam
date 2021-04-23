@@ -185,65 +185,53 @@ TransFile::printTags ( bool usetagfmt ) const
     tIter = _pmap.find("ARTIST");
     if ( tIter != _pmap.end() ) {
         if ( usetagfmt ) 
-            std::cout << "ARTIST:'";
+            std::cout << "ARTIST:";
         std::cout << tIter->second.front().to8Bit();
-        if ( usetagfmt ) 
-            std::cout << "'";
     }
 
     tIter = _pmap.find("ALBUM");
     if ( tIter != _pmap.end() ) {
         if ( usetagfmt )
-            std::cout << "|ALBUM:'";
+            std::cout << "|ALBUM:";
         else
             std::cout << " - ";
         std::cout << tIter->second.front().to8Bit();
-        if ( usetagfmt )
-            std::cout << "'";
     }
 
     tIter = _pmap.find("DISCNUMBER");
     if ( tIter != _pmap.end() ) {
         if ( usetagfmt)
-            std::cout << "|DISCNUMBER:'";
+            std::cout << "|DISCNUMBER:";
         else 
             std::cout << " - d";
         std::cout << tIter->second.front().to8Bit();
-        if ( usetagfmt)
-            std::cout << "'";
     }
 
     tIter = _pmap.find ("GENRE");
     if ( tIter != _pmap.end() ) {
         if ( usetagfmt )
-            std::cout <<"|GENRE:'";
+            std::cout <<"|GENRE:";
         else
             std::cout << " - ";
         std::cout << tIter->second.front().to8Bit();
-        if ( usetagfmt )
-            std::cout << "'";
     }
 
     tIter = _pmap.find("TRACKNUMBER");
     if ( tIter != _pmap.end() ) {
         if ( usetagfmt )
-            std::cout << "|TRACKNUMBER:'";
+            std::cout << "|TRACKNUMBER:";
         else
             std::cout << " - t";
         std::cout << tIter->second.front().to8Bit();
-        if ( usetagfmt )
-            std::cout << "'";
     }
 
     tIter = _pmap.find("TITLE");
     if ( tIter != _pmap.end() ) {
         if ( usetagfmt )
-            std::cout << "|TITLE:'";
+            std::cout << "|TITLE:";
         else
             std::cout << " - ";
         std::cout << tIter->second.front().to8Bit();
-        if ( usetagfmt )
-            std::cout << "'";
     }
 
     std::cout << std::endl;
