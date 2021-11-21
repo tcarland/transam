@@ -234,10 +234,12 @@ int main ( int argc, char **argv )
         path = argv[optind];
     
     if ( path.empty() ) {
-        if ( showtags )
+        if ( showtags ) {
             path=".";
-        else
+        } else {
+            std::cout << "Error, filesystem path or file required";
             usage();
+        }
     }
 
     if ( tagstr != NULL ) {
