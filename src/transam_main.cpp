@@ -288,17 +288,13 @@ int main ( int argc, char **argv )
     // list only
     if ( showtags )
     {
-        if ( path.empty() ) {
-            if ( inf.empty() ) { 
-                std::cout << "Path or file required with the --list option" << std::endl;
-                return -1;
-            }
+        if ( ! inf.empty() ) { 
             TransFile tf(inf, TransFile::GetEncoding(inf));
             tf.printTags(shtagfmt);
             return 0;
         }
 
-        TransFile::ListTags(path, verbose, enctype);
+        TransFile::ListTags(path, verbose, shtagfmt);
 
         return 0;
     }

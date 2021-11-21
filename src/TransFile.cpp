@@ -379,12 +379,12 @@ TransFile::GetEncoding ( const std::string & name )
 //-------------------------------------------------------------------------
 
 void
-TransFile::ListTags ( const std::string & path, bool allTags, bool recursive )
+TransFile::ListTags ( const std::string & path, bool allTags, bool tagfmt )
 {
     TransFileList  files;
     TransFileList::iterator  fIter;
 
-    if ( ! TransFile::ReadPath(path, files, recursive ) )
+    if ( ! TransFile::ReadPath(path, files, false) )
     {
         std::cout << "ERROR reading files from path '" << path
             << "'" << std::endl;
@@ -406,7 +406,7 @@ TransFile::ListTags ( const std::string & path, bool allTags, bool recursive )
         if ( allTags )
             tf.printAllTags();
         else
-            tf.printTags();
+            tf.printTags(tagfmt);
     }
 
     return;

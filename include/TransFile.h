@@ -88,7 +88,7 @@ class TransFile {
 
     static void   ListTags     ( const std::string & path,
                                  bool                allTags,
-                                 bool                recursive = false );
+                                 bool                tagfmt = false );
 
     static bool   SetTags      ( const std::string & tags,
                                  const std::string & target,
