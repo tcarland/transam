@@ -228,10 +228,9 @@ int main ( int argc, char **argv )
     }
 
     std::string inf, outf, outp, path, tags;
-
     encoding_t  enctype = AUDIO_UNK;
 
-    if ( optind > argc )
+    if ( optind < argc )
         path = argv[optind];
     
     if ( path.empty() ) {
