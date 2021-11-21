@@ -86,7 +86,7 @@ void usage()
               << " This application makes use of external binaries for encoding and decoding.\n"
               << " The various apps are: 'lame' for mp3, 'neroAacEnc/Dec' for m4a, 'flac', \n"
               << " 'oggenc/dec' for vorbis, 'ffmpeg' for aac, and 'shorten' for decoding shn files." << std::endl;
-    exit(0);
+    exit(1);
 }
 
 
@@ -231,14 +231,15 @@ int main ( int argc, char **argv )
 
     encoding_t  enctype = AUDIO_UNK;
 
-    if ( optind == argc ) {
-        std::cout << "No target defined." << std::endl;
-        usage();
+    if ( optind > argc )
+        path = argv[optind];
+    
+    if ( path.empty() ) {
+        if ( showtags )
+            path=".";
+        else
+            usage();
     }
-
-    path = argv[optind];
-    if ( path.empty() )
-        usage();
 
     if ( tagstr != NULL ) {
         tags.assign(tagstr);
@@ -248,7 +249,8 @@ int main ( int argc, char **argv )
     if ( anytags )
         TransFile::AllowAnyTag(anytags);
 
-    if ( apply ) {
+    if ( apply ) 
+    {
         if ( ! tags.empty() ) {
             TransFile::SetTags(tags, path);
         }
@@ -348,7 +350,9 @@ int main ( int argc, char **argv )
             std::cout << "Error decoding files: " << decoder.getErrorStr() << std::endl;
             return -1;
         }
-        if ( ! decode ) {
+        
+        if ( ! decode ) 
+        {
             if ( ! encoder.encodeFiles(wavs, outfiles, outp) ) {
                 std::cout << "Error encoding files: " << encoder.getErrorStr() << std::endl;
                 return -1;
