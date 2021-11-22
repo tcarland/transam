@@ -51,7 +51,7 @@ distclean: clean
 
 install:
 ifdef TCAMAKE_PREFIX
-	$(CP) transam $(TCAMAKE_PREFIX)/bin
-	$(CP) transcheck $(TCAMAKE_PREFIX)/bin
+	$(CP) transam $(TCAMAKE_PREFIX)/bin/
+	$(CP) transcheck $(TCAMAKE_PREFIX)/bin/
 	@echo
 endif

@@ -58,34 +58,42 @@ void version()
 
 void usage()
 {
-    std::cout << "Usage: " << Process << " [-dEhnvVW] [-t type] [-o outfile] <infile|path>\n"
-              << "     -A | --apply-only     :  Apply tags to the infiles, no decoding.\n"
-              << "     -a | --anytags        :  Disable tag name checking when apply tag names. \n"
-              << "     -b | --bitrate        :  Bitrate for encoding (default=384). For flac encoding.\n"
-              << "                              Using '16' or '24' (24/96khz) requires raw input (-r).\n"
-              << "     -d | --decode-only    :  Decode only to a .wav file (default is to encode).\n"
-              << "     -E | --no-erase       :  Do NOT erase source WAV files after decode/encode.\n"
-              << "     -F | --no-ffmpeg      :  Do not use the 'ffmpeg' app for aac (requires NeroAAC).\n"
-              << "     -h | --help           :  Display help information and exit.\n"
-              << "     -l | --list           :  List the ID3/4 tags for the given target.\n"
-              << "     -L | --listtags       :  List the ID3/4 tags in the --tags format for a file. \n"
-              << "     -n | --dryrun         :  Enable the 'dryrun' option, no changes are made.\n"
-              << "     -o | --outfile <file> :  Name of the target output file, when <infile> is given.\n"
-              << "     -P | --outpath <path> :  Alternate output path to place generated files.\n"
-              << "     -r | --raw            :  Decode files to raw PCM data. \n"
-              << "     -R | --renum          :  Sets 'apply-only' and offers to re-number tracks.\n"
-              << "     -t | --type <name>    :  The encoding type by extension (if applicable).\n"
-              << "                           :  supported types: flac, mp3, mp4, ogg, shn, wav\n"
-              << "     -T | --tags=\"KEY:val\" :  Set ID3/4 tags on the given file(s). Useful Keys:\n"
-              << "                              ARTIST, ALBUM, TRACKNUMBER, TITLE, DISCNUMBER, GENRE \n"
-              << "                              Using the format: \"KEY:val|KEY:val|KEY:val|...\"\n"
-              << "     -S | --skiptags       :  Do not copy metadata tags to new encoding.\n"
-              << "     -W | --clobber        :  Allow the overwriting of files that already exist.\n"
-              << "     -v | --verbose        :  Enable verbose output.\n"
-              << "     -V | --version        :  Display version info and exit.\n\n"
-              << " This application makes use of external binaries for encoding and decoding.\n"
-              << " The various apps are: 'lame' for mp3, 'neroAacEnc/Dec' for m4a, 'flac', \n"
-              << " 'oggenc/dec' for vorbis, 'ffmpeg' for aac, and 'shorten' for decoding shn files." << std::endl;
+    std::cout <<
+        "TransAM (Transcoding Audio Media) is a tool for converting audio media \n" <<
+        "formats as well as applying or manipulating audio metadata tags. \n" <<
+        "The application makes use of external programs for the various encoding \n" <<
+        "and decoding tasks, consisting of LAME for MP3 support, NeroAAC or FFMpeg \n" <<
+        "for M4A, libvorbis for OGG files, FLAC for lossless flac support, and \n" <<
+        "optionally shorten for decoding (only) of SHN files.\n\n" <<
+
+        "Synopsis: \n" <<
+        "  " << Process << "[-dEhnvVW] [-t type] [-o outfile]  <infile|path> \n\n " <<
+
+        "Options: \n" <<
+        "  -A | --apply-only     :  Apply tags to the infiles, no decoding.\n" <<
+        "  -a | --anytags        :  Disable tag name checking when apply tag names. \n" << 
+        "  -b | --bitrate        :  Bitrate for encoding (default=384). For flac encoding.\n" << 
+        "                           Using '16' or '24' (24/96khz) requires raw input (-r).\n" << 
+        "  -d | --decode-only    :  Decode only to a .wav file (default is to encode).\n" << 
+        "  -E | --no-erase       :  Do NOT erase source WAV files after decode/encode.\n" << 
+        "  -F | --no-ffmpeg      :  Do not use the 'ffmpeg' app for aac (requires NeroAAC).\n" << 
+        "  -h | --help           :  Display help information and exit.\n" << 
+        "  -l | --list           :  List the ID3/4 tags for the given target(s).\n" << 
+        "  -L | --listtags       :  List the ID3/4 tags in a more concise tags format. \n" << 
+        "  -n | --dryrun         :  Enable the 'dryrun' option, no changes are made. \n" << 
+        "  -o | --outfile <file> :  Name of the target output file, when <infile> is given. \n" << 
+        "  -P | --outpath <path> :  Alternate output path to place generated files. \n" << 
+        "  -r | --raw            :  Decode files to raw PCM data. \n" << 
+        "  -R | --renum          :  Sets 'apply-only' and offers to re-number tracks. \n" << 
+        "  -t | --type <name>    :  The encoding type by extension (if applicable). \n" << 
+        "                        :  supported types: flac, mp3, mp4, ogg, wav \n" << 
+        "  -T | --tags=\"KEY:val\" :  Set ID3/4 tags on the given file(s). Useful Keys:\n" << 
+        "                           ARTIST, ALBUM, TRACKNUMBER, TITLE, DISCNUMBER, GENRE \n" << 
+        "                           Using the format: \"KEY:val|KEY:val|KEY:val|...\"\n" << 
+        "  -S | --skiptags       :  Do not copy metadata tags to new encoding.\n" << 
+        "  -W | --clobber        :  Allow the overwriting of files that already exist.\n" << 
+        "  -v | --verbose        :  Enable verbose output.\n" << 
+        "  -V | --version        :  Display version info and exit.\n\n" << std::endl;
     exit(1);
 }
 

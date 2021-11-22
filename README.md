@@ -1,7 +1,7 @@
-Trans.A.M. - Transcoding Audio Media
+TransAM - Transcoding Audio Media
 =====================================
 
-*TransAm* is a tool for transcoding between a variety audio formats 
+*TransAM* is a tool for transcoding between a variety audio formats 
 while tracking or manipulating the audio metadata, ie. id3 tags. 
 Namely the *mp3*, *flac*, *aac*, and Vorbis *ogg* formats are supported.
 It makes use of existing (*FOSS*) audio tools for the decoding and/or encoding 
@@ -13,7 +13,7 @@ of files.
 
 ## Overview
 
- *TransAm* wraps various audio tools with sane defaults as well as keeping
+ *TransAM* wraps various audio tools with sane defaults as well as keeping
 tags/metadata intact across the transcoding process. It will keep tags intact 
 while transcoding or manipulate tags as defined by the user using
  [taglib](https://github.com/taglib/taglib)
@@ -28,9 +28,10 @@ The audio formats are supported via various opensource tools:
 - **FLAC** or Free Lossless Audio Compression (https://github.com/xiph/flac)
 - **libvorbis** for *ogg* support. (https://xiph.org/vorbis/)
 - **ffmpeg** for *aac* support. (https://ffmpeg.org/)
-- **shorten** is a legacy lossless format that is supported for decode only.
+- **shorten** is a legacy lossless format that is optionally supported 
+  for decoding only.
 
-Additionally, support for the Nero AAC encoder/decoder is provided for 
+Additionally, support for the *Nero AAC encoder/decoder* is provided for 
 legacy purposes as AAC support and quality has historically varied in the 
 underlying *libfaac* or *libavcodec* libraries used by *ffmpeg*, while the 
 Nero implementation still proves to be stable and efficient in providing 
@@ -41,20 +42,21 @@ files. To prefer the use of the Nero Encoder, pass the `--no-ffmpeg` option.
 
 ## Build Requirements
 
-  TransAm makes use of the *tcanetpp* library for tree data-structure 
-and various String and File utilities. Both TransAm and tcanetpp make 
-use of *tcamake* for a build environment. 
+  *TransAM* makes use of the *tcanetpp* library for tree data-structure 
+and various String and File utilities. Both *TransAM* and *tcanetpp* make 
+use of the *tcamake* project for providing the build environment. 
   
   * tcanetpp (https://github.com/tcarland/tcanetpp.git)
   * tcamake (https://github.com/tcarland/tcamake.git)
 
-  The *taglib* library can installed via the systems package manager.
+  The *taglib* library can installed via the systems package manager as 
+detailed below.
 
 <br>
 
 ---
 
-## External Codec support
+## External Codec support / dependencies
 
 The various tools are expected to be available via the system PATH.
 Nearly all tools (save NeroAAC) are available via distribution package 
@@ -77,13 +79,13 @@ Ubuntu (apt) based distributions:
 - libtag1-dev
 
 
-### NeroAAC
+## NeroAAC
 
 NeroAAC is a proprietary codec that is no longer maintained, but 
 remains a stable and efficient option as an AAC encoder/decoder. It can 
 still be acquired separately from the following location(s):
- - http://wiki.hydrogenaud.io/index.php?title=Nero_AAC
- - https://web.archive.org/web/20160923100008/http://ftp6.nero.com/tools/NeroAACCodec-1.5.1.zip
+- http://wiki.hydrogenaud.io/index.php?title=Nero_AAC
+- https://web.archive.org/web/20160923100008/http://ftp6.nero.com/tools/NeroAACCodec-1.5.1.zip
 
 
 ### Nero vs FFMPEG
@@ -91,15 +93,17 @@ still be acquired separately from the following location(s):
 To prefer **NeroAAC** over **ffmpeg**,  use the `-F` or `--no-ffmpeg` option.
 *ffmpeg* is the default encoder/decoder for *AAC* files.
 
+
 ## Codec Versions
 
 *TransAm* has been tested with the following versions:
 
- * LAME 64 >=3.99.5
- * Flac 1.3.3
- * Vorbis Tools 1.4.0
- * FFmpeg 4.2.x
- * NeroAAC v1.5.1
+- LAME 64 >=3.99.5
+- Flac 1.3.3
+- Vorbis Tools 1.4.0
+- FFmpeg 4.2.x
+- NeroAAC v1.5.1
+
 
 ## Examples
 
@@ -125,7 +129,7 @@ any existing files.
 transam -t m4a --no-erase --clobber .
 ```
 
-Renumber the tracks in a directory
+Renumber the tracks in a given directory to be sequential (based on sorted filenames).
 ```
 transam -R .
 ```

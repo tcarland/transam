@@ -2,20 +2,20 @@
   * 
   * Copyright (c) 2010-2021 Timothy Charlton Arland <tcarland@gmail.com>
   *
-  * This file is part of TransAm.
+  * This file is part of TransAM.
   * 
-  * TransAm is free software: you can redistribute it and/or modify
+  * TransAM is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
   * the Free Software Foundation, either version 3 of the License, or
   * (at your option) any later version.
   *
-  * TransAm is distributed in the hope that it will be useful,
+  * TransAM is distributed in the hope that it will be useful,
   * but WITHOUT ANY WARRANTY; without even the implied warranty of
   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   * GNU General Public License for more details.
   *
   * You should have received a copy of the GNU General Public License
-  * along with TransAm.  If not, see <https://www.gnu.org/licenses/>.
+  * along with TransAM.  If not, see <https://www.gnu.org/licenses/>.
   * 
  **/
 #ifndef _TRANSAM_DECODER_H_
