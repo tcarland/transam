@@ -1,6 +1,6 @@
 /**  @file Encoder.h 
   *
-  * Copyright (c) 2010-2021 Timothy Charlton Arland <tcarland@gmail.com>
+  * Copyright (c) 2010-2022 Timothy Charlton Arland <tcarland@gmail.com>
   *
   * This file is part of TransAM.
   * 
@@ -29,9 +29,7 @@
 
 namespace transam {
 
-    
 typedef std::map<std::string, encoding_t> EncoderMap;
-
 
 
 class Encoder {
@@ -113,7 +111,6 @@ class Encoder {
     bool        _debug;
     std::string _errstr;
 };
-
 
 }  // namespace
 
