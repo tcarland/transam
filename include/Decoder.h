@@ -1,6 +1,6 @@
 /** @file Decoder.h 
   * 
-  * Copyright (c) 2010-2021 Timothy Charlton Arland <tcarland@gmail.com>
+  * Copyright (c) 2010-2022 Timothy Charlton Arland <tcarland@gmail.com>
   *
   * This file is part of TransAM.
   * 
@@ -24,9 +24,7 @@
 #include "transam.h"
 #include "TransFile.h"
 
-
 namespace transam {
-
 
 class Decoder {
 
@@ -78,7 +76,6 @@ class Decoder {
     bool        _debug;
     std::string _errstr;
 };
-
 
 }  // namespace
 

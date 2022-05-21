@@ -4,8 +4,8 @@ TransAM - Transcoding Audio Media
 *TransAM* is a tool for transcoding between a variety audio formats 
 while tracking or manipulating the audio metadata, ie. id3 tags. 
 Namely the *mp3*, *flac*, *aac*, and Vorbis *ogg* formats are supported.
-It makes use of existing (*FOSS*) audio tools for the decoding and/or encoding 
-of files.
+It makes use of existing (*FOSS*) audio tools for the decoding and/or 
+encoding of files.
 
 <br>
 
@@ -14,15 +14,15 @@ of files.
 ## Overview
 
  *TransAM* wraps various audio tools with sane defaults as well as keeping
-tags/metadata intact across the transcoding process. It will keep tags intact 
-while transcoding or manipulate tags as defined by the user using
- [taglib](https://github.com/taglib/taglib)
+tags/metadata intact across the transcoding process. It will keep tags 
+intact while transcoding, or manipulate tags as defined by the user via
+ [taglib](https://github.com/taglib/taglib). 
 The tool is intended to operate on directories of audio files and will
-decode only, transcode (decode/encode), or edit tags.
+decode, transcode (decode *and* encode), or edit tags.
 
 ## Audio Tools
 
-The audio formats are supported via various opensource tools:
+The audio formats are supported via existing opensource tools:
 
 - **LAME** for *mp3* files (http://lame.sf.net)
 - **FLAC** or Free Lossless Audio Compression (https://github.com/xiph/flac)
