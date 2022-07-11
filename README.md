@@ -39,7 +39,6 @@ quality AAC files. Of note, the ffmpeg aac encoder has improved since the
 project was originally created and is now the default encoder for mp4/aac 
 files. To prefer the use of the Nero Encoder, pass the `--no-ffmpeg` option.
 
-
 ## Build Requirements
 
   *TransAM* makes use of the *tcanetpp* library for tree data-structure 
@@ -91,7 +90,8 @@ still be acquired separately from the following location(s):
 ### Nero vs FFMPEG
 
 To prefer **NeroAAC** over **ffmpeg**,  use the `-F` or `--no-ffmpeg` option.
-*ffmpeg* is the default encoder/decoder for *AAC* files.
+*ffmpeg* is the default encoder/decoder for *AAC* files. Note that Nero
+will not encode raw pcm audio.
 
 
 ## Codec Versions
