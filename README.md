@@ -41,14 +41,14 @@ files. To prefer the use of the Nero Encoder, pass the `--no-ffmpeg` option.
 
 ## Build Requirements
 
-  *TransAM* makes use of the *tcanetpp* library for tree data-structure 
+*TransAM* makes use of the *tcanetpp* library for tree data-structure 
 and various String and File utilities. Both *TransAM* and *tcanetpp* make 
 use of the *tcamake* project for providing the build environment. 
   
-  * tcanetpp (https://github.com/tcarland/tcanetpp.git)
-  * tcamake (https://github.com/tcarland/tcamake.git)
+- tcanetpp (https://github.com/tcarland/tcanetpp.git)  
+- tcamake (https://github.com/tcarland/tcamake.git)  
 
-  The *taglib* library can installed via the systems package manager as 
+The *taglib* library can installed via the systems package manager as 
 detailed below.
 
 <br>
@@ -61,7 +61,7 @@ The various tools are expected to be available via the system PATH.
 Nearly all tools (save NeroAAC) are available via distribution package 
 managers. These packages should be installed accordingly.
 
-RHEL/CentOS (yum) based distributions:
+RHEL (yum) based distributions:
 - flac
 - lame
 - vorbis-tools
@@ -69,7 +69,7 @@ RHEL/CentOS (yum) based distributions:
 - ffmpeg
 - taglib-devel
 
-Ubuntu (apt) based distributions:
+Debian/Ubuntu (apt) based distributions:
 - flac
 - lame
 - vorbis-tools
@@ -81,8 +81,9 @@ Ubuntu (apt) based distributions:
 ## NeroAAC
 
 NeroAAC is a proprietary codec that is no longer maintained, but 
-remains a stable and efficient option as an AAC encoder/decoder. It can 
-still be acquired separately from the following location(s):
+remains a stable and efficient option as an AAC encoder/decoder (and 
+possibly still better than libfaac or ffmpeg). It can still be acquired separately 
+from the following locations:
 - http://wiki.hydrogenaud.io/index.php?title=Nero_AAC
 - https://web.archive.org/web/20160923100008/http://ftp6.nero.com/tools/NeroAACCodec-1.5.1.zip
 
