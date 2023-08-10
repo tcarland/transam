@@ -29,7 +29,7 @@ ifeq ($(TCAMAKE_HOME),)
 	TCAMAKE_HOME := $(shell realpath ../tcamake)
 endif
 
-include $(TCAMAKE_HOME)/tcamake/tcamake_include
+include $(TCAMAKE_HOME)/tcamake_include
 
 # -----------------------------
 
