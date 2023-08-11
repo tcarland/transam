@@ -132,5 +132,7 @@ transam -t m4a --no-erase --clobber .
 
 Renumber the tracks in a given directory to be sequential (based on sorted filenames).
 ```
+transam -L
 transam -R .
+transam -L
 ```

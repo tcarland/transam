@@ -1,8 +1,5 @@
-# Makefile for trans-am
-# TOPDIR is relative to parent directory of 'tcamake'
+# Makefile for TransAm
 #
-TOPDIR = ..
-
 NEED_PTHREADS = 1
 NEED_DL = 1
 NEED_LIBRT = 1
@@ -26,9 +23,15 @@ TESTOBJ=    src/trans_check.o
 ALL_OBJS=   $(OBJS) $(TESTOBJ)
 ALL_BINS=   $(BIN)
 
+# -----------------------------
 
-include $(TOPDIR)/tcamake/tcamake_include
+ifeq ($(TCAMAKE_HOME),)
+	TCAMAKE_HOME := $(shell realpath ../tcamake)
+endif
 
+include $(TCAMAKE_HOME)/tcamake_include
+
+# -----------------------------
 
 all: transam transcheck
 
