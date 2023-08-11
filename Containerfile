@@ -1,4 +1,4 @@
-FROM ghcr.io/tcarland/tcanetpp:latest
+FROM ghcr.io/tcarland/tcalibcore:latest
 
 RUN apt-get install -y --no-install-recommends \
     ffmpeg \
