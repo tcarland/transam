@@ -6,6 +6,7 @@ RUN apt-get install -y --no-install-recommends \
     lame \
     libtag1-dev \
     libvorbis-dev \
+    sox \
     vorbis-tools
 
 WORKDIR /opt 
