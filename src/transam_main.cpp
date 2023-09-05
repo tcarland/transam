@@ -91,7 +91,7 @@ void usage()
         "                           ARTIST, ALBUM, TRACKNUMBER, TITLE, DISCNUMBER, GENRE \n" << 
         "                           Using the format: \"KEY:val|KEY:val|KEY:val|...\"\n" << 
         "  -S | --skiptags       :  Do not copy metadata tags to new encoding.\n" << 
-        "  -W | --clobber        :  Allow the overwriting of files that already exist.\n" << 
+        "  -W | --clobber        :  Allow overwriting of files without confirmation.\n" << 
         "  -v | --verbose        :  Enable verbose output.\n" << 
         "  -V | --version        :  Display version info and exit.\n\n" << std::endl;
     exit(1);
@@ -163,10 +163,11 @@ int main ( int argc, char **argv )
                                       {"verbose",    no_argument, 0, 'v'},
                                       {"version",    no_argument, 0, 'V'},
                                       {"clobber",    no_argument, 0, 'W'},
+                                      {"yes",        no_argument, 0, 'y'},
                                       {0,0,0,0}
                                     };
 
-    while ( (optChar = ::getopt_long(argc, argv, "Aab:dEFhi:lLo:P:nrRst:T:vVW", l_opts, &optindx)) != EOF )
+    while ( (optChar = ::getopt_long(argc, argv, "Aab:dEFhi:lLo:P:nrRst:T:vVWy", l_opts, &optindx)) != EOF )
     {
         switch ( optChar ) {
             case 'A':
@@ -226,6 +227,7 @@ int main ( int argc, char **argv )
             case 'V':
               version();
               break;
+            case 'y':
             case 'W':
               clobber = true;
               break;
@@ -307,6 +309,8 @@ int main ( int argc, char **argv )
 
         return 0;
     }
+
+    // ------------------------------------------------------------
 
     if ( enctype < 2 && inf.empty() && ! decode ) {
         if ( ! tags.empty() )

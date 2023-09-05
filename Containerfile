@@ -9,9 +9,9 @@ RUN apt-get install -y --no-install-recommends \
     sox \
     vorbis-tools
 
-WORKDIR /opt 
+WORKDIR / 
 
-RUN mkdir -p /opt/transam
-COPY . /opt/transam
-
+COPY . /transam
 RUN cd transam && make
+
+ENTRYPOINT ["/transam/transam"]
