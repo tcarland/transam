@@ -99,10 +99,10 @@ will not encode raw pcm audio.
 
 *TransAm* has been tested with the following versions:
 
-- LAME 64 >=3.99.5
+- LAME 64 >=3.100
 - Flac 1.3.3
 - Vorbis Tools 1.4.0
-- FFmpeg 4.2.x
+- FFmpeg 4.4.2
 - NeroAAC v1.5.1
 
 
