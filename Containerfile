@@ -1,6 +1,6 @@
 FROM ghcr.io/tcarland/tcalibcore:latest
 
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
     flac \
     lame \
