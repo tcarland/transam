@@ -16,9 +16,10 @@ yes=0
 
 usage="
 $PNAME $VERSION
-Adds song title metadata tags to audio files based on the filename.
-This expects the filename in the format of 'str-name.ext' where 
-'str' is some string such as trackno. and 'name' is the song title.
+Adds media 'TITLE' metadata tags to files based on the filename.
+This expects the filename in the format of 'artist-trackno-name.ext' 
+where 'name' is the media title (ie. song name).
+
 This is useful for first setting individual title names resulting 
 directly from raw media file importing. 
 
@@ -29,7 +30,7 @@ Options:
   -h, --help
     Print this help message and exit.
   -n, --dry-run
-    Print the commands that would be executed, but do not execute them.
+    Enables Dry Run, no changes are made.
   -y, --yes
     Do not prompt before executing commands.
   -V, --version
