@@ -79,7 +79,7 @@ insert_spaces() {
 get_title_string() {
     local str="$1"
     title="${str%.*}"
-    title="${title#*-}"
+    title="${title##*-}"
     title=$(insert_spaces "$title")
     echo "$title"
 }
