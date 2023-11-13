@@ -136,3 +136,11 @@ transam -L
 transam -R .
 transam -L
 ```
+
+## Tagging by filename
+
+The script *resources/transetTagByName.sh* will attempt to tag the media title from 
+the filename. Useful when dealing with raw recordings such as those pulled in by 
+Ardour or other multi-track recording apps. This requires a file-naming convention of 
+*name-trackno-title.ext*. For example, *HeavenlyHana-s1t01-HanaChant.wav*, would 
+result in the TITLE tag being set to `Hana Chant`.

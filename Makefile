@@ -56,5 +56,6 @@ install:
 ifdef TCAMAKE_PREFIX
 	$(CP) transam $(TCAMAKE_PREFIX)/bin/
 	$(CP) transcheck $(TCAMAKE_PREFIX)/bin/
+	$(CP) resources/transetTagByName.sh $(TCAMAKE_PREFIX)/bin/
 	@echo
 endif
