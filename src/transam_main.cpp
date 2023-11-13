@@ -88,7 +88,7 @@ void usage()
         "  -t | --type <name>    :  The encoding type by extension (if applicable). \n" << 
         "                        :  supported types: flac, mp3, mp4, ogg, wav \n" << 
         "  -T | --tags=\"KEY:val\" :  Set ID3/4 tags on the given file(s). Useful Keys:\n" << 
-        "                           ARTIST, ALBUM, TRACKNUMBER, TITLE, DISCNUMBER, GENRE \n" << 
+        "                           ARTIST, ALBUM, TRACKNUMBER, TITLE, DISCNUMBER, GENRE, COMMENT \n" << 
         "                           Using the format: \"KEY:val|KEY:val|KEY:val|...\"\n" << 
         "  -S | --skiptags       :  Do not copy metadata tags to new encoding.\n" << 
         "  -W | --clobber        :  Allow overwriting of files without confirmation.\n" << 
