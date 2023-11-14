@@ -4,13 +4,18 @@
 #  by file name convention.
 #
 PNAME=${0##*\/}
-VERSION="v23.11"
+VERSION="v23.11.13"
 
 files=()
 path=
 exts=("mp3" "flac" "wav")
 dryrun=0
+setall=0
 yes=0
+
+artist=
+album=
+comment=
 
 # -----------------------------------------------------------
 
@@ -27,10 +32,18 @@ Synopsis:
   $PNAME [options] <path>
 
 Options:
+  -A, --artist <artist>
+    Set the 'ARTIST' metadata tag to <artist>
+  -a, --album <album>
+    Set the 'ALBUM' metadata tag to <album>
+  -c, --comment <comment>
+    Set the 'COMMENT' metadata tag to <comment>
   -h, --help
     Print this help message and exit.
   -n, --dry-run
     Enables Dry Run, no changes are made.
+  -S, --set-all
+    Additionally set Artist and Album tags from the filename. 
   -y, --yes
     Do not prompt before executing commands.
   -V, --version
@@ -85,6 +98,11 @@ get_title_string() {
     echo "$title"
 }
 
+count_dashes() {
+    local str="$1"
+    local count=$(echo "$str" | grep -o '-' | wc -l)
+    echo $count
+}
 
 # -----------------------------------------------------------
 
@@ -93,6 +111,18 @@ rt=0
 
 while [ $# -gt 0 ]; do
     case "$1" in
+        -A|--artist)
+            artist="$2"
+            shift
+            ;;
+        -a|--album)
+            album="$2"
+            shift
+            ;;
+        -c|--comment)
+            comment="$2"
+            shift
+            ;;
         -h|--help)
             echo "$usage"
             exit 0
@@ -100,6 +130,9 @@ while [ $# -gt 0 ]; do
         -n|--dryrun|--dry-run)
             echo " > DRYRUN enabled"
             dryrun=1
+            ;;
+        -S|--set*) 
+            setall=1
             ;;
         -y|-Y|--y*|--Y*)
             yes=1
@@ -154,30 +187,60 @@ if [ ${#files[@]} -eq 0 ]; then
     exit 2
 fi
 
-for f in ${files[@]}; do
-    title=$(get_title_string "$f")
+settags=0
+tagstr=""
+
+if [[ -n "$artist" || -n "$album" || -n "$comment" || $setall -eq 1 ]]; then
+    settags=1
+fi
+
+for file in ${files[@]}; do
+    title=$(get_title_string "$file")
 
     if [ -z "$title" ]; then
-        echo "$PNAME Error getting title from '$f'" >&2
+        echo "$PNAME Error getting title from '$file'" >&2
         rt=1
         break
     fi
 
+    tagstr="TITLE:$title"
+    cnt=$(count_dashes "$file")
+
+    if [ $settags -eq 1 ]; then
+        if [ -n "$artist" ]; then
+            tagstr="${tagstr}|ARTIST:${artist}"
+        elif [[ $setall -eq 1 && $cnt -eq 2 ]]; then
+            artist=$(echo "$file" | cut -d'-' -f1)
+            artist=$(insert_spaces "$artist")
+            tagstr="${tagstr}|ARTIST:${artist}"
+        fi
+        if [ -n "$album" ]; then
+            tagstr="${tagstr}|ALBUM:${album}"
+        elif [[ $setall -eq 1 && $cnt -eq 2 ]]; then
+            album=$(echo "$file" | cut -d'-' -f2)
+            album=$(insert_spaces "$album")
+            tagstr="${tagstr}|ALBUM:${album}"
+        fi
+        if [ -n "$comment" ]; then
+            tagstr="$tagstr|COMMENT:$comment"
+        fi
+    fi
+
     if [ $yes -eq 0 ]; then
         echo ""
-        ask "Tag '$f' with 'TITLE:$title'?" "Y" || continue
+        ask "Tag '$file' with '$tagstr'?" "Y" || continue
     fi
     
-    echo " > transam -A -T 'TITLE:$title' $path/$f"
+    echo " > transam -A -T '$tagstr' $path/$file"
     if [ $dryrun -eq 1 ]; then
         continue
     fi
     
-    transam -A -T "TITLE:$title" "$path/$f"
+    transam -A -T "$tagstr" "$path/$file"
 
     rt=$?
     if [ $rt -ne 0 ]; then
-        echo "$PNAME Error tagging '$f'" >&2
+        echo "$PNAME Error tagging '$file'" >&2
         break
     fi
 done
