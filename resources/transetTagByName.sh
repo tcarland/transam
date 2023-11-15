@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 #
-#  Automate the setting of  metadata 'TITLE' idTag of audio files 
+#  Automate the setting of metadata 'TITLE' idTag of audio files 
 #  by file name convention.
 #
 PNAME=${0##*\/}
-VERSION="v23.11.13"
+VERSION="v23.11.15"
 
 files=()
 path=
@@ -209,14 +209,14 @@ for file in ${files[@]}; do
     if [ $settags -eq 1 ]; then
         if [ -n "$artist" ]; then
             tagstr="${tagstr}|ARTIST:${artist}"
-        elif [[ $setall -eq 1 && $cnt -eq 2 ]]; then
+        elif [[ $setall -eq 1 && $cnt -eq 3 ]]; then
             artist=$(echo "$file" | cut -d'-' -f1)
             artist=$(insert_spaces "$artist")
             tagstr="${tagstr}|ARTIST:${artist}"
         fi
         if [ -n "$album" ]; then
             tagstr="${tagstr}|ALBUM:${album}"
-        elif [[ $setall -eq 1 && $cnt -eq 2 ]]; then
+        elif [[ $setall -eq 1 && $cnt -eq 3 ]]; then
             album=$(echo "$file" | cut -d'-' -f2)
             album=$(insert_spaces "$album")
             tagstr="${tagstr}|ALBUM:${album}"
