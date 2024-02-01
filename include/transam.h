@@ -6,7 +6,7 @@
   * Allows for single-step transcoding from one audio format to another
   * such as flac->mp3 or flac->mp4 while keeping metadata intact. 
   *
-  * Copyright (c) 2010-2023 Timothy Charlton Arland <tcarland@gmail.com>
+  * Copyright (c) 2010-2024 Timothy Charlton Arland <tcarland@gmail.com>
   *
   * This file is part of TransAM.
   * 
@@ -34,8 +34,8 @@
 
 namespace transam {
 
-#define TRANSAM_VERSION  "v23.11.15"
-#define TRANSAM_LICENSE  "Copyright (c)2010-2023 Timothy C. Arland <tcarland@gmail.com>"
+#define TRANSAM_VERSION  "v24.02.01"
+#define TRANSAM_LICENSE  "Copyright (c)2010-2024 Timothy C. Arland <tcarland@gmail.com>"
 
 #define TRANSAM_DEFAULT_BITRATE 256
 

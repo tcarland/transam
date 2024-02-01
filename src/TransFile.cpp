@@ -1,6 +1,6 @@
 /**  @file TransFile.cpp
   *
-  * Copyright (c) 2010-2023 Timothy Charlton Arland <tcarland@gmail.com>
+  * Copyright (c) 2010-2024 Timothy Charlton Arland <tcarland@gmail.com>
   *
   * This file is part of TransAM.
   * 
