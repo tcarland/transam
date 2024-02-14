@@ -4,7 +4,7 @@
 #  by file name convention.
 #
 PNAME=${0##*\/}
-VERSION="v23.11.15"
+VERSION="v24.02.01"
 
 files=()
 path=
@@ -32,25 +32,17 @@ Synopsis:
   $PNAME [options] <path>
 
 Options:
-  -A, --artist <artist>
-    Set the 'ARTIST' metadata tag to <artist>
-  -a, --album <album>
-    Set the 'ALBUM' metadata tag to <album>
-  -c, --comment <comment>
-    Set the 'COMMENT' metadata tag to <comment>
-  -h, --help
-    Print this help message and exit.
-  -n, --dry-run
-    Enables Dry Run, no changes are made.
-  -S, --set-all
-    Additionally set Artist and Album tags from the filename. 
-  -y, --yes
-    Do not prompt before executing commands.
-  -V, --version
-    Print the version number and exit.
+  -A, --artist <artist>    Set the 'ARTIST' metadata tag to <artist>
+  -a, --album <album>      Set the 'ALBUM' metadata tag to <album>
+  -c, --comment <comment>  Set the 'COMMENT' metadata tag to <comment>
+  -h, --help               Print this help message and exit.
+  -n, --dry-run            Enables Dry Run, no changes are made.
+  -S, --set-all            Additionally set Artist and Album tags 
+                           from the filename format. 
+  -y, --yes                Do not prompt before executing commands.
+  -V, --version            Print the version number and exit.
 
-  <path>
-    Path to the file(s) to tag. 
+  <path>                   Path to the file(s) to tag. 
 "
 
 # -----------------------------------------------------------
