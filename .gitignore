@@ -29,5 +29,5 @@
 *.app
 
 .settings
-transam
-transcheck
+**/transam
+**/transcheck
