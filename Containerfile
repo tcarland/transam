@@ -14,7 +14,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR / 
 
 COPY . /transam
-RUN cd transam && source .resources/build_profile.release && make
+RUN chown -R tdh:tdh transam && \
+    cd transam && \
+    source .resources/build_profile.release && \
+    make
 
 USER tdh
 
