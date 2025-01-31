@@ -1,6 +1,6 @@
 /**  @file Encoder.h 
   *
-  * Copyright (c) 2010-2024 Timothy Charlton Arland <tcarland@gmail.com>
+  * Copyright (c) 2010-2025 Timothy Charlton Arland <tcarland@gmail.com>
   *
   * This file is part of TransAM.
   * 

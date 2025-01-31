@@ -9,8 +9,8 @@
             ],
             "intelliSenseMode": "gcc-x64",
             "compilerPath": "/usr/bin/gcc",
-            "cStandard": "c11",
-            "cppStandard": "c++17"
+            "cStandard": "c23",
+            "cppStandard": "c++23"
         }
     ],
     "version": 4
