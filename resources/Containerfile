@@ -11,14 +11,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     sox \
     vorbis-tools
 
-WORKDIR / 
+WORKDIR /opt
 
-COPY . /transam
-RUN chown -R tdh:tdh transam && \
-    cd transam && \
-    source .resources/build_profile.release && \
+COPY . /opt/transam
+RUN chown -R tdh:tdh /opt/transam && \
+    cd /opt/transam && \
+    source resources/build_profile.release && \
     make
 
 USER tdh
-
-ENTRYPOINT ["/transam/transam"]
