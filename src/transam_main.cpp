@@ -52,7 +52,7 @@ void version()
 {
     std::cout << Process << " : "
               << TRANSAM_VERSION << std::endl
-              << TRANSAM_LICENSE  << std::endl;
+              << TRANSAM_LICENSE << std::endl;
     exit(0);
 }
 
