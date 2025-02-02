@@ -13,10 +13,10 @@ encoding of files.
 
 ## Overview
 
- *TransAM* wraps various audio tools with sane defaults as well as keeping
+*TransAM* wraps various audio tools with sane defaults as well as keeping
 tags/metadata intact across the transcoding process. It will keep tags 
-intact while transcoding, or manipulate tags as defined by the user via
- [taglib](https://github.com/taglib/taglib). 
+intact while transcoding, or manipulate tags as defined by the user via 
+[taglib](https://github.com/taglib/taglib). 
 The tool is intended to operate on directories of audio files and will
 decode, transcode (decode *and* encode), or edit tags.
 
@@ -45,8 +45,8 @@ files. To prefer the use of the Nero Encoder, pass the `--no-ffmpeg` option.
 and various String and File utilities. Both *TransAM* and *tcanetpp* make 
 use of the *tcamake* project for providing the build environment. 
   
-- tcanetpp (https://github.com/tcarland/tcanetpp.git)  
 - tcamake (https://github.com/tcarland/tcamake.git)  
+- tcanetpp (https://github.com/tcarland/tcanetpp.git)  
 
 The *taglib* library can installed via the systems package manager as 
 detailed below.
@@ -61,7 +61,7 @@ The various tools are expected to be available via the system PATH.
 Nearly all tools (save NeroAAC) are available via distribution package 
 managers. These packages should be installed accordingly.
 
-RHEL (yum) based distributions:
+RHEL (dnf/ym) distributions, package names:
 - flac
 - lame
 - vorbis-tools
@@ -69,9 +69,9 @@ RHEL (yum) based distributions:
 - ffmpeg
 - taglib-devel
 
-Debian/Ubuntu (apt) based distributions:
-- flac
+Debian/Ubuntu (apt) distributions, package names:
 - lame
+- flac
 - vorbis-tools
 - libvorbis-dev
 - ffmpeg
@@ -110,28 +110,28 @@ will not encode raw pcm audio.
 
 Transcode the files in the current directory to mp3 with a constant bitrate of 256k,
 and keepting tags intact.
-```
+```sh
 transam -b 256 -t mp3 .
 ```
 
 Set the Artist and Album name for tracks in the current directory only.
-```
+```sh
 transam -A -T "ARTIST:Grateful Dead|ALBUM:Aoxomoxoa" .
 ```
 
 Decode the input files to wav pcm and do not re-encode.
-```
+```sh
 transam -d -r .
 ```
 
 Transcode the input files to AAC, but leave the decoded WAV files intact. Overwrite 
 any existing files.
-```
+```sh
 transam -t m4a --no-erase --clobber .
 ```
 
 Renumber the tracks in a given directory to be sequential (based on sorted filenames).
-```
+```sh
 transam -L
 transam -R .
 transam -L

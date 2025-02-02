@@ -1,0 +1,26 @@
+FROM ghcr.io/tcarland/tcalibcore:v25.02.01
+
+ENV TCAMAKE_PROJECT=/opt
+
+USER root
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg \
+    flac \
+    lame \
+    libtag1-dev \
+    libvorbis-dev \
+    sox \
+    vorbis-tools
+
+COPY . /opt/transam
+
+RUN chown -R tdh:tdh /opt/transam && \
+    cd /opt/transam && \
+    source resources/build_profile.release && \
+    make
+
+WORKDIR /opt/transam
+
+USER tdh
+
