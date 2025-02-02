@@ -4,7 +4,7 @@
 #  by file name convention.
 #
 PNAME=${0##*\/}
-VERSION="v25.01.31"
+VERSION="v25.02.01"
 
 files=()
 path=
