@@ -1,4 +1,4 @@
-FROM ghcr.io/tcarland/tcalibcore:latest
+FROM ghcr.io/tcarland/tcalibcore:v24.02.01
 
 USER root
 
@@ -11,12 +11,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     sox \
     vorbis-tools
 
-WORKDIR /opt
-
 COPY . /opt/transam
+
 RUN chown -R tdh:tdh /opt/transam && \
     cd /opt/transam && \
     source resources/build_profile.release && \
     make
 
+WORKDIR /opt/transam
+
 USER tdh
+

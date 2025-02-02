@@ -11,17 +11,17 @@ ifdef TCAMAKE_DEBUG
 OPT_FLAGS= -g
 endif
 
-CXXFLAGS=   -std=c++23
-INCLUDES=   -Iinclude $(shell pkg-config --cflags taglib)
-LIBS=	    $(shell pkg-config --libs taglib)
-LFLAGS=     -L/usr/lib/x86_64-linux-gnu
+CXXFLAGS= -std=c++23
+INCLUDES= -Iinclude $(shell pkg-config --cflags taglib)
+LIBS=	  $(shell pkg-config --libs taglib)
+LFLAGS=   -L/usr/lib/x86_64-linux-gnu
 
-BIN=        transam transcheck bin/transam bin/transcheck
-OBJS=       src/TransFile.o src/Encoder.o src/Decoder.o src/transam_main.o
-TESTOBJ=    src/trans_check.o
+BIN=      transam transcheck bin/transam bin/transcheck
+OBJS=     src/TransFile.o src/Encoder.o src/Decoder.o src/transam_main.o
+TESTOBJ=  src/trans_check.o
 
-ALL_OBJS=   $(OBJS) $(TESTOBJ)
-ALL_BINS=   $(BIN)
+ALL_OBJS= $(OBJS) $(TESTOBJ)
+ALL_BINS= $(BIN)
 
 # -----------------------------
 
