@@ -1,5 +1,7 @@
 FROM ghcr.io/tcarland/tcalibcore:v25.02.01
 
+ENV TCAMAKE_PROJECT=/opt
+
 USER root
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
