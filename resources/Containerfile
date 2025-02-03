@@ -17,7 +17,7 @@ COPY . /opt/transam
 
 RUN chown -R tdh:tdh /opt/transam && \
     cd /opt/transam && \
-    source resources/transam_release.profile && \
+    source resources/transam_release.env && \
     make
 
 WORKDIR /opt/transam
