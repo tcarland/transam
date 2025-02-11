@@ -1,4 +1,4 @@
-name: Container Build CI
+name: C/C++ Container Build CI
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
       packages: write
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Docker Login Action
       uses: docker/login-action@v3
@@ -39,6 +39,6 @@ jobs:
       with:
         context: .
         file: ./resources/Containerfile
-        push: false
+        push: ${{ github.event_name != 'pull_request' }}
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
