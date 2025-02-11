@@ -4,6 +4,8 @@ ENV TCAMAKE_PROJECT=/opt
 
 USER root
 
+COPY . /opt/transam
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
     flac \
@@ -11,11 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libtag1-dev \
     libvorbis-dev \
     sox \
-    vorbis-tools
-
-COPY . /opt/transam
-
-RUN chown -R tdh:tdh /opt/transam && \
+    vorbis-tools && \
+    chown -R tdh:tdh /opt/transam && \
     cd /opt/transam && \
     source resources/transam_release.env && \
     make
