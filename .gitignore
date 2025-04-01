@@ -13,10 +13,6 @@
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-*.smod
-
 # Compiled Static libraries
 *.lai
 *.la
@@ -29,5 +25,6 @@
 *.app
 
 .settings
+compile_flags.txt
 **/transam
 **/transcheck

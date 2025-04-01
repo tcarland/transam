@@ -2,14 +2,14 @@
   * @file  transam.h
   *
   * TransAM -  Transcoding for Audio Media
-  * 
+  *
   * Allows for single-step transcoding from one audio format to another
-  * such as flac->mp3 or flac->mp4 while keeping metadata intact. 
+  * such as flac->mp3 or flac->mp4 while keeping metadata intact.
   *
   * Copyright (c) 2010-2025 Timothy Charlton Arland <tcarland@gmail.com>
   *
   * This file is part of TransAM.
-  * 
+  *
   * TransAM is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
   * the Free Software Foundation, either version 3 of the License, or
@@ -22,7 +22,7 @@
   *
   * You should have received a copy of the GNU General Public License
   * along with TransAM.  If not, see <https://www.gnu.org/licenses/>.
-  * 
+  *
  **/
 #ifndef _TRANSAM_TRANSAM_H_
 #define _TRANSAM_TRANSAM_H_
@@ -34,7 +34,7 @@
 
 namespace transam {
 
-#define TRANSAM_VERSION  "v25.02.03"
+#define TRANSAM_VERSION  "v25.03.18"
 #define TRANSAM_LICENSE  "Copyright (c)2010-2025 Timothy C. Arland <tcarland@gmail.com>"
 
 #define TRANSAM_DEFAULT_BITRATE 256
@@ -79,7 +79,7 @@ static std::string  AAC_AACOPTS  = " -c:a aac ";
 static std::string  AAC_CBR      = "-b:a 128k ";
 static std::string  AAC_VBR      = "-vbr 5 ";
 static std::string  AAC_IF       = " -i ";
-static std::string  AAC_FORMAT   = "-f adts";  // AAC-LE 
+static std::string  AAC_FORMAT   = "-f adts";  // AAC-LE
 
 // FLAC
 static std::string  FLAC_ENCODER = "flac";
