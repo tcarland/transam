@@ -1,5 +1,3 @@
-# Makefile for TransAm
-#
 NEED_PTHREADS = 1
 NEED_DL = 1
 NEED_LIBRT = 1
