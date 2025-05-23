@@ -1,4 +1,4 @@
-FROM ghcr.io/tcarland/tcalibcore:v25.02.01
+FROM ghcr.io/tcarland/tcalibcore:v25.05.15
 
 ENV TCAMAKE_PROJECT=/opt
 
@@ -17,9 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     chown -R tdh:tdh /opt/transam && \
     cd /opt/transam && \
     source resources/transam_release.env && \
-    make
+    make && make clean
 
 WORKDIR /opt/transam
 
 USER tdh
-
