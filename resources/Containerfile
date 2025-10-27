@@ -1,12 +1,20 @@
-FROM ghcr.io/tcarland/tcalibcore:v25.05.15
+FROM ghcr.io/tcarland/tcalibcore:v25.10.12
+ARG RELEASE_VERSION=
 
-ENV TCAMAKE_PROJECT=/opt
+LABEL org.opencontainers.image.authors="Timothy C. Arland <tcarland at gmail.com" \
+      org.opencontainers.image.base.name="tcalibcore:v25.10.12" \
+      org.opencontainers.image.description="TransAM" \
+      org.opencontainers.image.source="https://github.com/tcarland/transam" \
+      org.opencontainers.image.title="transam" \
+      org.opencontainers.image.version="${RELEASE_VERSION}"
 
 USER root
 
+ENV TCAMAKE_PROJECT=/opt
 COPY . /opt/transam
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     ffmpeg \
     flac \
     lame \
@@ -14,11 +22,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libvorbis-dev \
     sox \
     vorbis-tools && \
-    chown -R tdh:tdh /opt/transam && \
-    cd /opt/transam && \
-    source resources/transam_release.env && \
-    make && make clean
+    chown -R tdh:tdh /opt/transam
 
 WORKDIR /opt/transam
 
+RUN source resources/transam_release.env && \
+    make && make install && make clean
+
 USER tdh
+
+ENTRYPOINT [ "/usr/bin/tini", "--" ]
+CMD [ "/opt/transam/transam" ]
