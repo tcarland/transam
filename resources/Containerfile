@@ -3,7 +3,7 @@ ARG RELEASE_VERSION=""
 
 LABEL org.opencontainers.image.authors="Timothy C. Arland <tcarland at gmail.com" \
       org.opencontainers.image.base.name="ghcr.io/tcarland/tcalibcore:v26.01.01" \
-      org.opencontainers.image.description="TransAM" \
+      org.opencontainers.image.description="Trans-AM - Transcoding for Audio Media" \
       org.opencontainers.image.source="https://github.com/tcarland/transam" \
       org.opencontainers.image.title="transam" \
       org.opencontainers.image.version="${RELEASE_VERSION}"
@@ -27,9 +27,8 @@ RUN apt-get update && \
 WORKDIR /opt/transam
 
 RUN source resources/transam_release.env && \
-    make && make install && make clean
+    make && TCAMAKE_PREFIX="" make install && make clean
 
 USER tdh
 
-ENTRYPOINT [ "/usr/bin/tini", "--" ]
-CMD [ "/opt/transam/transam" ]
+ENTRYPOINT [ "/usr/bin/tini", "--", "/opt/transam/bin/transam" ]

@@ -82,7 +82,7 @@ The various tools are expected to be available via the system PATH.
 Nearly all tools (save NeroAAC) are available via distribution package 
 managers. These packages should be installed accordingly.
 
-RHEL (dnf/ym) distributions, package names:
+RHEL (dnf/yum) distributions, package names:
 - flac
 - lame
 - vorbis-tools
