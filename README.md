@@ -82,7 +82,7 @@ The various tools are expected to be available via the system PATH.
 Nearly all tools (save NeroAAC) are available via distribution package 
 managers. These packages should be installed accordingly.
 
-RHEL (dnf/ym) distributions, package names:
+RHEL (dnf/yum) distributions, package names:
 - flac
 - lame
 - vorbis-tools
@@ -101,10 +101,10 @@ Debian/Ubuntu (apt) distributions, package names:
 
 ## NeroAAC
 
-NeroAAC is a proprietary codec that is no longer maintained, but 
-remains a stable and efficient option as an AAC encoder/decoder (and 
-possibly still better than libfaac or ffmpeg). It can still be acquired separately 
-from the following locations:
+NeroAAC is a proprietary codec that is no longer maintained, but remains a 
+stable and efficient option as an AAC encoder/decoder (and possibly still 
+better than libfaac or ffmpeg). It can still be acquired separately from 
+the following locations:
 - http://wiki.hydrogenaud.io/index.php?title=Nero_AAC
 - https://web.archive.org/web/20160923100008/http://ftp6.nero.com/tools/NeroAACCodec-1.5.1.zip
 
@@ -129,8 +129,8 @@ will not encode raw pcm audio.
 
 ## Examples
 
-Transcode the files in the current directory to mp3 with a constant bitrate of 256k,
-and keepting tags intact.
+Transcode the files in the current directory to mp3 with a constant bitrate 
+of 256k, and keepting tags intact.
 ```sh
 transam -b 256 -t mp3 .
 ```
@@ -145,8 +145,8 @@ Decode the input files to wav pcm and do not re-encode.
 transam -d -r .
 ```
 
-Transcode the input files to AAC, but leave the decoded WAV files intact. Overwrite 
-any existing files.
+Transcode the input files to AAC, but leave the decoded WAV files intact. 
+Overwrite any existing files.
 ```sh
 transam -t m4a --no-erase --clobber .
 ```
@@ -160,8 +160,9 @@ transam -L
 
 ## Tagging by filename
 
-The script *resources/transetTagByName.sh* will attempt to tag the media title from 
-the filename. Useful when dealing with raw recordings such as those pulled in by 
-Ardour or other multi-track recording apps. This requires a file-naming convention of 
-*name-trackno-title.ext*. For example, *HeavenlyHana-s1t01-HanaChant.wav*, would 
-result in the TITLE tag being set to `Hana Chant`.
+The script *resources/transetTagByName.sh* will attempt to tag the media 
+title from the filename. Useful when dealing with raw recordings such as 
+those pulled in by Ardour or other multi-track recording apps. This requires 
+a file-naming convention of *name-trackno-title.ext*. For example, 
+*HeavenlyHana-s1t01-HanaChant.wav*, would result in the TITLE tag 
+being set to `Hana Chant`.

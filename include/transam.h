@@ -6,7 +6,7 @@
   * Allows for single-step transcoding from one audio format to another
   * such as flac->mp3 or flac->mp4 while keeping metadata intact.
   *
-  * Copyright (c) 2010-2025 Timothy Charlton Arland <tcarland@gmail.com>
+  * Copyright (c) 2010-2026 Timothy Charlton Arland <tcarland@gmail.com>
   *
   * This file is part of TransAM.
   *
@@ -38,6 +38,7 @@ namespace transam {
 #define TRANSAM_LICENSE  "Copyright (c)2010-2026 Timothy C. Arland <tcarland@gmail.com>"
 
 #define TRANSAM_DEFAULT_BITRATE 256
+
 
 // supported encoding types
 typedef enum encoding_types {

@@ -1,3 +1,4 @@
+# tcamake Makefile
 NEED_PTHREADS = 1
 NEED_DL = 1
 NEED_LIBRT = 1
@@ -26,6 +27,9 @@ ALL_BINS= $(BIN)
 
 ifeq ($(TCAMAKE_HOME),)
 	TCAMAKE_HOME := $(shell realpath ../tcamake)
+endif
+ifeq ($(TCAMAKE_PROJECT),)
+	export TCAMAKE_PROJECT := $(shell realpath ..)
 endif
 
 include $(TCAMAKE_HOME)/tcamake_include

@@ -27,9 +27,8 @@ RUN apt-get update && \
 WORKDIR /opt/transam
 
 RUN source resources/transam_release.env && \
-    make && make install && make clean
+    make && TCAMAKE_PREFIX="" make install && make clean
 
 USER tdh
 
-ENTRYPOINT [ "/usr/bin/tini", "--" ]
-CMD [ "/opt/transam/transam" ]
+ENTRYPOINT [ "/usr/bin/tini", "--", "/opt/transam/bin/transam" ]
