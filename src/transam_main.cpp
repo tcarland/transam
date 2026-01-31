@@ -121,11 +121,11 @@ encoding_t setEncodingType ( const std::string & typestr )
 int main ( int argc, char **argv )
 {
     char  optChar;
-    char *outfile  = NULL;
-    char *outpath  = NULL;
-    char *type     = NULL;
-    char *tagstr   = NULL;
-    char *br       = NULL;
+    char *outfile  = nullptr;
+    char *outpath  = nullptr;
+    char *type     = nullptr;
+    char *tagstr   = nullptr;
+    char *br       = nullptr;
     bool  apply    = false;
     bool  verbose  = false;
     bool  dryrun   = false;
@@ -252,7 +252,7 @@ int main ( int argc, char **argv )
         }
     }
 
-    if ( tagstr != NULL ) {
+    if ( tagstr != nullptr ) {
         tags.assign(tagstr);
         ::free(tagstr);
     }
@@ -279,19 +279,19 @@ int main ( int argc, char **argv )
         path = "";
     }
 
-    if ( outfile != NULL ) {
+    if ( outfile != nullptr ) {
         outf.assign(outfile);
         ::free(outfile);
     }
-    if ( outpath != NULL ) {
+    if ( outpath != nullptr ) {
         outp.assign(outpath);
         ::free(outpath);
     }
-    if ( type != NULL ) {
+    if ( type != nullptr ) {
         enctype = setEncodingType(type);
         ::free(type);
     }
-    if ( br != NULL ) {
+    if ( br != nullptr ) {
         rate = StringUtils::FromString<uint16_t>(br);
         ::free(br);
     }

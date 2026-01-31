@@ -239,6 +239,7 @@ TransFile::printTags ( bool usetagfmt ) const
     return;
 }
 
+
 void
 TransFile::printAllTags() const
 {
@@ -294,13 +295,13 @@ TransFile::ReadPath ( const std::string & path, TransFileList & files, bool recu
     encoding_t      type;
     TransFile       file;
 
-    if ( (dirp = ::opendir(path.c_str())) == NULL ) {
+    if ( (dirp = ::opendir(path.c_str())) == nullptr ) {
         std::cout << "TransFile::ReadFiles failed to read directory."
             << std::endl;
         return false;
     }
 
-    while ( (dire = ::readdir(dirp)) != NULL )
+    while ( (dire = ::readdir(dirp)) != nullptr )
     {
         name = dire->d_name;
 

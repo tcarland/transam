@@ -2,6 +2,7 @@ CompileFlags:
   Add:
     - "--include-directory=./include"
     - "--include-directory=../tcanetpp/include"
+    - "--include-directory=/usr/include/taglib"
     - "-xc++"
     - "-DUSE_LIBRT"
     - "-DUSE_PTHREADS"
