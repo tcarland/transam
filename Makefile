@@ -1,9 +1,11 @@
+# tcamake Makefile
 NEED_PTHREADS = 1
 NEED_DL = 1
 NEED_LIBRT = 1
 NEED_SOCKET = 1
 NEED_TCANETPP = 1
 NEED_TCACMDBUF = 1
+NEED_OPENSSL = 1
 
 ifdef TCAMAKE_DEBUG
 OPT_FLAGS= -g
@@ -25,6 +27,9 @@ ALL_BINS= $(BIN)
 
 ifeq ($(TCAMAKE_HOME),)
 	TCAMAKE_HOME := $(shell realpath ../tcamake)
+endif
+ifeq ($(TCAMAKE_PROJECT),)
+	export TCAMAKE_PROJECT := $(shell realpath ..)
 endif
 
 include $(TCAMAKE_HOME)/tcamake_include
