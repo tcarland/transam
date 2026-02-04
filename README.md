@@ -9,6 +9,7 @@ encoding of files.
 
 <br>
 
+```
 <notice>
 *
 * Copyright (c) 2010-2026 Timothy Charlton Arland <tcarland@gmail.com>
@@ -29,6 +30,7 @@ encoding of files.
 * along with TransAM.  If not, see <https://www.gnu.org/licenses/>.
 * 
 </notice>
+```
 
 ---
 
