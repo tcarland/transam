@@ -1,8 +1,8 @@
-FROM ghcr.io/tcarland/tcalibcore:v26.04.02
+FROM ghcr.io/tcarland/tcalibcore:v26.04.03
 ARG RELEASE_VERSION=""
 
 LABEL org.opencontainers.image.authors="Timothy C. Arland <tcarland at gmail.com" \
-      org.opencontainers.image.base.name="ghcr.io/tcarland/tcalibcore:v26.04.02" \
+      org.opencontainers.image.base.name="ghcr.io/tcarland/tcalibcore:v26.04.03" \
       org.opencontainers.image.description="TransAM" \
       org.opencontainers.image.source="https://github.com/tcarland/transam" \
       org.opencontainers.image.title="transam" \
